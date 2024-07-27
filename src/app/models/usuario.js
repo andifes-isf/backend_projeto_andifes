@@ -33,6 +33,10 @@ class Usuario extends Model {
                     fields: [
                         {name: "login"}
                     ]
+                }, {
+                    name: 'unique_telefone',
+                    unique: true,
+                    fields: ['DDI', 'DDD', 'telefone'],
                 }]
             }
         )
