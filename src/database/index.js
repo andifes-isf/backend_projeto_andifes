@@ -2,10 +2,12 @@ import Sequelize from 'sequelize'
 import DatabaseConfig from '../config/database'
 
 // Models
-import User from '../app/models/usuario'
+import Usuario from '../app/models/usuario'
+import AlunoIsF from '../app/models/alunoisf'
+import AlunoDeInstituicao from '../app/models/alunodeinstituicao'
 
 // buffer
-const models = [User]
+const models = [Usuario, AlunoIsF, AlunoDeInstituicao]
 
 class DataBase{
     constructor() {

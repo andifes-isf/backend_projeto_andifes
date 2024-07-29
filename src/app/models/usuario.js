@@ -44,7 +44,8 @@ class Usuario extends Model {
         // Hooks
         this.addHook('beforeSave', async (usuario) => {
             if(usuario.senha_encriptada) {
-                usuario.senha = await bcrypt.hash(usuario.senha_encriptada, 8)
+                const salt = await bcrypt.genSalt(12)
+                usuario.senha = await bcrypt.hash(usuario.senha_encriptada, salt)
             }
         })
 
