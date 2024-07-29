@@ -20,4 +20,6 @@ router.get('/aluno_isf', alunoIsFController.get)
 
 router.post('/aluno_deinstituicao', alunoDeInstituicaoController.post)
 
+router.get('/aluno_deinstituicao', alunoDeInstituicaoController.get)
+
 export default router

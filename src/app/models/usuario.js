@@ -19,8 +19,8 @@ class Usuario extends Model {
                 ativo: Sequelize.BOOLEAN,
                 nomeEmail: Sequelize.STRING,
                 dominio: Sequelize.ENUM('gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'),
-                senha: Sequelize.STRING,
-                senha_encriptada: Sequelize.VIRTUAL,
+                senha: Sequelize.VIRTUAL,
+                senha_encriptada: Sequelize.STRING,
                 tipo: Sequelize.ENUM('alunoisf', 'professorisf')
             },
             {
@@ -43,9 +43,9 @@ class Usuario extends Model {
 
         // Hooks
         this.addHook('beforeSave', async (usuario) => {
-            if(usuario.senha_encriptada) {
+            if(usuario.senha) {
                 const salt = await bcrypt.genSalt(12)
-                usuario.senha = await bcrypt.hash(usuario.senha_encriptada, salt)
+                usuario.senha_encriptada = await bcrypt.hash(usuario.senha, salt)
             }
         })
 

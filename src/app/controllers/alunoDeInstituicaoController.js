@@ -29,6 +29,16 @@ class alunoDeinstituicaoController {
         return res.status(201).json(aluno)
 
     }
+
+    async get(_, res) {
+        try {
+            const alunos = await AlunoDeInstituicao.findAll()
+
+            return res.status(200).json(alunos)
+        } catch (error) {
+            return res.status(400).json(error)
+        }
+    }
 }
 
 export default new alunoDeinstituicaoController()
