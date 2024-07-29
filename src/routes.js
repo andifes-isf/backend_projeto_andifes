@@ -3,6 +3,7 @@ import { Router } from "express"
 import usuarioController from "./app/controllers/usuarioController"
 import alunoIsFController from "./app/controllers/alunoIsFController"
 import alunoDeInstituicaoController from "./app/controllers/alunoDeInstituicaoController"
+import instituicaoEnsinoController from "./app/controllers/instituicaoEnsinoController"
 
 const router = new Router()
 
@@ -21,5 +22,7 @@ router.get('/aluno_isf', alunoIsFController.get)
 router.post('/aluno_deinstituicao', alunoDeInstituicaoController.post)
 
 router.get('/aluno_deinstituicao', alunoDeInstituicaoController.get)
+
+router.post('/instituicao_ensino', instituicaoEnsinoController.post)
 
 export default router

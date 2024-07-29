@@ -31,7 +31,7 @@ class Usuario extends Model {
                     unique: true,
                     using: "BTREE",
                     fields: [
-                        {name: "login"}
+                        { name: "login" }
                     ]
                 }, {
                     name: 'unique_telefone',
