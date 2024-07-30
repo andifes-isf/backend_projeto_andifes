@@ -6,6 +6,7 @@ import professorIsFController from "./app/controllers/professorIsFController"
 import alunoDeInstituicaoController from "./app/controllers/alunoDeInstituicaoController"
 import instituicaoEnsinoController from "./app/controllers/instituicaoEnsinoController"
 import comprovanteAlunoInstituicaoController from "./app/controllers/comprovanteAlunoInstituicaoController"
+import cursoController from "./app/controllers/cursoController"
 
 const router = new Router()
 
@@ -32,5 +33,9 @@ router.post('/comprovante_aluno_instituicao', comprovanteAlunoInstituicaoControl
 router.post('/professor_isf', professorIsFController.post)
 
 router.get('/professor_isf', professorIsFController.get)
+
+router.post('/curso', cursoController.post)
+
+router.get('/curso', cursoController.get)
 
 export default router
