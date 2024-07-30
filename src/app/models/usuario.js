@@ -9,7 +9,7 @@ class Usuario extends Model {
                     type: Sequelize.STRING,
                     primaryKey: true
                 },
-                name: Sequelize.STRING,
+                nome: Sequelize.STRING,
                 sobrenome: Sequelize.STRING,
                 DDI: Sequelize.INTEGER,
                 DDD: Sequelize.INTEGER,
@@ -55,6 +55,10 @@ class Usuario extends Model {
 
     static associate(models) {
         this.hasOne(models.AlunoIsF, {
+            foreignKey: 'login'
+        })
+
+        this.hasOne(models.ProfessorIsF, {
             foreignKey: 'login'
         })
     }

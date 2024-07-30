@@ -4,12 +4,13 @@ import DatabaseConfig from '../config/database'
 // Models
 import Usuario from '../app/models/usuario'
 import AlunoIsF from '../app/models/alunoisf'
+import ProfessorIsF from '../app/models/professorisf'
 import AlunoDeInstituicao from '../app/models/alunodeinstituicao'
 import InstituicaoEnsino from '../app/models/instituicaoensino'
 import ComprovanteAlunoInstituicao from '../app/models/comprovantealunoinstituicao'
 
 // buffer
-const models = [Usuario, AlunoIsF, AlunoDeInstituicao, InstituicaoEnsino, ComprovanteAlunoInstituicao]
+const models = [Usuario, AlunoIsF, AlunoDeInstituicao, InstituicaoEnsino, ComprovanteAlunoInstituicao, ProfessorIsF]
 
 class DataBase{
     constructor() {

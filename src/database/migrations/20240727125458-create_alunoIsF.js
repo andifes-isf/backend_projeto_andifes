@@ -29,7 +29,7 @@ module.exports = {
           unique: true,
           using: 'BTREE',
           fields: [
-            { name: 'logon' }
+            { name: 'login' }
           ]
         }
       ]
