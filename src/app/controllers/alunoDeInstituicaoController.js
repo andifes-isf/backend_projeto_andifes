@@ -1,7 +1,9 @@
 import * as Yup from 'yup'
-import AlunoDeinstituicao from '../models/alunodeinstituicao'
-import alunoIsFController from './alunoIsFController'
 import AlunoDeInstituicao from '../models/alunodeinstituicao'
+import alunoIsFController from './alunoIsFController'
+import InstituicaoEnsino from '../models/instituicaoensino'
+import AlunoIsF from '../models/alunoisf'
+import Usuario from '../models/usuario'
 
 class alunoDeinstituicaoController {
     async post(req, res) {
@@ -32,7 +34,34 @@ class alunoDeinstituicaoController {
 
     async get(_, res) {
         try {
-            const alunos = await AlunoDeInstituicao.findAll()
+            const alunos = await AlunoDeInstituicao.findAll({
+                include: [
+                    {
+                        model: AlunoIsF,
+                        attributes: {
+                            exclude: ['login']
+                        },
+                        include: [{
+                            model: Usuario,
+                            attributes: {
+                                exclude: ['login', 'senha_encriptada', 'ativo', 'tipo']
+                            }
+                        }]
+                    },    
+                    {
+                        model: InstituicaoEnsino,
+                        attributes: {
+                            exclude: ['idInstituicao']
+                        },
+                        through: {
+                            attributes: {
+                                exclude: ['login', 'idInstituicao'],
+                                include: ['inicio']
+                            }
+                        }
+                    }
+                ]
+            })
 
             return res.status(200).json(alunos)
         } catch (error) {

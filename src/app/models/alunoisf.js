@@ -35,6 +35,16 @@ class AlunoIsF extends Model {
         return this
         
     }
+
+    static associate(models) {
+        this.hasOne(models.AlunoDeInstituicao, {
+            foreignKey: 'login'
+        })
+
+        this.belongsTo(models.Usuario, {
+            foreignKey: 'login'
+        })
+    }
 }
 
 export default AlunoIsF

@@ -21,7 +21,6 @@ class AlunoDeInstituicao extends Model {
                     references: {
                         model: 'alunoisf',
                         key: 'login',
-                        name: 'fk_login_alunodeinstituicao'
                     },
                     onDelete: 'CASCADE',
                     onUpdate: 'CASCADE'
@@ -45,6 +44,20 @@ class AlunoDeInstituicao extends Model {
         return this
 
     }
+
+    static associate(models) {
+        this.belongsTo(models.AlunoIsF, {
+            foreignKey: 'login'
+        });
+
+        this.belongsToMany(models.InstituicaoEnsino, {
+            through: 'comprovantealunoinstituicao',
+            foreignKey: 'login',
+            sourceKey: 'login',
+            timestamps: false
+        });
+    }
+
 }
 
 export default AlunoDeInstituicao

@@ -52,6 +52,12 @@ class Usuario extends Model {
         return this
 
     }
+
+    static associate(models) {
+        this.hasOne(models.AlunoIsF, {
+            foreignKey: 'login'
+        })
+    }
 }
 
 export default Usuario

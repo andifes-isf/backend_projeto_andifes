@@ -34,6 +34,16 @@ class InstituicaoEnsino extends Model {
         return this
 
     }
+
+    static associate(models) {
+        this.belongsToMany(models.AlunoDeInstituicao, {
+            through: 'comprovantealunoinstituicao',
+            foreignKey: 'idInstituicao',
+            targetKey: 'login',
+            timestamps: false
+        })
+    }
+
 }
 
 export default InstituicaoEnsino

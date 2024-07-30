@@ -6,9 +6,10 @@ import Usuario from '../app/models/usuario'
 import AlunoIsF from '../app/models/alunoisf'
 import AlunoDeInstituicao from '../app/models/alunodeinstituicao'
 import InstituicaoEnsino from '../app/models/instituicaoensino'
+import ComprovanteAlunoInstituicao from '../app/models/comprovantealunoinstituicao'
 
 // buffer
-const models = [Usuario, AlunoIsF, AlunoDeInstituicao, InstituicaoEnsino]
+const models = [Usuario, AlunoIsF, AlunoDeInstituicao, InstituicaoEnsino, ComprovanteAlunoInstituicao]
 
 class DataBase{
     constructor() {
@@ -21,6 +22,11 @@ class DataBase{
 
         // Percorre o vetor e acessa o método inicializador
         models.map(model => model.init(this.connection))
+        models.forEach(model => {
+            if (model.associate) {
+                model.associate(this.connection.models);
+            }
+        });
     }
 }
 

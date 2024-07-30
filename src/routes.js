@@ -4,6 +4,7 @@ import usuarioController from "./app/controllers/usuarioController"
 import alunoIsFController from "./app/controllers/alunoIsFController"
 import alunoDeInstituicaoController from "./app/controllers/alunoDeInstituicaoController"
 import instituicaoEnsinoController from "./app/controllers/instituicaoEnsinoController"
+import comprovanteAlunoInstituicaoController from "./app/controllers/comprovanteAlunoInstituicaoController"
 
 const router = new Router()
 
@@ -24,5 +25,7 @@ router.post('/aluno_deinstituicao', alunoDeInstituicaoController.post)
 router.get('/aluno_deinstituicao', alunoDeInstituicaoController.get)
 
 router.post('/instituicao_ensino', instituicaoEnsinoController.post)
+
+router.post('/comprovante_aluno_instituicao', comprovanteAlunoInstituicaoController.post)
 
 export default router
