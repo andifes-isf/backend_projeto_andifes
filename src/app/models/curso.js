@@ -69,6 +69,13 @@ class Curso extends Model {
         return this
 
     }
+
+    static associate(models) {
+      this.hasMany(models.TurmaOC, {
+        foreignKey: 'idCurso'
+      })
+    }
+
 }
 
 export default Curso

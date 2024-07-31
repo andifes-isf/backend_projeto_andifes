@@ -9,9 +9,10 @@ import AlunoDeInstituicao from '../app/models/alunodeinstituicao'
 import InstituicaoEnsino from '../app/models/instituicaoensino'
 import ComprovanteAlunoInstituicao from '../app/models/comprovantealunoinstituicao'
 import Curso from '../app/models/curso'
+import TurmaOC from '../app/models/turmaoc'
 
 // buffer
-const models = [Usuario, AlunoIsF, AlunoDeInstituicao, InstituicaoEnsino, ComprovanteAlunoInstituicao, ProfessorIsF, Curso]
+const models = [Usuario, AlunoIsF, AlunoDeInstituicao, InstituicaoEnsino, ComprovanteAlunoInstituicao, ProfessorIsF, Curso, TurmaOC]
 
 class DataBase{
     constructor() {

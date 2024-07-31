@@ -1,5 +1,5 @@
 import express from 'express'
-import routes from './routes'
+import routes from './app/routes/routes'
 import './database'
 
 class App {
@@ -17,8 +17,6 @@ class App {
     }
 
     routes() {
-        // utilizado para aplicar as rotas
-
         this.server.use(routes)
     }
 }
