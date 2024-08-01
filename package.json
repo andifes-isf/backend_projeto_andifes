@@ -4,6 +4,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server",
+    "build": "sucrase ./src -d ./dist --transforms imports",
+    "start": "yarn build && node ./dist/server.js",
+    "migrate": "yarn build && sequelize db:migrate --config dist/config/database.js --migrations-path dist/database/migrations",
+    "seed": "yarn build && sequelize db:seed:all --config dist/config/database.js --seeders-path dist/database/seeds",
+    "undo-seed": "yarn build && sequelize db:seed:undo:all --config dist/config/database.js --seeders-path dist/database/seeds",
     "dev:debug": "nodemon --inspect src/server"
   },
   "keywords": [],
@@ -18,6 +23,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mysql2": "^3.10.3",

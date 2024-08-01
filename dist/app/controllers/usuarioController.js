@@ -1,5 +1,5 @@
-import * as Yup from 'yup'
-import Usuario from '../models/usuario'
+"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
+var _usuario = require('../models/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 class usuarioController {
     async post(req, res, tipo) {
@@ -21,7 +21,7 @@ class usuarioController {
         //     })
         // }
 
-        const usuarioExistente = await Usuario.findOne({
+        const usuarioExistente = await _usuario2.default.findOne({
             where: {
                 login: req.body.login
             }
@@ -31,7 +31,7 @@ class usuarioController {
             return 0
         }
 
-        return await Usuario.create({
+        return await _usuario2.default.create({
             login: req.body.login,
             nome: req.body.nome,
             sobrenome: req.body.sobrenome,
@@ -50,7 +50,7 @@ class usuarioController {
 
     async get(_, res) {
         try {
-            const usuarios = await Usuario.findAll()
+            const usuarios = await _usuario2.default.findAll()
             
             return res.status(200).json(usuarios)
         } catch (error) {
@@ -59,4 +59,4 @@ class usuarioController {
     }
 }
 
-export default new usuarioController()
+exports. default = new usuarioController()

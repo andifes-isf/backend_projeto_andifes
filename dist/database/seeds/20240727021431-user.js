@@ -1,8 +1,8 @@
-"use strict";'use strict';
+"use strict"; function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use strict";'use strict';
 
 // const path = require('path')
-import '../../database';  // Importa para garantir que os models sejam inicializados
-import Usuario from '../../app/models/usuario';
+require('../../database');  // Importa para garantir que os models sejam inicializados
+var _usuario = require('../../app/models/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -93,7 +93,7 @@ module.exports = {
       }
     ];
 
-    await Usuario.bulkCreate(usuarios, { individualHooks: true });
+    await _usuario2.default.bulkCreate(usuarios, { individualHooks: true });
   },
 
   down: async (queryInterface, Sequelize) => {
