@@ -50,6 +50,13 @@ class ProfessorIsF extends Model {
         this.belongsTo(models.Usuario, {
             foreignKey: 'login'
         })
+
+        this.belongsToMany(models.TurmaOC, {
+            through: 'professorisfministraturmaoc',
+            foreignKey: 'login',
+            sourceKey: 'login',
+            timestamps: false
+        })
     }
 
 }

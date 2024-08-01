@@ -7,6 +7,8 @@ import comprovanteAlunoInstituicaoRoutes from './comprovanteAlunoInstituicaoRout
 import alunoIsFRoutes from './alunoIsFRoutes'
 import alunoDeInstituicaoRoutes from './alunoDeInstituicaoRoutes'
 import turmaOCRoutes from './turmaOCRoutes'
+import professorIsFMinistraTurmaOCRoutes from "./professorIsFMinistraTurmaOCRoutes"
+
 
 const router = new Router()
 
@@ -18,5 +20,6 @@ router.use('/comprovante_aluno_instituicao', comprovanteAlunoInstituicaoRoutes)
 router.use('/aluno_isf', alunoIsFRoutes)
 router.use('/aluno_deinstituicao', alunoDeInstituicaoRoutes)
 router.use('/turma_oc', turmaOCRoutes)
+router.use('/professorisf_ministra_turmaoc', professorIsFMinistraTurmaOCRoutes)
 
 export default router

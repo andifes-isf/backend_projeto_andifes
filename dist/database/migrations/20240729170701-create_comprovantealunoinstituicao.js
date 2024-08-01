@@ -6,14 +6,14 @@ module.exports = {
     return queryInterface.createTable('comprovantealunoinstituicao', {
       idInstituicao: {
         type: Sequelize.BIGINT,
+        primaryKey: true,
         references: {
           model: 'instituicaoensino',
           key: 'idInstituicao',
           name: 'fk_comprovante_instituicao'
         },
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-        primaryKey: true
+        onUpdate: 'CASCADE'
       },
       login: {
         type: Sequelize.STRING,

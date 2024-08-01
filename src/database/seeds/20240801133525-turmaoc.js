@@ -127,5 +127,6 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('turmaoc', null, {})
+    await queryInterface.sequelize.query('ALTER TABLE turmaoc AUTO_INCREMENT = 1')
   }
 };
