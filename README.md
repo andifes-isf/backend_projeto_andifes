@@ -52,9 +52,13 @@ Esse projeto tem como objetivo criar um sistema de gerenciamento para o programa
    ```
 6. Execute as migrações do banco de dados
    ```bash
-   yarn sequelize db:migrate
+   yarn migrate
    ```
-7. Inicie o servidor
+7. Alimente o banco de dados
+   ```bash
+   yarn seed
+   ```
+8. Inicie o servidor
    ```bash
    yarn dev
    ```
@@ -77,6 +81,9 @@ Esse projeto tem como objetivo criar um sistema de gerenciamento para o programa
 ### Curso
 - **POST /curso**: Cria um novo Curso
 - **GET /curso**: Lista todos os Curso
+#### Turmas da Oferta Coletiva
+- **Post /turma_oc**: Cria uma nova turma da oferta coletiva
+- **Get /turma_oc**: lista todas as turmas da oferta coletiva
 
 ## Tecnologias Utilizadas
 - Node.Js
