@@ -1,6 +1,5 @@
-"use strict"; function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use strict";'use strict';
+"use strict"; function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }"use strict"
 
-// const path = require('path')
 require('../../database');  // Importa para garantir que os models sejam inicializados
 var _usuario = require('../../app/models/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
@@ -84,19 +83,62 @@ module.exports = {
         DDI: 55,
         DDD: 16,
         telefone: 123486780,
-        raca: 'amarelo',
+        raca: 'branco',
         genero: 'feminino',
         nomeEmail: 'gaby',
         dominio: 'gmail.com',
         senha: 'senha',
         tipo: 'alunoisf'
+      },
+      {
+        login: 'Carlos',
+        nome: 'Carlos',
+        sobrenome: 'Mattos',
+        DDI: 55,
+        DDD: 16,
+        telefone: 923486780,
+        raca: 'branco',
+        genero: 'masculino',
+        nomeEmail: 'carlos',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'professorisf'
+      },
+      {
+        login: 'Pietro',
+        nome: 'Pietro',
+        sobrenome: 'Minghini',
+        DDI: 55,
+        DDD: 16,
+        telefone: 123486720,
+        raca: 'branco',
+        genero: 'masculino',
+        nomeEmail: 'pietro',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'professorisf'
+      },
+      {
+        login: 'Pedro',
+        nome: 'Pedro',
+        sobrenome: 'Coleone',
+        DDI: 55,
+        DDD: 16,
+        telefone: 123486180,
+        raca: 'branco',
+        genero: 'masculino',
+        nomeEmail: 'pedro',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'professorisf'
       }
-    ];
+    ]
 
-    await _usuario2.default.bulkCreate(usuarios, { individualHooks: true });
+    await _usuario2.default.bulkCreate(usuarios, { individualHooks: true })
+
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('usuarios', null, {});
+    await queryInterface.bulkDelete('usuarios', null, {})
   }
-};
+}

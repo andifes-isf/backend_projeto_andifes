@@ -5,4 +5,6 @@ const router = new (0, _express.Router)()
 
 router.post('/', _instituicaoEnsinoController2.default.post)
 
+router.get('/', _instituicaoEnsinoController2.default.get)
+
 exports. default = router

@@ -5,4 +5,6 @@ const router = new Router()
 
 router.post('/', instituicaoEnsinoController.post)
 
+router.get('/', instituicaoEnsinoController.get)
+
 export default router

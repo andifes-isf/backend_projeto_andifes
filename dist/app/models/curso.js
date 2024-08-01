@@ -16,7 +16,7 @@ class Curso extends _sequelize.Model {
                   unique: true
                 },
                 idioma: {
-                  type: _sequelize2.default.ENUM('ingles', 'portuges', 'alemao', 'frances', 'italiano', 'espanhol', 'japones'),
+                  type: _sequelize2.default.ENUM('ingles', 'portugues', 'alemao', 'frances', 'italiano', 'espanhol', 'japones'),
                   allowNull: false
                 },
                 categoria: {

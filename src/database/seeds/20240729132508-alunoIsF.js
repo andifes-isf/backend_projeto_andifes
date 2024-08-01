@@ -1,25 +1,43 @@
-'use strict';
+'use strict'
+
+import '../../database'
+import AlunoIsF from '../../app/models/alunoisf'
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+  up: async (queryInterface, Sequelize) => {
+    const alunosIsF = [
+      {
+        login: 'Arata',
+        deInstituicao: 1
+      },
+      {
+        login: 'Balla',
+        deInstituicao: 1
+      },
+      {
+        login: 'Bruno',
+        deInstituicao: 1
+      },
+      {
+        login: 'Portix',
+        deInstituicao: 1
+      },
+      {
+        login: 'Guto',
+        deInstituicao: 1
+      },
+      {
+        login: 'Gaby',
+        deInstituicao: 1
+      }
+    ]
+
+    await AlunoIsF.bulkCreate(alunosIsF, { individualHooks: true })
+
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkDelete('alunoisf', null, {})
   }
 };
