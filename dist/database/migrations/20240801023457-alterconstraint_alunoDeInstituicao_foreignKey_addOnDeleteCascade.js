@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.removeConstraint('alunoisfdeinstituicao', 'fk_login_alunoDeInstituicao');
+    await queryInterface.removeConstraint('alunoisfdeinstituicao', 'alunoisfdeinstituicao_login_fkey');
 
     await queryInterface.addConstraint('alunoisfdeinstituicao', {
       fields: ['login'],
