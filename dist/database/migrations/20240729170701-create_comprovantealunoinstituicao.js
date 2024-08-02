@@ -2,27 +2,14 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('comprovantealunoinstituicao', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('comprovantealunoinstituicao', {
       idInstituicao: {
         type: Sequelize.BIGINT,
         primaryKey: true,
-        references: {
-          model: 'instituicaoensino',
-          key: 'idInstituicao',
-          name: 'fk_comprovante_instituicao'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
       },
       login: {
         type: Sequelize.STRING,
-        references: {
-          model: 'alunoisfdeinstituicao',
-          key: 'login'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
         primaryKey: true
       },
       inicio: {
@@ -36,6 +23,31 @@ module.exports = {
         allowNull: false
       }
     })
+
+    await queryInterface.addConstraint('comprovantealunoinstituicao', {
+      fields: ['login'],
+      type: 'foreign key',
+      name: 'fk_login_comprovante_aluno_instituicao',
+      references: {
+        table: 'alunoisfdeinstituicao',
+        field: 'login'
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
+    })
+
+    await queryInterface.addConstraint('comprovantealunoinstituicao', {
+      fields: ['idInstituicao'],
+      type: 'foreign key',
+      name: 'fk_idInstituicao_comprovante_aluno_instituicao',
+      references: {
+        table: 'instituicaoensino',
+        field: 'idInstituicao'
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
+    })
+
   },
 
   down: () => {}

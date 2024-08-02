@@ -2,37 +2,29 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('alunoisf', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('alunoisf', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
         primaryKey: true,
-        references: {
-          model: 'usuarios',
-          key: 'login',
-          name: 'fk_login_alunoisf'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
       },
       deInstituicao: {
         type: Sequelize.BOOLEAN,
         allowNull: false
       }
-    },
-    {
-      timestamps: false,
-      indexes: [
-        {
-          name: "primary",
-          unique: true,
-          using: 'BTREE',
-          fields: [
-            { name: 'login' }
-          ]
-        }
-      ]
+    })
+
+    await queryInterface.addConstraint('alunoisf', {
+      fields: ['login'],
+      type: 'foreign key',
+      name: 'fk_login_aluno_isf',
+      references: {
+        table: 'usuario',
+        field: 'login'
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
     })
   },
 

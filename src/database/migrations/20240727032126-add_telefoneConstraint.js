@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface) => {
-    await queryInterface.addIndex('Usuarios', ['DDI', 'DDD', 'telefone'], {
+    await queryInterface.addIndex('usuario', ['DDI', 'DDD', 'telefone'], {
       unique: true,
       name: 'unique_telefone',
     });

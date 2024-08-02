@@ -2,8 +2,8 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('turmaoc', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('turmaoc', {
       idTurma: {
         type: Sequelize.BIGINT,
         autoIncrement: true,
@@ -13,13 +13,7 @@ module.exports = {
       idCurso: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        primaryKey: true,
-        references: {
-          model: 'curso',
-          key: 'idCurso'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        primaryKey: true
       },
       nVagas: {
         type: Sequelize.INTEGER,
@@ -28,21 +22,20 @@ module.exports = {
       nInscritos: Sequelize.INTEGER,
       nConcluintes: Sequelize.INTEGER,
       nReprovados: Sequelize.INTEGER,
-    },
-    {
-      timestamps: false,
-      indexes: [
-        {
-          name: 'primary',
-          unique: true,
-          using: 'BTREE',
-          fields: [
-            { name: 'idTurma' },
-            { name: 'idCurso' }
-          ]
-        }
-      ]
     })
+
+    await queryInterface.addConstraint('turmaoc', {
+      fields: ['idCurso'],
+      type: 'foreign key',
+      name: 'fk_idCurso_turmaoc',
+      references: {
+        table: 'curso',
+        field: 'idCurso'
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
+    })
+
   },
 
   down: () => {}

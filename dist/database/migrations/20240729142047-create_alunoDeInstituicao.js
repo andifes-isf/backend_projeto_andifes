@@ -2,8 +2,8 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up:  (queryInterface, Sequelize) => {
-    return queryInterface.createTable('alunoisfdeinstituicao', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('alunoisfdeinstituicao', {
       nDocumento: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -17,13 +17,22 @@ module.exports = {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
-        references: {
-          model: 'alunoisf',
-          key: 'login'
-        },
         unique: true
       }
-    })  
+    })
+
+    await queryInterface.addConstraint('alunoisfdeinstituicao', {
+      fields: ['login'],
+      type: 'foreign key',
+      name: 'fk_login_aluno_de_instituicao',
+      references: {
+        table: 'alunoisf',
+        field: 'login'
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
+    })
+
   },
 
   down: () => {}
