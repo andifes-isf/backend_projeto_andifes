@@ -26,6 +26,7 @@ class Usuario extends Model {
             {
                 sequelize,
                 timestamps: false,
+                tableName: 'usuario',
                 indexes: [{
                     name: "primary_key",
                     unique: true,

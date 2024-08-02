@@ -20,14 +20,19 @@ class ProfessorIsFController {
             })
         }
 
-        const professor = await _professorisf2.default.create({
-            login: req.body.login,
-            poca: req.body.poca,
-            inicio: req.body.inicio,
-            fim: req.body.fim
-        })
+        try {
+            const professor = await _professorisf2.default.create({
+                login: req.body.login,
+                poca: req.body.poca,
+                inicio: req.body.inicio,
+                fim: req.body.fim
+            })
+    
+            return res.status(201).json(professor)
+        } catch (error) {
+            return res.status(422).json(error.message)
+        }
 
-        return res.status(201).json(professor)
     }
 
     async get(_, res){
