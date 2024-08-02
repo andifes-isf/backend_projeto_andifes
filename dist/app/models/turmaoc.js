@@ -36,7 +36,7 @@ class TurmaOC extends _sequelize.Model {
                   min: 0,
                   customValidator(value) {
                     if(value > this.nVagas) {
-                      throw new Error('Quantidade de inscritos não pode ser maior que a quantidade de vagas')
+                      throw new Error('Quantidade de inscritos nao pode ser maior que a quantidade de vagas')
                     }
                   }
                 }

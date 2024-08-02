@@ -28,9 +28,26 @@ class ComprovanteAlunoInstituicao extends Model {
                 inicio: {
                     type: Sequelize.DATEONLY,
                     allowNull: false,
-                    primaryKey: true
+                    primaryKey: true,
+                    validate: {
+                        isBeforeToday(value) {
+                            const today = new Date().toISOString().split('T')[0]
+                            if(value > today) {
+                                throw new Error('A data de inicio nao pode ser posterior a data de hoje')
+                            }
+                        }
+                    }
                 },
-                termino: Sequelize.DATEONLY,
+                termino: {
+                    type: Sequelize.DATEONLY,
+                    validate: {
+                        isBeforeBegin(value) {
+                            if(this.inicio > value) {
+                                throw new Error('A data de termino nao pode ser anterior a data de inicio')
+                            }
+                        }
+                    }
+                },
                 comprovante: {
                     type: Sequelize.STRING,
                     allowNull: false

@@ -2,7 +2,13 @@ import ProfessorIsFMinistraTurmaOC from "../models/professorisfministraturmaoc"
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
-        const relacaoExistente = await ProfessorIsFMinistraTurmaOC.findOne()
+        const relacaoExistente = await ProfessorIsFMinistraTurmaOC.findOne({
+            where: {
+                login: req.body.login,
+                idTurma: req.body.idTurma,
+                inicio: req.body.inicio
+            }
+        })
 
         if(relacaoExistente) {
             return res.status(422).json({

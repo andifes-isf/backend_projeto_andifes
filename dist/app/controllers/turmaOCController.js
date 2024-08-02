@@ -1,5 +1,6 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _turmaoc = require('../models/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
 var _curso = require('../models/curso'); var _curso2 = _interopRequireDefault(_curso);
+var _professorisf = require('../models/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 
 class turmaOCController {
     async post(req, res) {
@@ -39,6 +40,18 @@ class turmaOCController {
                     {
                         model: _curso2.default,
                         attributes: ['nome', 'idioma', 'categoria', 'nivel', 'cargaHoraria']
+                    },
+                    {
+                        model: _professorisf2.default,
+                        attributes: {
+                            exclude: ['poca']
+                        },
+                        through: {
+                            attributes: {
+                                exclude: ['login', 'idTurma'],
+                                include: ['inicio', 'termino']
+                            }
+                        }
                     }
                 ],
                 order: [

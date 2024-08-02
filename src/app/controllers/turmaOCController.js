@@ -1,5 +1,6 @@
 import TurmaOC from "../models/turmaoc";
 import Curso from '../models/curso'
+import ProfessorIsF from '../models/professorisf'
 
 class turmaOCController {
     async post(req, res) {
@@ -39,6 +40,18 @@ class turmaOCController {
                     {
                         model: Curso,
                         attributes: ['nome', 'idioma', 'categoria', 'nivel', 'cargaHoraria']
+                    },
+                    {
+                        model: ProfessorIsF,
+                        attributes: {
+                            exclude: ['poca']
+                        },
+                        through: {
+                            attributes: {
+                                exclude: ['login', 'idTurma'],
+                                include: ['inicio', 'termino']
+                            }
+                        }
                     }
                 ],
                 order: [

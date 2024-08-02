@@ -2,7 +2,13 @@
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
-        const relacaoExistente = await _professorisfministraturmaoc2.default.findOne()
+        const relacaoExistente = await _professorisfministraturmaoc2.default.findOne({
+            where: {
+                login: req.body.login,
+                idTurma: req.body.idTurma,
+                inicio: req.body.inicio
+            }
+        })
 
         if(relacaoExistente) {
             return res.status(422).json({

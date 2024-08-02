@@ -17,15 +17,19 @@ class ComprovanteAlunoInstituicaoController {
             })
         }
 
-        const comprovante = await _comprovantealunoinstituicao2.default.create({
-            idInstituicao: req.body.idInstituicao,
-            login: req.body.login,
-            inicio: req.body.inicio,
-            termino: req.body.termino || null,
-            comprovante: req.body.comprovante
-        })
-
-        return res.status(201).json(comprovante)
+        try {
+            const comprovante = await _comprovantealunoinstituicao2.default.create({
+                idInstituicao: req.body.idInstituicao,
+                login: req.body.login,
+                inicio: req.body.inicio,
+                termino: req.body.termino || null,
+                comprovante: req.body.comprovante
+            })
+    
+            return res.status(201).json(comprovante)    
+        } catch (error) {
+            return res.status(422).json(error.message)
+        }
 
     }
 }
