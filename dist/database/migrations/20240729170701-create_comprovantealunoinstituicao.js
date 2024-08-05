@@ -39,7 +39,7 @@ module.exports = {
     await queryInterface.addConstraint('comprovantealunoinstituicao', {
       fields: ['idInstituicao'],
       type: 'foreign key',
-      name: 'fk_idInstituicao_comprovante_aluno_instituicao',
+      name: 'fk_idInstituicao_comprovantealunoinstituicao',
       references: {
         table: 'instituicaoensino',
         field: 'idInstituicao'

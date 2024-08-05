@@ -6,21 +6,18 @@ module.exports = {
     await queryInterface.createTable('comprovanteprofessorinstituicao', {
       login: {
         type: Sequelize.STRING,
-        allowNull: false,
         primaryKey: true
       },
       idInstituicao: {
         type: Sequelize.BIGINT,
-        allowNull: false,
         primaryKey: true
       },
       inicio: {
         type: Sequelize.DATEONLY,
-        allowNull: false,
         primaryKey: true
       },
       termino: Sequelize.DATEONLY,
-      comprovanteMatricula: {
+      comprovante: {
         type: Sequelize.TEXT,
         allowNull: false,
       }

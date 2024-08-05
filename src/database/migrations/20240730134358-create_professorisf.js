@@ -24,7 +24,7 @@ module.exports = {
     await queryInterface.addConstraint('professorisf', {
       fields: ['login'],
       type: 'foreign key',
-      name: 'fk_login_professor_isf',
+      name: 'fk_login_professorisf',
       references: {
         table: 'usuario',
         field: 'login'

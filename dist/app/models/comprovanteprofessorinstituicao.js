@@ -20,7 +20,7 @@ class ComprovanteProfessorInstituicao extends _sequelize.Model {
           primaryKey: true
         },
         termino: _sequelize2.default.DATEONLY,
-        comprovanteMatricula: {
+        comprovante: {
           type: _sequelize2.default.TEXT,
           allowNull: false,
         }

@@ -20,7 +20,7 @@ class ComprovanteProfessorInstituicao extends Model {
           primaryKey: true
         },
         termino: Sequelize.DATEONLY,
-        comprovanteMatricula: {
+        comprovante: {
           type: Sequelize.TEXT,
           allowNull: false,
         }

@@ -11,19 +11,19 @@ module.exports = {
         login: "Pedro",
         idInstituicao: 2,
         inicio: "2021-04-20",
-        comprovanteMatricula: "Comprovante de Pedro na UFSCar"
+        comprovante: "Comprovante de Pedro na UFSCar"
       },
       {
         login: "Carlos",
         idInstituicao: 1,
         inicio: "2021-04-20",
-        comprovanteMatricula: "Comprovante de Carlos na UFMG"
+        comprovante: "Comprovante de Carlos na UFMG"
       },
       {
         login: "Pietro",
         idInstituicao: 1,
         inicio: "2021-04-20",
-        comprovanteMatricula: "Comprovante de Pietro na UFSCar"
+        comprovante: "Comprovante de Pietro na UFSCar"
       }
     ]
 
