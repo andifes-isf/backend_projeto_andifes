@@ -1,9 +1,9 @@
-'use strict';
+"use strict";'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('professorisfministraturmaoc', {
+    await queryInterface.createTable('alunoisfparticipaturmaoc', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -22,22 +22,22 @@ module.exports = {
       termino: Sequelize.DATEONLY
     })
 
-    await queryInterface.addConstraint('professorisfministraturmaoc', {
+    await queryInterface.addConstraint('alunoisfparticipaturmaoc', {
       fields: ['login'],
       type: 'foreign key',
-      name: 'fk_login_professorisfministraturmaoc',
+      name: 'fk_login_alunoisfparticipaturmaoc',
       references: {
-        table: 'professorisf',
+        table: 'usuario',
         field: 'login'
       },
       onDelete: 'cascade',
       onUpdate: 'cascade'
     })
 
-    await queryInterface.addConstraint('professorisfministraturmaoc', {
+    await queryInterface.addConstraint('alunoisfparticipaturmaoc', {
       fields: ['idTurma'],
       type: 'foreign key',
-      name: 'fk_idTurma_professorisfministraturmaoc',
+      name: 'fk_idTurma_alunoisfparticipaturmaoc',
       references: {
         table: 'turmaoc',
         field: 'idTurma'

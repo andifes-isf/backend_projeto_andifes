@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false,
         primaryKey: true
       },
-      fim: Sequelize.DATEONLY
+      termino: Sequelize.DATEONLY
     })
 
     await queryInterface.addConstraint('professorisf', {

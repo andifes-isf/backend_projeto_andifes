@@ -33,7 +33,7 @@ class ProfessorIsF extends _sequelize.Model {
                         }
                     }
                 },
-                fim: {
+                termino: {
                     type: _sequelize2.default.DATEONLY,
                     validate: {
                         isBeforeBegin(value) {
