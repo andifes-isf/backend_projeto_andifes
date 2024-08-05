@@ -7,12 +7,26 @@ module.exports = {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        references: {
+          model: 'professorisf',
+          key: 'login',
+          name: 'fk_login_professorisf_ministra_turmaoc'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       idTurma: {
         type: Sequelize.BIGINT,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        references: {
+          model: 'turmaoc',
+          key: 'idTurma',
+          name: 'fk_idTurma_professorisf_ministra_turmaoc'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       inicio: {
         type: Sequelize.DATEONLY,
@@ -21,31 +35,6 @@ module.exports = {
       },
       termino: Sequelize.DATEONLY
     })
-
-    await queryInterface.addConstraint('professorisfministraturmaoc', {
-      fields: ['login'],
-      type: 'foreign key',
-      name: 'fk_login_professorisfministraturmaoc',
-      references: {
-        table: 'professorisf',
-        field: 'login'
-      },
-      onDelete: 'cascade',
-      onUpdate: 'cascade'
-    })
-
-    await queryInterface.addConstraint('professorisfministraturmaoc', {
-      fields: ['idTurma'],
-      type: 'foreign key',
-      name: 'fk_idTurma_professorisfministraturmaoc',
-      references: {
-        table: 'turmaoc',
-        field: 'idTurma'
-      },
-      onDelete: 'cascade',
-      onUpdate: 'cascade'
-    })
-
   },
 
   down: async () => {}

@@ -11,13 +11,9 @@ var _comprovantealunoinstituicao = require('../app/models/comprovantealunoinstit
 var _curso = require('../app/models/curso'); var _curso2 = _interopRequireDefault(_curso);
 var _turmaoc = require('../app/models/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
 var _professorisfministraturmaoc = require('../app/models/professorisfministraturmaoc'); var _professorisfministraturmaoc2 = _interopRequireDefault(_professorisfministraturmaoc);
-var _alunoisfparticipaturmaoc = require('../app/models/alunoisfparticipaturmaoc'); var _alunoisfparticipaturmaoc2 = _interopRequireDefault(_alunoisfparticipaturmaoc);
-var _comprovanteprofessorinstituicao = require('../app/models/comprovanteprofessorinstituicao'); var _comprovanteprofessorinstituicao2 = _interopRequireDefault(_comprovanteprofessorinstituicao);
-
-
 
 // buffer
-const models = [_usuario2.default, _alunoisf2.default, _alunodeinstituicao2.default, _instituicaoensino2.default, _comprovantealunoinstituicao2.default, _professorisf2.default, _curso2.default, _turmaoc2.default, _professorisfministraturmaoc2.default, _alunoisfparticipaturmaoc2.default, _comprovanteprofessorinstituicao2.default]
+const models = [_usuario2.default, _alunoisf2.default, _alunodeinstituicao2.default, _instituicaoensino2.default, _comprovantealunoinstituicao2.default, _professorisf2.default, _curso2.default, _turmaoc2.default, _professorisfministraturmaoc2.default]
 
 class DataBase{
     constructor() {
