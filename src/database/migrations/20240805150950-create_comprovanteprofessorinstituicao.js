@@ -3,13 +3,13 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('professorisfministraturmaoc', {
+    await queryInterface.createTable('comprovanteprofessorinstituicao', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
         primaryKey: true
       },
-      idTurma: {
+      idInstituicao: {
         type: Sequelize.BIGINT,
         allowNull: false,
         primaryKey: true
@@ -19,28 +19,32 @@ module.exports = {
         allowNull: false,
         primaryKey: true
       },
-      termino: Sequelize.DATEONLY
+      termino: Sequelize.DATEONLY,
+      comprovanteMatricula: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      }
     })
 
-    await queryInterface.addConstraint('professorisfministraturmaoc', {
+    await queryInterface.addConstraint('comprovanteprofessorinstituicao', {
       fields: ['login'],
       type: 'foreign key',
-      name: 'fk_login_professorisfministraturmaoc',
+      name: 'fk_login_comprovanteprofessorinstituicao',
       references: {
-        table: 'professorisf',
+        table: 'usuario',
         field: 'login'
       },
       onDelete: 'cascade',
       onUpdate: 'cascade'
     })
 
-    await queryInterface.addConstraint('professorisfministraturmaoc', {
-      fields: ['idTurma'],
+    await queryInterface.addConstraint('comprovanteprofessorinstituicao', {
+      fields: ['idInstituicao'],
       type: 'foreign key',
-      name: 'fk_idTurma_professorisfministraturmaoc',
+      name: 'fk_idInstituicao_comprovanteprofessorinstituicao',
       references: {
-        table: 'turmaoc',
-        field: 'idTurma'
+        table: 'instituicaoensino',
+        field: 'idInstituicao'
       },
       onDelete: 'cascade',
       onUpdate: 'cascade'
@@ -48,5 +52,5 @@ module.exports = {
 
   },
 
-  down: async () => {}
+  down: () => {}
 };
