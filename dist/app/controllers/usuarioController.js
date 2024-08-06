@@ -57,6 +57,16 @@ class usuarioController {
             return res.status(400).json(error)
         }
     }
+
+    async getMyData(req, res) {
+        const usuario = await _usuario2.default.findOne({
+            where: {
+                login: req.loginUsuario
+            }
+        })
+
+        return res.status(200).json(usuario)
+    }
 }
 
 exports. default = new usuarioController()

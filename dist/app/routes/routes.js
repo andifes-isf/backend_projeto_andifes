@@ -1,4 +1,9 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _express = require('express');
+
+// Autenticação
+var _SessionController = require('../controllers/SessionController'); var _SessionController2 = _interopRequireDefault(_SessionController);
+
+// Models
 var _usuarioRoutes = require('./usuarioRoutes'); var _usuarioRoutes2 = _interopRequireDefault(_usuarioRoutes);
 var _professorIsFRoutes = require('./professorIsFRoutes'); var _professorIsFRoutes2 = _interopRequireDefault(_professorIsFRoutes);
 var _instituicaoEnsinoRoutes = require('./instituicaoEnsinoRoutes'); var _instituicaoEnsinoRoutes2 = _interopRequireDefault(_instituicaoEnsinoRoutes);
@@ -14,6 +19,10 @@ var _comprovanteProfessorInstituicaoRoutes = require('./comprovanteProfessorInst
 
 const router = new (0, _express.Router)()
 
+// Rotas de autenticação
+router.post('/login', _SessionController2.default.store)
+
+// Rotas de uso
 router.use('/usuario', _usuarioRoutes2.default)
 router.use('/professor_isf', _professorIsFRoutes2.default)
 router.use('/instituicao_ensino', _instituicaoEnsinoRoutes2.default)

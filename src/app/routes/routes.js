@@ -1,4 +1,9 @@
 import { Router } from "express"
+
+// Autenticação
+import SessionController from '../controllers/SessionController'
+
+// Models
 import usuarioRoutes from './usuarioRoutes'
 import professorIsFRoutes from './professorIsFRoutes'
 import instituicaoEnsinoRoutes from './instituicaoEnsinoRoutes'
@@ -14,6 +19,10 @@ import comprovanteProfessorInstituicaoRoutes from "./comprovanteProfessorInstitu
 
 const router = new Router()
 
+// Rotas de autenticação
+router.post('/login', SessionController.store)
+
+// Rotas de uso
 router.use('/usuario', usuarioRoutes)
 router.use('/professor_isf', professorIsFRoutes)
 router.use('/instituicao_ensino', instituicaoEnsinoRoutes)
