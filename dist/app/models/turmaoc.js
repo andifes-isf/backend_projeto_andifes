@@ -93,6 +93,13 @@ class TurmaOC extends _sequelize.Model {
         targetKey: 'login',
         timestamps: false
       })
+
+      this.belongsToMany(models.AlunoIsF, {
+        through: 'alunoisfparticipaturmaoc',
+        foreignKey: 'idTurma',
+        sourceKey: 'idTurma',
+        timestamps: false
+      })
     }
 
 }

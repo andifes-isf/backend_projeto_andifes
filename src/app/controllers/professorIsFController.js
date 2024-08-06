@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import ProfessorIsF from "../models/professorisf";
 import Usuario from "../models/usuario";
+import InstituicaoEnsino from "../models/instituicaoensino";
 import usuarioController from "./usuarioController";
 
 class ProfessorIsFController {
@@ -43,10 +44,19 @@ class ProfessorIsFController {
                         model: Usuario,
                         attributes: {
                             include: [
-                                [Sequelize.fn('CONCAT_WS', ' ', Sequelize.col('nome'), Sequelize.col('sobrenome')), 'nome'],
+                                [Sequelize.fn('CONCAT_WS', ' ', Sequelize.col('Usuario.nome'), Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
                                 [Sequelize.fn('CONCAT_WS', '@', Sequelize.col('nomeEmail'), Sequelize.col('dominio')), 'email']
                             ],
                             exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
+                        }
+                    },
+                    {
+                        model: InstituicaoEnsino,
+                        attributes: {
+                            exclude: ['idInstituicao']
+                        },
+                        through: {
+                            attributes: ['inicio']
                         }
                     }
                 ]
@@ -55,6 +65,7 @@ class ProfessorIsFController {
             return res.status(200).json(professores)
             
         } catch (error) {
+            console.log(error)
             return res.status(400).json(error)
         }
 

@@ -42,6 +42,13 @@ class InstituicaoEnsino extends Model {
             targetKey: 'login',
             timestamps: false
         })
+
+        this.belongsToMany(models.ProfessorIsF, {
+            through: 'comprovanteprofessorinstituicao',
+            foreignKey: 'idInstituicao',
+            sourceKey: 'idInstituicao',
+            timestamps: false
+        })
     }
 
 }

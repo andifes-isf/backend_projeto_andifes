@@ -1,6 +1,8 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
 var _alunoisf = require('../models/alunoisf'); var _alunoisf2 = _interopRequireDefault(_alunoisf);
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
+var _turmaoc = require('../models/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
+var _curso = require('../models/curso'); var _curso2 = _interopRequireDefault(_curso);
 
 class alunoIsFController {
     async post(req, res, deInstituicao) {
@@ -23,7 +25,23 @@ class alunoIsFController {
     }
 
     async get(_, res){
-        const alunos = await _alunoisf2.default.findAll()
+        const alunos = await _alunoisf2.default.findAll({
+            include: [
+                {
+                    model: _turmaoc2.default,
+                    attributes: {
+                        exclude: ['idTurma', 'idCurso', ]
+                    },
+                    include: {
+                        model: _curso2.default,
+                        attributes: ['nome']
+                    },
+                    through: {
+                        attributes: []
+                    }
+                }
+            ]
+        })
 
         return res.status(200).json(alunos)
     }

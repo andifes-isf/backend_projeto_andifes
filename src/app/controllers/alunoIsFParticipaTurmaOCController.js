@@ -3,19 +3,25 @@ import AlunoIsFParticipaTurmaOC from '../models/alunoisfparticipaturmaoc'
 
 class AlunoIsFParticipaTurmaOCController {
     async post(req, res) {
-        const relacao = await AlunoIsFParticipaTurmaOC.findOne({
-            where: {
-                login: req.body.login,
-                idTurma: req.body.idInstituicao,
-                inicio: req.body.inicio
-            }
-        })
-
-        if(comprovanteExistente) {
-            return res.status(422).json({
-                msg: "Aluno ja cadastrado na turma"
+        try {
+            const relacao = await AlunoIsFParticipaTurmaOC.findOne({
+                where: {
+                    login: req.body.login,
+                    idTurma: req.body.idTurma,
+                    inicio: req.body.inicio
+                }
             })
+            
+            if(relacao) {
+                return res.status(422).json({
+                    msg: "Aluno ja cadastrado na turma"
+                })
+            }
+        } catch (error) {
+            return res.status(400).json(error)
         }
+        
+
 
         try {
             const comprovante = await AlunoIsFParticipaTurmaOC.create({
