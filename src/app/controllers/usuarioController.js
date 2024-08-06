@@ -38,7 +38,7 @@ class usuarioController {
             DDI: req.body.DDI,
             DDD: req.body.DDD,
             telefone: req.body.telefone,
-            raca: req.body.raca,
+            etnia: req.body.etnia,
             genero: req.body.genero,
             ativo: 1,
             nomeEmail: req.body.nomeEmail,
