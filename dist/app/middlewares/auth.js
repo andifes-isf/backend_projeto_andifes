@@ -7,7 +7,7 @@ exports. default = async(req, res, next) => {
 
     if(!authorization) {
         return res.status(401).json({
-            error: 'Token de acesso inexistente'
+            error: 'E preciso estar logado para acessar essa pagina'
         })
     }
 
@@ -16,7 +16,9 @@ exports. default = async(req, res, next) => {
 
     try {
         const{ login, tipo } = await _util.promisify.call(void 0, _jsonwebtoken2.default.verify)(token, _auth2.default.secret)
+
         req.loginUsuario = login
+        req.tipoUsuario = tipo
     } catch (error) {
         return res.status(401).json({
             error: 'Token de acesso inválido'

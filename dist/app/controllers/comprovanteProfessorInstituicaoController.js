@@ -3,9 +3,16 @@ var _comprovanteprofessorinstituicao = require('../models/comprovanteprofessorin
 
 class ComprovanteProfessorInstituicaoController {
     async post(req, res) {
+        if(!(req.tipoUsuario === 'professorisf')){
+            console.log(req.tipoUsuario)
+            return res.status(404).json({
+                error: 'Pagina nao encontrada'
+            })
+        }
+
         const comprovanteExistente = await _comprovanteprofessorinstituicao2.default.findOne({
             where: {
-                login: req.body.login,
+                login: req.loginUsuario,
                 idInstituicao: req.body.idInstituicao,
                 inicio: req.body.inicio
             }
@@ -20,7 +27,7 @@ class ComprovanteProfessorInstituicaoController {
         try {
             const comprovante = await _comprovanteprofessorinstituicao2.default.create({
                 idInstituicao: req.body.idInstituicao,
-                login: req.body.login,
+                login: req.loginUsuario,
                 inicio: req.body.inicio,
                 termino: req.body.termino || null,
                 comprovante: req.body.comprovante

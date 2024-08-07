@@ -4,6 +4,13 @@ var _professorisf = require('../models/professorisf'); var _professorisf2 = _int
 
 class turmaOCController {
     async post(req, res) {
+        // Verificação de acesso (verificar quem mais pode criar uma turma)
+        if(!(req.tipoUsuario === 'professorisf')){
+            return res.status(404).json({
+                error: 'Pagina nao encontrada'
+            })
+        }
+
         const turmaExistente = await _turmaoc2.default.findOne({
             where: {
                 nome: req.body.nome

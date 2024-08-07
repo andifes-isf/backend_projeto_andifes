@@ -4,6 +4,13 @@ import ProfessorIsF from '../models/professorisf'
 
 class turmaOCController {
     async post(req, res) {
+        // Verificação de acesso (verificar quem mais pode criar uma turma)
+        if(!(req.tipoUsuario === 'professorisf')){
+            return res.status(404).json({
+                error: 'Pagina nao encontrada'
+            })
+        }
+
         const turmaExistente = await TurmaOC.findOne({
             where: {
                 nome: req.body.nome

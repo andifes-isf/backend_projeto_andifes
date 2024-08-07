@@ -2,9 +2,18 @@ import ProfessorIsFMinistraTurmaOC from "../models/professorisfministraturmaoc"
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
+
+        // Precisa verificar se um Docente Orientador pode associar um orientando a uma turma
+
+        if(!(req.tipoUsuario === 'professorisf')){
+            return res.status(404).json({
+                error: 'Pagina nao encontrada'
+            })
+        }
+
         const relacaoExistente = await ProfessorIsFMinistraTurmaOC.findOne({
             where: {
-                login: req.body.login,
+                login: req.loginUsuario,
                 idTurma: req.body.idTurma,
                 inicio: req.body.inicio
             }
@@ -18,7 +27,7 @@ class ProfessorIsFMinistraTurmaOCController {
 
         try {
             const relacao = await ProfessorIsFMinistraTurmaOC.create({
-                login: req.body.login,
+                login: req.loginUsuario,
                 idTurma: req.body.idTurma,
                 inicio: req.body.inicio,
                 termino: req.body.termino,
