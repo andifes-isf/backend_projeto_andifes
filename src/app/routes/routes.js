@@ -15,7 +15,7 @@ import turmaOCRoutes from './turmaOCRoutes'
 import professorIsFMinistraTurmaOCRoutes from "./professorIsFMinistraTurmaOCRoutes"
 import alunoIsFParticipaTurmaOCRoutes from "./alunoIsFParticipaTurmaOCRoutes"
 import comprovanteProfessorInstituicaoRoutes from "./comprovanteProfessorInstituicaoRoutes"
-
+import proeficienciaAlunoIsFRoutes from "./proeficienciaAlunoIsFRoutes"
 
 const router = new Router()
 
@@ -34,5 +34,6 @@ router.use('/turma_oc', turmaOCRoutes)
 router.use('/professorisf_ministra_turmaoc', professorIsFMinistraTurmaOCRoutes)
 router.use('/alunoisf_participa_turmaoc', alunoIsFParticipaTurmaOCRoutes)
 router.use('/comprovante_professor_instituicao', comprovanteProfessorInstituicaoRoutes)
+router.use('/proeficiencia_alunoisf', proeficienciaAlunoIsFRoutes)
 
 export default router

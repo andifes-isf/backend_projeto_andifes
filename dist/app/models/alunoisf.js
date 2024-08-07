@@ -51,6 +51,10 @@ class AlunoIsF extends _sequelize.Model {
             targetKey: 'idTurma', 
             timestamps: false
         })
+
+        this.hasMany(models.ProeficienciaAlunoIsf, {
+            foreignKey: 'login'
+        })
     }
 }
 
