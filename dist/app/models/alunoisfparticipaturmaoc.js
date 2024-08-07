@@ -16,8 +16,7 @@ class AlunoIsFParticipaTurmaOC extends _sequelize.Model {
                 },
                 inicio: {
                   type: _sequelize2.default.DATEONLY,
-                  allowNull: false,
-                  primaryKey: true
+                  allowNull: false
                 },
                 termino: _sequelize2.default.DATEONLY
             },
@@ -31,8 +30,7 @@ class AlunoIsFParticipaTurmaOC extends _sequelize.Model {
                     using: 'BTREE',
                     fields: [
                         { name: 'login'},
-                        { name: 'idTurma'},
-                        { name: 'inicio'}
+                        { name: 'idTurma'}
                     ]
                 }]
             }

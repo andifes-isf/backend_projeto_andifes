@@ -16,8 +16,7 @@ module.exports = {
       },
       inicio: {
         type: Sequelize.DATEONLY,
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
       },
       termino: Sequelize.DATEONLY
     })
