@@ -51,15 +51,20 @@ class ProfessorIsFController {
                         }
                     },
                     {
+
+                        // Precisaria testar, mas acredito que se quisermos pegar todas as relações que um professor tem com alguma instituição de ensino, a gente teria que 
+                        // incluir primeiro o comprovanteprofessorinstituicao e através dele incluir as instituicoesensino
+
                         model: InstituicaoEnsino,
                         attributes: {
                             exclude: ['idInstituicao']
                         },
                         through: {
                             attributes: ['inicio']
-                        }
+                        },
                     }
-                ]
+                ],
+                logging: console.log
             })
             
             return res.status(200).json(professores)
