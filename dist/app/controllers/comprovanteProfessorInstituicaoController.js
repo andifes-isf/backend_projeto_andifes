@@ -2,29 +2,29 @@
 var _comprovanteprofessorinstituicao = require('../models/comprovanteprofessorinstituicao'); var _comprovanteprofessorinstituicao2 = _interopRequireDefault(_comprovanteprofessorinstituicao);
 
 class ComprovanteProfessorInstituicaoController {
-    async post(req, res) {
-        if(!(req.tipoUsuario === 'professorisf')){
-            console.log(req.tipoUsuario)
-            return res.status(404).json({
-                error: 'Pagina nao encontrada'
-            })
-        }
-
-        const comprovanteExistente = await _comprovanteprofessorinstituicao2.default.findOne({
-            where: {
-                login: req.loginUsuario,
-                idInstituicao: req.body.idInstituicao,
-                inicio: req.body.inicio
-            }
-        })
-
-        if(comprovanteExistente) {
-            return res.status(422).json({
-                msg: "Comprovante de Professor ja cadastrado"
-            })
-        }
-
+    async post(req, res) {  
         try {
+            if(!(req.tipoUsuario === 'professorisf')){
+                console.log(req.tipoUsuario)
+                return res.status(403).json({
+                    error: 'Pagina nao encontrada'
+                })
+            }
+    
+            const comprovanteExistente = await _comprovanteprofessorinstituicao2.default.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idInstituicao: req.body.idInstituicao,
+                    inicio: req.body.inicio
+                }
+            })
+    
+            if(comprovanteExistente) {
+                return res.status(409).json({
+                    msg: "Comprovante de Professor ja cadastrado"
+                })
+            }
+            
             const comprovante = await _comprovanteprofessorinstituicao2.default.create({
                 idInstituicao: req.body.idInstituicao,
                 login: req.loginUsuario,
@@ -35,7 +35,7 @@ class ComprovanteProfessorInstituicaoController {
     
             return res.status(201).json(comprovante)    
         } catch (error) {
-            return res.status(422).json(error.message)
+            return res.status(500).json(error.message)
         }
 
     }

@@ -54,18 +54,22 @@ class usuarioController {
             
             return res.status(200).json(usuarios)
         } catch (error) {
-            return res.status(400).json(error)
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
     }
 
     async getMyData(req, res) {
-        const usuario = await Usuario.findOne({
-            where: {
-                login: req.loginUsuario
-            }
-        })
-
-        return res.status(200).json(usuario)
+        try {
+            const usuario = await Usuario.findOne({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+    
+            return res.status(200).json(usuario)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
     }
 }
 

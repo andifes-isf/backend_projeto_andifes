@@ -2,30 +2,30 @@
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
-
-        // Precisa verificar se um Docente Orientador pode associar um orientando a uma turma
-
-        if(!(req.tipoUsuario === 'professorisf')){
-            return res.status(404).json({
-                error: 'Pagina nao encontrada'
-            })
-        }
-
-        const relacaoExistente = await _professorisfministraturmaoc2.default.findOne({
-            where: {
-                login: req.loginUsuario,
-                idTurma: req.body.idTurma,
-                inicio: req.body.inicio
-            }
-        })
-
-        if(relacaoExistente) {
-            return res.status(422).json({
-                msg: "Relacao ProfessorIsF e TurmaOC ja cadastrada"
-            })
-        }
-
         try {
+            
+            // Precisa verificar se um Docente Orientador pode associar um orientando a uma turma
+    
+            if(!(req.tipoUsuario === 'professorisf')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+    
+            const relacaoExistente = await _professorisfministraturmaoc2.default.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idTurma: req.body.idTurma,
+                    inicio: req.body.inicio
+                }
+            })
+    
+            if(relacaoExistente) {
+                return res.status(409).json({
+                    msg: "Relacao ProfessorIsF e TurmaOC ja cadastrada"
+                })
+            }
+                    
             const relacao = await _professorisfministraturmaoc2.default.create({
                 login: req.loginUsuario,
                 idTurma: req.body.idTurma,
@@ -35,7 +35,7 @@ class ProfessorIsFMinistraTurmaOCController {
             
             return res.status(201).json(relacao)
         } catch (error) {
-            return res.status(400).json(error)
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 
     }
@@ -46,7 +46,7 @@ class ProfessorIsFMinistraTurmaOCController {
 
             return res.status(200).json(relacoes)
         } catch (error) {
-            return res.status(400).json(error)
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
     }
 }

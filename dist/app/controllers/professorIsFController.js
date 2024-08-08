@@ -6,22 +6,22 @@ var _usuarioController = require('./usuarioController'); var _usuarioController2
 
 class ProfessorIsFController {
     async post(req, res) {
-        await _usuarioController2.default.post(req, res, 'professorisf')
-
-        const professorExistente = await _professorisf2.default.findOne({
-            where: {
-                login: req.body.login,
-                inicio: req.body.inicio
-            }
-        })
-
-        if(professorExistente) {
-            return res.status(422).json({
-                msg: "Professor IsF ja cadastrado"
-            })
-        }
-
         try {
+            await _usuarioController2.default.post(req, res, 'professorisf')
+    
+            const professorExistente = await _professorisf2.default.findOne({
+                where: {
+                    login: req.body.login,
+                    inicio: req.body.inicio
+                }
+            })
+    
+            if(professorExistente) {
+                return res.status(409).json({
+                    msg: "Professor IsF ja cadastrado"
+                })
+            }
+            
             const professor = await _professorisf2.default.create({
                 login: req.body.login,
                 poca: req.body.poca,
@@ -31,7 +31,7 @@ class ProfessorIsFController {
     
             return res.status(201).json(professor)
         } catch (error) {
-            return res.status(422).json(error.message)
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 
     }
@@ -70,8 +70,7 @@ class ProfessorIsFController {
             return res.status(200).json(professores)
             
         } catch (error) {
-            console.log(error)
-            return res.status(400).json(error)
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 
     }
