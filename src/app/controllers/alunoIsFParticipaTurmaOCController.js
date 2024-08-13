@@ -68,8 +68,7 @@ class AlunoIsFParticipaTurmaOCController {
             const relacao = await AlunoIsFParticipaTurmaOC.findOne({
                 where: {
                     login: req.loginUsuario,
-                    idTurma: req.body.idTurma,
-                    inicio: req.body.inicio
+                    idTurma: req.body.idTurma
                 }
             })
             
@@ -94,7 +93,7 @@ class AlunoIsFParticipaTurmaOCController {
     
             return res.status(201).json(comprovante)    
         } catch (error) {
-            return res.status(422).json(error)
+            return res.status(500).json(error)
         }
 
     }
