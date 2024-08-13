@@ -1,4 +1,7 @@
 import ProfessorIsFMinistraTurmaOC from "../models/professorisfministraturmaoc"
+import ProeficienciaProfessorIsf from '../models/proeficienciaprofessorisf'
+import TurmaOC from '../models/turmaoc'
+import Curso from '../models/curso'
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
@@ -12,6 +15,51 @@ class ProfessorIsFMinistraTurmaOCController {
                 })
             }
     
+            const turma = await TurmaOC.findOne({
+                where: {
+                    idTurma: req.body.idTurma
+                }
+            })
+    
+            const curso = await Curso.findOne({
+                where: {
+                    idCurso: turma.idCurso
+                }
+            })
+            
+            const proeficienciaProfessor = await ProeficienciaProfessorIsf.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idioma: curso.idioma
+                }
+            })
+    
+            if(curso.idioma === 'japones') {
+                console.log("+")
+                if(proeficienciaProfessor == null) {
+                    return res.status(422).json({
+                        msg: `É preciso validar sua proeficiência no idioma para poder ministrar uma turma`
+                    })
+                }
+                if(curso.nivel < proeficienciaProfessor.nivel){
+                    return res.status(422).json({
+                        msg: `${req.loginUsuario} possui proeficiencia ${proeficienciaProfessor.nivel} que é abaixo da proeficiencia do curso (${curso.nivel})`
+                    })
+                }
+            } else {
+                if(proeficienciaProfessor == null) {
+                    console.log("-")
+                    return res.status(422).json({
+                        msg: `É preciso validar sua proeficiência no idioma para poder ministrar uma turma`
+                    })
+                }
+                if(curso.nivel > proeficienciaProfessor.nivel){
+                    return res.status(422).json({
+                        msg: `${req.loginUsuario} possui proeficiencia ${proeficienciaProfessor.nivel} que é abaixo da proeficiencia do curso (${curso.nivel})`
+                    })
+                }
+            }
+
             const relacaoExistente = await ProfessorIsFMinistraTurmaOC.findOne({
                 where: {
                     login: req.loginUsuario,

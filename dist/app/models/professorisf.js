@@ -81,6 +81,10 @@ class ProfessorIsF extends _sequelize.Model {
             targetKey: 'idInstituicao',
             timestamps: false
         })
+
+        this.hasMany(models.ProeficienciaProfessorIsF, {
+            foreignKey: 'login'
+        })
     }
 
 }

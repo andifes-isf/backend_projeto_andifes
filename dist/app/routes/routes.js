@@ -16,6 +16,7 @@ var _professorIsFMinistraTurmaOCRoutes = require('./professorIsFMinistraTurmaOCR
 var _alunoIsFParticipaTurmaOCRoutes = require('./alunoIsFParticipaTurmaOCRoutes'); var _alunoIsFParticipaTurmaOCRoutes2 = _interopRequireDefault(_alunoIsFParticipaTurmaOCRoutes);
 var _comprovanteProfessorInstituicaoRoutes = require('./comprovanteProfessorInstituicaoRoutes'); var _comprovanteProfessorInstituicaoRoutes2 = _interopRequireDefault(_comprovanteProfessorInstituicaoRoutes);
 var _proeficienciaAlunoIsFRoutes = require('./proeficienciaAlunoIsFRoutes'); var _proeficienciaAlunoIsFRoutes2 = _interopRequireDefault(_proeficienciaAlunoIsFRoutes);
+var _proeficienciaProfessorIsFRoutes = require('./proeficienciaProfessorIsFRoutes'); var _proeficienciaProfessorIsFRoutes2 = _interopRequireDefault(_proeficienciaProfessorIsFRoutes);
 
 const router = new (0, _express.Router)()
 
@@ -35,5 +36,6 @@ router.use('/professorisf_ministra_turmaoc', _professorIsFMinistraTurmaOCRoutes2
 router.use('/alunoisf_participa_turmaoc', _alunoIsFParticipaTurmaOCRoutes2.default)
 router.use('/comprovante_professor_instituicao', _comprovanteProfessorInstituicaoRoutes2.default)
 router.use('/proeficiencia_alunoisf', _proeficienciaAlunoIsFRoutes2.default)
+router.use('/proeficiencia_professorisf', _proeficienciaProfessorIsFRoutes2.default)
 
 exports. default = router

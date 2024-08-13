@@ -1,4 +1,7 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _professorisfministraturmaoc = require('../models/professorisfministraturmaoc'); var _professorisfministraturmaoc2 = _interopRequireDefault(_professorisfministraturmaoc);
+var _proeficienciaprofessorisf = require('../models/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
+var _turmaoc = require('../models/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
+var _curso = require('../models/curso'); var _curso2 = _interopRequireDefault(_curso);
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
@@ -12,6 +15,51 @@ class ProfessorIsFMinistraTurmaOCController {
                 })
             }
     
+            const turma = await _turmaoc2.default.findOne({
+                where: {
+                    idTurma: req.body.idTurma
+                }
+            })
+    
+            const curso = await _curso2.default.findOne({
+                where: {
+                    idCurso: turma.idCurso
+                }
+            })
+            
+            const proeficienciaProfessor = await _proeficienciaprofessorisf2.default.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idioma: curso.idioma
+                }
+            })
+    
+            if(curso.idioma === 'japones') {
+                console.log("+")
+                if(proeficienciaProfessor == null) {
+                    return res.status(422).json({
+                        msg: `É preciso validar sua proeficiência no idioma para poder ministrar uma turma`
+                    })
+                }
+                if(curso.nivel < proeficienciaProfessor.nivel){
+                    return res.status(422).json({
+                        msg: `${req.loginUsuario} possui proeficiencia ${proeficienciaProfessor.nivel} que é abaixo da proeficiencia do curso (${curso.nivel})`
+                    })
+                }
+            } else {
+                if(proeficienciaProfessor == null) {
+                    console.log("-")
+                    return res.status(422).json({
+                        msg: `É preciso validar sua proeficiência no idioma para poder ministrar uma turma`
+                    })
+                }
+                if(curso.nivel > proeficienciaProfessor.nivel){
+                    return res.status(422).json({
+                        msg: `${req.loginUsuario} possui proeficiencia ${proeficienciaProfessor.nivel} que é abaixo da proeficiencia do curso (${curso.nivel})`
+                    })
+                }
+            }
+
             const relacaoExistente = await _professorisfministraturmaoc2.default.findOne({
                 where: {
                     login: req.loginUsuario,

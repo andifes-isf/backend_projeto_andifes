@@ -1,16 +1,16 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
-var _proeficienciaalunoisf = require('../models/proeficienciaalunoisf'); var _proeficienciaalunoisf2 = _interopRequireDefault(_proeficienciaalunoisf);
+var _proeficienciaprofessorisf = require('../models/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
 
-class ProeficienciaAlunoIsFController {
+class ProeficienciaProfessorIsFController {
     async post(req, res) {
 
-        if(!(req.tipoUsuario === 'alunoisf')){
+        if(!(req.tipoUsuario === 'professorisf')){
             return res.status(404).json({
                 error: 'Pagina nao encontrada'
             })
         }
 
-        const proeficiaenciaExistente = await _proeficienciaalunoisf2.default.findOne({
+        const proeficiaenciaExistente = await _proeficienciaprofessorisf2.default.findOne({
             where: {
                 login: req.loginUsuario,
                 idioma: req.body.idioma,
@@ -20,12 +20,12 @@ class ProeficienciaAlunoIsFController {
 
         if(proeficiaenciaExistente) {
             return res.status(422).json({
-                msg: "Proeficiencia do aluno ja cadastrada"
+                msg: "Proeficiencia do professor ja cadastrada"
             })
         }
 
         try {
-            const proeficiaencia = await _proeficienciaalunoisf2.default.create({
+            const proeficiaencia = await _proeficienciaprofessorisf2.default.create({
                 login: req.loginUsuario,
                 nivel: req.body.nivel,
                 idioma: req.body.idioma,
@@ -40,4 +40,4 @@ class ProeficienciaAlunoIsFController {
     }
 }
 
-exports. default = new ProeficienciaAlunoIsFController()
+exports. default = new ProeficienciaProfessorIsFController()

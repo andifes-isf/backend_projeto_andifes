@@ -15,6 +15,7 @@ var _alunoisfparticipaturmaoc = require('../app/models/alunoisfparticipaturmaoc'
 var _comprovanteprofessorinstituicao = require('../app/models/comprovanteprofessorinstituicao'); var _comprovanteprofessorinstituicao2 = _interopRequireDefault(_comprovanteprofessorinstituicao);
 
 var _proeficienciaalunoisf = require('../app/models/proeficienciaalunoisf'); var _proeficienciaalunoisf2 = _interopRequireDefault(_proeficienciaalunoisf);
+var _proeficienciaprofessorisf = require('../app/models/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
 
 
 // buffer
@@ -29,7 +30,9 @@ const models = [_usuario2.default,
     _professorisfministraturmaoc2.default,
     _alunoisfparticipaturmaoc2.default,
     _comprovanteprofessorinstituicao2.default,
-    _proeficienciaalunoisf2.default]
+    _proeficienciaalunoisf2.default,
+    _proeficienciaprofessorisf2.default
+]
 
 class DataBase{
     constructor() {
