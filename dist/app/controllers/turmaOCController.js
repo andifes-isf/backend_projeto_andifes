@@ -3,27 +3,27 @@ var _curso = require('../models/curso'); var _curso2 = _interopRequireDefault(_c
 var _professorisf = require('../models/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 
 class turmaOCController {
-    async post(req, res) {
-        // Verificação de acesso (verificar quem mais pode criar uma turma)
-        if(!(req.tipoUsuario === 'professorisf')){
-            return res.status(404).json({
-                error: 'Pagina nao encontrada'
-            })
-        }
-
-        const turmaExistente = await _turmaoc2.default.findOne({
-            where: {
-                nome: req.body.nome
-            }
-        })
-
-        if(turmaExistente) {
-            return res.status(422).json({
-                msg: "Turma da Oferta Coletiva ja cadastrada"
-            })
-        }
-
+    async post(req, res) {        
         try {
+            // Verificação de acesso (verificar quem mais pode criar uma turma)
+            if(!(req.tipoUsuario === 'professorisf')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+    
+            const turmaExistente = await _turmaoc2.default.findOne({
+                where: {
+                    nome: req.body.nome
+                }
+            })
+    
+            if(turmaExistente) {
+                return res.status(409).json({
+                    msg: "Turma da Oferta Coletiva ja cadastrada"
+                })
+            }
+
             const turma = await _turmaoc2.default.create({
                 idCurso: req.body.idCurso,
                 nVagas: req.body.nVagas,
@@ -35,7 +35,7 @@ class turmaOCController {
 
             return res.status(201).json(turma)
         } catch (error) {
-            return res.status(422).json(error)   
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 
     }
@@ -69,7 +69,7 @@ class turmaOCController {
 
             return res.status(200).json(turmas)
         } catch (error) {
-            return res.status(400).json(error)
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
     }
 

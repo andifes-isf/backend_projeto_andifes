@@ -73,29 +73,20 @@ class AlunoIsFParticipaTurmaOCController {
             })
             
             if(relacao) {
-                return res.status(422).json({
+                return res.status(409).json({
                     msg: "Aluno ja cadastrado na turma"
                 })
             }
-        } catch (error) {
-            return res.status(400).json(error)
-        }
-        
 
-
-        try {
             const comprovante = await AlunoIsFParticipaTurmaOC.create({
                 idTurma: req.body.idTurma,
                 login: req.loginUsuario,
                 inicio: req.body.inicio,
                 termino: req.body.termino || null
             })
-    
-            return res.status(201).json(comprovante)    
         } catch (error) {
-            return res.status(500).json(error)
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
-
     }
 }
 
