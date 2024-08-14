@@ -41,6 +41,10 @@ class AlunoIsF extends _sequelize.Model {
             foreignKey: 'login'
         })
 
+        this.hasOne(models.AlunoEstrangeiro, {
+            foreignKey: 'login'
+        })
+
         this.belongsTo(models.Usuario, {
             foreignKey: 'login'
         })

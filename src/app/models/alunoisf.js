@@ -41,6 +41,10 @@ class AlunoIsF extends Model {
             foreignKey: 'login'
         })
 
+        this.hasOne(models.AlunoEstrangeiro, {
+            foreignKey: 'login'
+        })
+
         this.belongsTo(models.Usuario, {
             foreignKey: 'login'
         })

@@ -16,6 +16,7 @@ import ComprovanteProfessorInstituicao from '../app/models/comprovanteprofessori
 import ComprovanteProfessorInstituicao from '../app/models/comprovanteprofessorinstituicao'
 import ProeficienciaAlunoIsf from '../app/models/proeficienciaalunoisf'
 import ProeficienciaProfessorIsf from '../app/models/proeficienciaprofessorisf'
+import AlunoEstrangeiro from '../app/models/alunoestrangeiro'
 
 
 // buffer
@@ -31,7 +32,8 @@ const models = [Usuario,
     AlunoIsFParticipaTurmaOC,
     ComprovanteProfessorInstituicao,
     ProeficienciaAlunoIsf,
-    ProeficienciaProfessorIsf
+    ProeficienciaProfessorIsf,
+    AlunoEstrangeiro
 ]
 
 class DataBase{

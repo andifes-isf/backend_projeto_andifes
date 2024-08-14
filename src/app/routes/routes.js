@@ -17,6 +17,7 @@ import alunoIsFParticipaTurmaOCRoutes from "./alunoIsFParticipaTurmaOCRoutes"
 import comprovanteProfessorInstituicaoRoutes from "./comprovanteProfessorInstituicaoRoutes"
 import proeficienciaAlunoIsFRoutes from "./proeficienciaAlunoIsFRoutes"
 import proeficienciaProfessorIsFRoutes from "./proeficienciaProfessorIsFRoutes"
+import alunoEstrangeiroRoutes from './alunoEstrangeiroRoutes'
 
 const router = new Router()
 
@@ -25,17 +26,26 @@ router.post('/login', SessionController.store)
 
 // Rotas de uso
 router.use('/usuario', usuarioRoutes)
-router.use('/professor_isf', professorIsFRoutes)
-router.use('/instituicao_ensino', instituicaoEnsinoRoutes)
-router.use('/curso', cursoRoutes)
-router.use('/comprovante_aluno_instituicao', comprovanteAlunoInstituicaoRoutes)
+
+// Rotas de alunos
 router.use('/aluno_isf', alunoIsFRoutes)
+router.use('/aluno_estrangeiro', alunoEstrangeiroRoutes)
 router.use('/aluno_deinstituicao', alunoDeInstituicaoRoutes)
-router.use('/turma_oc', turmaOCRoutes)
-router.use('/professorisf_ministra_turmaoc', professorIsFMinistraTurmaOCRoutes)
+router.use('/comprovante_aluno_instituicao', comprovanteAlunoInstituicaoRoutes)
 router.use('/alunoisf_participa_turmaoc', alunoIsFParticipaTurmaOCRoutes)
-router.use('/comprovante_professor_instituicao', comprovanteProfessorInstituicaoRoutes)
 router.use('/proeficiencia_alunoisf', proeficienciaAlunoIsFRoutes)
+
+// Rotas de professor
+router.use('/professor_isf', professorIsFRoutes)
+router.use('/professorisf_ministra_turmaoc', professorIsFMinistraTurmaOCRoutes)
+router.use('/comprovante_professor_instituicao', comprovanteProfessorInstituicaoRoutes)
 router.use('/proeficiencia_professorisf', proeficienciaProfessorIsFRoutes)
+
+// Rotas de Instituições
+router.use('/instituicao_ensino', instituicaoEnsinoRoutes)
+
+// Curso Oferta Coletiva
+router.use('/curso', cursoRoutes)
+router.use('/turma_oc', turmaOCRoutes)
 
 export default router

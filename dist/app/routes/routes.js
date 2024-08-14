@@ -17,6 +17,7 @@ var _alunoIsFParticipaTurmaOCRoutes = require('./alunoIsFParticipaTurmaOCRoutes'
 var _comprovanteProfessorInstituicaoRoutes = require('./comprovanteProfessorInstituicaoRoutes'); var _comprovanteProfessorInstituicaoRoutes2 = _interopRequireDefault(_comprovanteProfessorInstituicaoRoutes);
 var _proeficienciaAlunoIsFRoutes = require('./proeficienciaAlunoIsFRoutes'); var _proeficienciaAlunoIsFRoutes2 = _interopRequireDefault(_proeficienciaAlunoIsFRoutes);
 var _proeficienciaProfessorIsFRoutes = require('./proeficienciaProfessorIsFRoutes'); var _proeficienciaProfessorIsFRoutes2 = _interopRequireDefault(_proeficienciaProfessorIsFRoutes);
+var _alunoEstrangeiroRoutes = require('./alunoEstrangeiroRoutes'); var _alunoEstrangeiroRoutes2 = _interopRequireDefault(_alunoEstrangeiroRoutes);
 
 const router = new (0, _express.Router)()
 
@@ -25,17 +26,26 @@ router.post('/login', _SessionController2.default.store)
 
 // Rotas de uso
 router.use('/usuario', _usuarioRoutes2.default)
-router.use('/professor_isf', _professorIsFRoutes2.default)
-router.use('/instituicao_ensino', _instituicaoEnsinoRoutes2.default)
-router.use('/curso', _cursoRoutes2.default)
-router.use('/comprovante_aluno_instituicao', _comprovanteAlunoInstituicaoRoutes2.default)
+
+// Rotas de alunos
 router.use('/aluno_isf', _alunoIsFRoutes2.default)
+router.use('/aluno_estrangeiro', _alunoEstrangeiroRoutes2.default)
 router.use('/aluno_deinstituicao', _alunoDeInstituicaoRoutes2.default)
-router.use('/turma_oc', _turmaOCRoutes2.default)
-router.use('/professorisf_ministra_turmaoc', _professorIsFMinistraTurmaOCRoutes2.default)
+router.use('/comprovante_aluno_instituicao', _comprovanteAlunoInstituicaoRoutes2.default)
 router.use('/alunoisf_participa_turmaoc', _alunoIsFParticipaTurmaOCRoutes2.default)
-router.use('/comprovante_professor_instituicao', _comprovanteProfessorInstituicaoRoutes2.default)
 router.use('/proeficiencia_alunoisf', _proeficienciaAlunoIsFRoutes2.default)
+
+// Rotas de professor
+router.use('/professor_isf', _professorIsFRoutes2.default)
+router.use('/professorisf_ministra_turmaoc', _professorIsFMinistraTurmaOCRoutes2.default)
+router.use('/comprovante_professor_instituicao', _comprovanteProfessorInstituicaoRoutes2.default)
 router.use('/proeficiencia_professorisf', _proeficienciaProfessorIsFRoutes2.default)
+
+// Rotas de Instituições
+router.use('/instituicao_ensino', _instituicaoEnsinoRoutes2.default)
+
+// Curso Oferta Coletiva
+router.use('/curso', _cursoRoutes2.default)
+router.use('/turma_oc', _turmaOCRoutes2.default)
 
 exports. default = router
