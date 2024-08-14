@@ -35,7 +35,6 @@ class ProfessorIsFMinistraTurmaOCController {
             })
     
             if(curso.idioma === 'japones') {
-                console.log("+")
                 if(proeficienciaProfessor == null) {
                     return res.status(422).json({
                         msg: `É preciso validar sua proeficiência no idioma para poder ministrar uma turma`
@@ -48,7 +47,6 @@ class ProfessorIsFMinistraTurmaOCController {
                 }
             } else {
                 if(proeficienciaProfessor == null) {
-                    console.log("-")
                     return res.status(422).json({
                         msg: `É preciso validar sua proeficiência no idioma para poder ministrar uma turma`
                     })
