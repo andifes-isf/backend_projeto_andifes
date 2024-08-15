@@ -8,6 +8,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const cursos = [
       {
+        idCurso: 1,
         nome: "Japonês básico 1",
         idioma: "Japonês",
         categoria: "dia a dia",
@@ -23,6 +24,7 @@ module.exports = {
         aspectosLinguisticos: "req.body.aspectosLinguisticos"
       },
       {
+        idCurso: 2,
         nome: "Inglês básico 1",
         idioma: "Inglês",
         categoria: "dia a dia",
@@ -38,6 +40,7 @@ module.exports = {
         aspectosLinguisticos: "req.body.aspectosLinguisticos"
       },
       {
+        idCurso: 3,
         nome: "Alemão básico 1",
         idioma: "Alemão",
         categoria: "dia a dia",
@@ -53,6 +56,7 @@ module.exports = {
         aspectosLinguisticos: "req.body.aspectosLinguisticos"
       },
       {
+        idCurso: 4,
         nome: "Italiano básico 1",
         idioma: "Italiano",
         categoria: "dia a dia",
@@ -68,6 +72,7 @@ module.exports = {
         aspectosLinguisticos: "req.body.aspectosLinguisticos"
       },
       {
+        idCurso: 5,
         nome: "Espanhol básico 1",
         idioma: "Espanhol",
         categoria: "dia a dia",
@@ -83,6 +88,7 @@ module.exports = {
         aspectosLinguisticos: "req.body.aspectosLinguisticos"
       },
       {
+        idCurso: 6,
         nome: "Português básico 1",
         idioma: "Português",
         categoria: "dia a dia",
@@ -98,6 +104,7 @@ module.exports = {
         aspectosLinguisticos: "req.body.aspectosLinguisticos"
       },
       {
+        idCurso: 7,
         nome: "Francês básico 1",
         idioma: "Francês",
         categoria: "dia a dia",

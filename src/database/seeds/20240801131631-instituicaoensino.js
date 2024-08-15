@@ -8,21 +8,25 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const instituicoes = [
       {
+        idInstituicao: 1,
         nome: "Universidade Federal de Minas Gerais",
         documentoVinculo: "Documento de vinculo da UFMG",
         brasileira: 1
       },
       {
+        idInstituicao: 2,
         nome: "Universidade Federal de São Carlos",
         documentoVinculo: "Documento de vinculo da UFSCar",
         brasileira: 1
       },
       {
+        idInstituicao: 3,
         nome: "Universidade de São Paulo",
         documentoVinculo: "Documento de vinculo da USP",
         brasileira: 1
       },
       {
+        idInstituicao: 4,
         nome: "Universidade Federal Tecnologica do Parana",
         documentoVinculo: "Documento de vinculo da UFTPR",
         brasileira: 1

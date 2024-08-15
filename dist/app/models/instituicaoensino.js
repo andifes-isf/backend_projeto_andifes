@@ -25,7 +25,7 @@ class InstituicaoEnsino extends _sequelize.Model {
                     unique: true,
                     using: 'BTREE',
                     fields: [
-                        { name: 'login' }
+                        { name: 'idInstituicao' }
                     ]
                 }]
             }

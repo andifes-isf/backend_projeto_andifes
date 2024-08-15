@@ -7,6 +7,7 @@ var _SessionController = require('../controllers/SessionController'); var _Sessi
 var _usuarioRoutes = require('./usuarioRoutes'); var _usuarioRoutes2 = _interopRequireDefault(_usuarioRoutes);
 var _professorIsFRoutes = require('./professorIsFRoutes'); var _professorIsFRoutes2 = _interopRequireDefault(_professorIsFRoutes);
 var _instituicaoEnsinoRoutes = require('./instituicaoEnsinoRoutes'); var _instituicaoEnsinoRoutes2 = _interopRequireDefault(_instituicaoEnsinoRoutes);
+var _instituicaoEnsinoBrasileiraRoutes = require('./instituicaoEnsinoBrasileiraRoutes'); var _instituicaoEnsinoBrasileiraRoutes2 = _interopRequireDefault(_instituicaoEnsinoBrasileiraRoutes);
 var _cursoRoutes = require('./cursoRoutes'); var _cursoRoutes2 = _interopRequireDefault(_cursoRoutes);
 var _comprovanteAlunoInstituicaoRoutes = require('./comprovanteAlunoInstituicaoRoutes'); var _comprovanteAlunoInstituicaoRoutes2 = _interopRequireDefault(_comprovanteAlunoInstituicaoRoutes);
 var _alunoIsFRoutes = require('./alunoIsFRoutes'); var _alunoIsFRoutes2 = _interopRequireDefault(_alunoIsFRoutes);
@@ -43,6 +44,7 @@ router.use('/proeficiencia_professorisf', _proeficienciaProfessorIsFRoutes2.defa
 
 // Rotas de Instituições
 router.use('/instituicao_ensino', _instituicaoEnsinoRoutes2.default)
+router.use('/instituicao_ensino_brasileira', _instituicaoEnsinoBrasileiraRoutes2.default)
 
 // Curso Oferta Coletiva
 router.use('/curso', _cursoRoutes2.default)
