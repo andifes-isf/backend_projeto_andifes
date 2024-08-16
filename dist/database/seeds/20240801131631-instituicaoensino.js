@@ -15,9 +15,9 @@ module.exports = {
       },
       {
         idInstituicao: 2,
-        nome: "Universidade Federal de São Carlos",
-        documentoVinculo: "Documento de vinculo da UFSCar",
-        brasileira: 1
+        nome: "Massachusets Institute of Tecnology",
+        documentoVinculo: "Documento de vinculo do MIT",
+        brasileira: 0
       },
       {
         idInstituicao: 3,
@@ -30,6 +30,24 @@ module.exports = {
         nome: "Universidade Federal Tecnologica do Parana",
         documentoVinculo: "Documento de vinculo da UFTPR",
         brasileira: 1
+      },
+      {
+        idInstituicao: 5,
+        nome: "Universidade Federal de São Carlos",
+        documentoVinculo: "Documento de vinculo da UFSCar",
+        brasileira: 1
+      },
+      {
+        idInstituicao: 6,
+        nome: "Cambridge",
+        documentoVinculo: "Documento de vinculo de Cambridge",
+        brasileira: 0
+      },
+      {
+        idInstituicao: 7,
+        nome: "Tokyo University",
+        documentoVinculo: "Documento de vinculo da UTokyo",
+        brasileira: 0
       },
     ]
 

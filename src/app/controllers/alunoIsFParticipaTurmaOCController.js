@@ -31,20 +31,23 @@ class AlunoIsFParticipaTurmaOCController {
                 where: {
                     login: req.loginUsuario,
                     idioma: curso.idioma
-                }
+                },
+                order: [
+                    ['nivel', 'DESC']
+                ],
+                limit: 1
             })
-    
-            console.log(proeficienciaAluno.nivel)
-    
+
             if(curso.idioma === 'japones') {
                 if(proeficienciaAluno == null) {
-                    if(!(curso.nivel === "n5")) {
+                    console.log("Entrou aqui também")
+                    if(!(curso.nivel === "N5")) {
                         return res.status(422).json({
                             msg: `Esse curso é de nivel ${curso.nivel}. Para começar a aprender ${curso.idioma}, é preciso começar pelo nivel N5`
                         })
                     }
                 }
-                if(curso.nivel < proeficienciaAluno.nivel){
+                else if(curso.nivel < proeficienciaAluno.nivel){
                     return res.status(422).json({
                         msg: `${req.loginUsuario} possui proeficiencia ${proeficienciaAluno.nivel} que é abaixo da proeficiencia do curso (${curso.nivel})`
                     })
@@ -57,7 +60,7 @@ class AlunoIsFParticipaTurmaOCController {
                         })
                     }
                 }
-                if(curso.nivel > proeficienciaAluno.nivel){
+                else if(curso.nivel > proeficienciaAluno.nivel){
                     return res.status(422).json({
                         msg: `${req.loginUsuario} possui proeficiencia ${proeficienciaAluno.nivel} que é abaixo da proeficiencia do curso (${curso.nivel})`
                     })
@@ -83,6 +86,8 @@ class AlunoIsFParticipaTurmaOCController {
                 inicio: req.body.inicio,
                 termino: req.body.termino || null
             })
+
+            return res.status(201).json(comprovante)
 
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)

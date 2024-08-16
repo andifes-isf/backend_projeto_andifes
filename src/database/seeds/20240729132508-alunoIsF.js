@@ -30,7 +30,19 @@ module.exports = {
       {
         login: 'Gaby',
         deInstituicao: 1
-      }
+      },
+      {
+        login: 'Kactus',
+        deInstituicao: 0
+      },
+      {
+        login: 'Victin',
+        deInstituicao: 0
+      },
+      {
+        login: 'JP',
+        deInstituicao: 1
+      },
     ]
 
     await AlunoIsF.bulkCreate(alunosIsF, { individualHooks: true })
