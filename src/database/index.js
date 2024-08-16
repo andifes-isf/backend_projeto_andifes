@@ -18,7 +18,7 @@ import ProeficienciaAlunoIsf from '../app/models/proeficienciaalunoisf'
 import ProeficienciaProfessorIsf from '../app/models/proeficienciaprofessorisf'
 import AlunoEstrangeiro from '../app/models/alunoestrangeiro'
 import InstituicaoEnsinoBrasileira from '../app/models/instituicaoensinobrasileira'
-
+import InstituicaoEnsinoEstrangeira from '../app/models/instituicaoensinoestrangeira'
 
 // buffer
 const models = [Usuario,
@@ -26,6 +26,7 @@ const models = [Usuario,
     AlunoDeInstituicao,
     InstituicaoEnsino, 
     InstituicaoEnsinoBrasileira,
+    InstituicaoEnsinoEstrangeira,
     ComprovanteAlunoInstituicao,
     ProfessorIsF,
     Curso,

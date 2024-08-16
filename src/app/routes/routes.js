@@ -8,6 +8,7 @@ import usuarioRoutes from './usuarioRoutes'
 import professorIsFRoutes from './professorIsFRoutes'
 import instituicaoEnsinoRoutes from './instituicaoEnsinoRoutes'
 import instituicaoEnsinoBrasileiraRoutes from './instituicaoEnsinoBrasileiraRoutes'
+import instituicaoEnsinoEstrangeiraRoutes from './instituicaoEnsinoEstrangeiraRoutes'
 import cursoRoutes from './cursoRoutes'
 import comprovanteAlunoInstituicaoRoutes from './comprovanteAlunoInstituicaoRoutes'
 import alunoIsFRoutes from './alunoIsFRoutes'
@@ -45,6 +46,7 @@ router.use('/proeficiencia_professorisf', proeficienciaProfessorIsFRoutes)
 // Rotas de Instituições
 router.use('/instituicao_ensino', instituicaoEnsinoRoutes)
 router.use('/instituicao_ensino_brasileira', instituicaoEnsinoBrasileiraRoutes)
+router.use('/instituicao_ensino_estrangeira', instituicaoEnsinoEstrangeiraRoutes)
 
 // Curso Oferta Coletiva
 router.use('/curso', cursoRoutes)
