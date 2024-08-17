@@ -10,18 +10,21 @@ module.exports = {
       {
         paisOrigem: "Japão",
         tipo: "RG",
+        comprovante: 'Comprovante da Kactus',
         codigo: "Codigo da Kactus",
         login: 'Kactus'
       },
       {
         paisOrigem: "Japão",
         tipo: "RG",
+        comprovante: 'Comprovante do Victin',
         codigo: "Codigo do Victin",
         login: 'Victin'
       },
       {
         paisOrigem: "Itália",
         tipo: "RG",
+        comprovante: 'Comprovante do JP',
         codigo: "Codigo do JP",
         login: 'JP'
       },

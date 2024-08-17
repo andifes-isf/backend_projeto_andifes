@@ -20,6 +20,7 @@ import comprovanteProfessorInstituicaoRoutes from "./comprovanteProfessorInstitu
 import proeficienciaAlunoIsFRoutes from "./proeficienciaAlunoIsFRoutes"
 import proeficienciaProfessorIsFRoutes from "./proeficienciaProfessorIsFRoutes"
 import alunoEstrangeiroRoutes from './alunoEstrangeiroRoutes'
+import cursistaEspecializacaoRoutes from './cursistaEspecializacaoRoutes'
 
 const router = new Router()
 
@@ -39,6 +40,7 @@ router.use('/proeficiencia_alunoisf', proeficienciaAlunoIsFRoutes)
 
 // Rotas de professor
 router.use('/professor_isf', professorIsFRoutes)
+router.use('/cursista_especializacao', cursistaEspecializacaoRoutes)
 router.use('/professorisf_ministra_turmaoc', professorIsFMinistraTurmaOCRoutes)
 router.use('/comprovante_professor_instituicao', comprovanteProfessorInstituicaoRoutes)
 router.use('/proeficiencia_professorisf', proeficienciaProfessorIsFRoutes)

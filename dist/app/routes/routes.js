@@ -20,6 +20,7 @@ var _comprovanteProfessorInstituicaoRoutes = require('./comprovanteProfessorInst
 var _proeficienciaAlunoIsFRoutes = require('./proeficienciaAlunoIsFRoutes'); var _proeficienciaAlunoIsFRoutes2 = _interopRequireDefault(_proeficienciaAlunoIsFRoutes);
 var _proeficienciaProfessorIsFRoutes = require('./proeficienciaProfessorIsFRoutes'); var _proeficienciaProfessorIsFRoutes2 = _interopRequireDefault(_proeficienciaProfessorIsFRoutes);
 var _alunoEstrangeiroRoutes = require('./alunoEstrangeiroRoutes'); var _alunoEstrangeiroRoutes2 = _interopRequireDefault(_alunoEstrangeiroRoutes);
+var _cursistaEspecializacaoRoutes = require('./cursistaEspecializacaoRoutes'); var _cursistaEspecializacaoRoutes2 = _interopRequireDefault(_cursistaEspecializacaoRoutes);
 
 const router = new (0, _express.Router)()
 
@@ -39,6 +40,7 @@ router.use('/proeficiencia_alunoisf', _proeficienciaAlunoIsFRoutes2.default)
 
 // Rotas de professor
 router.use('/professor_isf', _professorIsFRoutes2.default)
+router.use('/cursista_especializacao', _cursistaEspecializacaoRoutes2.default)
 router.use('/professorisf_ministra_turmaoc', _professorIsFMinistraTurmaOCRoutes2.default)
 router.use('/comprovante_professor_instituicao', _comprovanteProfessorInstituicaoRoutes2.default)
 router.use('/proeficiencia_professorisf', _proeficienciaProfessorIsFRoutes2.default)

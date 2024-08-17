@@ -68,6 +68,10 @@ class ProfessorIsF extends _sequelize.Model {
             foreignKey: 'login'
         })
 
+        this.hasOne(models.CursistaEspecializacao, {
+            foreignKey: 'login'
+        })
+
         this.belongsToMany(models.TurmaOC, {
             through: 'professorisfministraturmaoc',
             foreignKey: 'login',

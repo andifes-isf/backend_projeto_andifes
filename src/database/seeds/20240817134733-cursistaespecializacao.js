@@ -1,23 +1,17 @@
 'use strict';
 
 import '../../database'
-import ProeficiencieProfessorIsF from '../../app/models/proeficienciaprofessorisf';
+import CursistaEspecializacao from '../../app/models/cursistaespecializacao';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const proeficiencias = [
+    const cursistas = [
       {
         login: "Carlos",
         idioma: "ingles",
         nivel: "C1",
         comprovante: "comprovante de proeficiencia nivel C1"
-      },
-      {
-        login: "Pietro",
-        idioma: "japones",
-        nivel: "N2",
-        comprovante: "comprovante de proeficiencia nivel N2"
       },
       {
         login: "Pedro",
@@ -28,7 +22,7 @@ module.exports = {
     ]
 
     try {  
-      await ProeficiencieProfessorIsF.bulkCreate(proeficiencias, { individualHooks: true })
+      await CursistaEspecializacao.bulkCreate(cursistas, { individualHooks: true })
     } catch (error) {
       throw error
     }
@@ -36,6 +30,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('proeficienciaprofessorisf', null, {})
+    await queryInterface.bulkDelete('cursistaespecializacao', null, {})
   }
 };

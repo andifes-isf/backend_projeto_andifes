@@ -17,19 +17,15 @@ class ProfessorIsFController {
             })
     
             if(professorExistente) {
-                return res.status(409).json({
-                    msg: "Professor IsF ja cadastrado"
-                })
+                return 0
             }
             
-            const professor = await _professorisf2.default.create({
+            return await _professorisf2.default.create({
                 login: req.body.login,
                 poca: req.body.poca,
                 inicio: req.body.inicio,
                 fim: req.body.fim
             })
-    
-            return res.status(201).json(professor)
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }

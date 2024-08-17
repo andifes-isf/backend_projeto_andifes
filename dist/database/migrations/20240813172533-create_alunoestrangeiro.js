@@ -6,12 +6,12 @@ module.exports = {
     await queryInterface.createTable('alunoisfestrangeiro', {
       login: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
       },
       paisOrigem: {
         type: Sequelize.STRING,
-        allowNull: false,
-        primaryKey: true,
+        allowNull: false
       },
       comprovante: {
         type: Sequelize.STRING,

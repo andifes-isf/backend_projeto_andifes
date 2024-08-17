@@ -19,6 +19,7 @@ var _proeficienciaprofessorisf = require('../app/models/proeficienciaprofessoris
 var _alunoestrangeiro = require('../app/models/alunoestrangeiro'); var _alunoestrangeiro2 = _interopRequireDefault(_alunoestrangeiro);
 var _instituicaoensinobrasileira = require('../app/models/instituicaoensinobrasileira'); var _instituicaoensinobrasileira2 = _interopRequireDefault(_instituicaoensinobrasileira);
 var _instituicaoensinoestrangeira = require('../app/models/instituicaoensinoestrangeira'); var _instituicaoensinoestrangeira2 = _interopRequireDefault(_instituicaoensinoestrangeira);
+var _cursistaespecializacao = require('../app/models/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
 
 // buffer
 const models = [_usuario2.default,
@@ -29,6 +30,7 @@ const models = [_usuario2.default,
     _instituicaoensinoestrangeira2.default,
     _comprovantealunoinstituicao2.default,
     _professorisf2.default,
+    _cursistaespecializacao2.default,
     _curso2.default,
     _turmaoc2.default,
     _professorisfministraturmaoc2.default,
