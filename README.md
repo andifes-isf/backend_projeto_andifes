@@ -3,25 +3,10 @@
 Esse projeto tem como objetivo criar um sistema de gerenciamento para o programa Idioma Sem Fronteira da Rede Andifes. Nesse projeto, precisamos gerenciar usuários de diferentes tipo (alunos, professores, etc.), precisamos gerenciar as turmas e os cursos e as inscrições.
 
 ## Tabela de Conteúdos
-- [Funcionalidades](#funcionalidades)
 - [Instalação](#instalação)
 - [Rotas da API](#rotas-da-api)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Contato](#contato)
-
-## Sobre
-
-## Funcionalidades
-- Criação de Usuários
-  - AlunoIsF   
-    - Associados à alguma instituição de ensino
-    - Não associados a instituição de ensino
-  - ProfessorIsF
-    - Cursista de especialização
-    - Aluno da graduação 
-- Inscrição em turmas
-  - AlunoIsF associados à instituições de ensino credenciadas, ou que algum professor da sua IES esteja ministrando alguma turma na oferta, possuem direito de se inscrever em qualquer curso da oferta
-  - AlunoIsF estrangeiros podem se inscrever em cursos de português, independentemente de estarem associados a alguma IES ou não   
 
 ## Instalação
 - Node.Js (20.15.0)
@@ -66,24 +51,44 @@ Esse projeto tem como objetivo criar um sistema de gerenciamento para o programa
 ## Rotas da API
 ### Usuário
 - **GET /usuario**: Lista todos os usuários
+- **GET /usuario/meus_dados**: Retorna os dados do usuário logado
 #### AlunoIsF
 - **GET /aluno_isf**: Lista todos os AlunoIsF
+- **POST /alunoisf_participa_turmaoc**: Insere um aluno isf em uma turma. Para poder aderir a turma, o aluno precisa que o nível de sua proeficiência naquele idioma seja no máximo um nível acima do seu (Se o aluno é do nível B1, ele pode cursar o B2, mas não o C1)
+- **POST /proeficiência_alunoisf**: Insere um nível de idioma para o aluno isf
 ##### AlunoDeInstituicao
+- **POST /aluno_estrangeiro**: Cria um novo AlunoEstrangeiro
+- **GET /aluno_estrangeiro**: Lista todos os AlunoEstrangeiro
+- **POST /comprovante_aluno_instituicao**: Relaciona o aluno isf com uma instituição de ensino
+##### AlunoEstrangeiro
 - **POST /aluno_deinstituicao**: Cria um novo AlunoDeInstituicao
 - **GET /aluno_deinstituicao**: Lista todos os AlunoDeInstituicao
 #### ProfessorIsF
-- **POST /professor_isf**: Cria um novo ProfessorIsF
 - **GET /professor_isf**: Lista todos os ProfessorIsF
+- **POST /comprovante_professor_instituicao**: Relaciona o professor com uma instituição de ensino
+- **POST /proeficiencia_professorisf**: Insere um nível de idioma para o professor isf
+- **POST /professorisf_ministra_turmaoc**: Insere o professor logado para ministrar uma turma. Para poder ministrar uma turma, o professor precisa que o nível de sua proeficiência naquele idioma seja igual ou superior ao do curso (se o professor é do nível C1, ele pode inistrar uma turma de nível C1, mas não uma de nível C2)
+- **GET /professorisf_ministra_turmaoc**: Lista todos os relacionamentos do professor logado
+##### CursistaEspecialização
+- **POST /cursista_especialização**: Cria um novo CursistaEspecialização
+- **GET /cursista_especialização**: Lista todos os CursistaEspecialização
 ### Instituição de Ensino
 - **POST /instituicao_ensino**: Cria um novo ProfessorIsF
-- **POST /comprovante_aluno_instituicao**: Cria uma associação entre um aluno e uma instituição de ensino
 - **GET /instituicao_ensino**: Lista todos os ProfessorIsF
+#### Instituição de Ensino Brasileira
+- **POST /instituicao_ensino_estrangeira**: Cria uma nova InstituicaoEnsinoBrasileira
+- **GET /instituicao_ensino_brasileira**: Lista todas as InstituicaoEnsinoBrasileira
+#### Instituição de Ensino Estrangeira
+- **POST /instituicao_ensino_estrangeira**: Cria uma nova InstituicaoEnsinoEstrangeira
+- **GET /instituicao_ensino_estrangeira**: Lista todas as InstituicaoEnsinoEstrangeira
 ### Curso
 - **POST /curso**: Cria um novo Curso
 - **GET /curso**: Lista todos os Curso
 #### Turmas da Oferta Coletiva
 - **Post /turma_oc**: Cria uma nova turma da oferta coletiva
 - **Get /turma_oc**: lista todas as turmas da oferta coletiva
+### Autentiação
+- **POST /login**: Autentica um usuário
 
 ## Tecnologias Utilizadas
 - Node.Js
