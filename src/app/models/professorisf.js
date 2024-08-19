@@ -76,6 +76,10 @@ class ProfessorIsF extends Model {
             foreignKey: 'login'
         })
 
+        this.hasOne(models.AlunoGraduacao, {
+            foreignKey: 'login'
+        })
+
         this.belongsToMany(models.TurmaOC, {
             through: 'professorisfministraturmaoc',
             foreignKey: 'login',
