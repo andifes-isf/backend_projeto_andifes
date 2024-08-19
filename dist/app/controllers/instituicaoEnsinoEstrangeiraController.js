@@ -1,9 +1,12 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
 var _instituicaoensinoestrangeira = require('../models/instituicaoensinoestrangeira'); var _instituicaoensinoestrangeira2 = _interopRequireDefault(_instituicaoensinoestrangeira);
+var _instituicaoensino = require('../models/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
 
 class instituicaoEnsinoEstrangeiraController {
     async post(req, res){
         try {
+            await _instituicaoensino2.default.post(req, res, 0)
+
             const instituicaoExistente = await _instituicaoensinoestrangeira2.default.findOne({
                 where: {
                     pais: req.body.pais,

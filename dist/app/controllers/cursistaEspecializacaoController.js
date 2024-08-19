@@ -7,7 +7,7 @@ var _professorIsFController = require('../controllers/professorIsFController'); 
 class CursistaEspecializacaoController {
     async post(req, res) {
         try {    
-            await _professorIsFController2.default.post(req, res)
+            await _professorIsFController2.default.post(req, res, 1)
             
             const cursistaExistente = await _cursistaespecializacao2.default.findOne({
                 where: {

@@ -7,7 +7,7 @@ import ProfessorIsFController from '../controllers/professorIsFController'
 class CursistaEspecializacaoController {
     async post(req, res) {
         try {    
-            await ProfessorIsFController.post(req, res)
+            await ProfessorIsFController.post(req, res, 1)
             
             const cursistaExistente = await CursistaEspecializacao.findOne({
                 where: {

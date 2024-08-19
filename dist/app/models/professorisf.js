@@ -42,6 +42,10 @@ class ProfessorIsF extends _sequelize.Model {
                             }
                         }
                     }
+                },
+                cursista: {
+                    type: _sequelize2.default.BOOLEAN,
+                    allowNull: false
                 }
             },
             {

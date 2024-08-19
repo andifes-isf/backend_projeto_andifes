@@ -3,8 +3,6 @@ var _professorIsFController = require('../controllers/professorIsFController'); 
 
 const router = new (0, _express.Router)()
 
-router.post('/', _professorIsFController2.default.post)
-
 router.get('/', _professorIsFController2.default.get)
 
 exports. default = router

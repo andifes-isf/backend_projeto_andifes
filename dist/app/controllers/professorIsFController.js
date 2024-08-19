@@ -5,7 +5,7 @@ var _instituicaoensino = require('../models/instituicaoensino'); var _instituica
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
 class ProfessorIsFController {
-    async post(req, res) {
+    async post(req, res, cursista) {
         try {
             await _usuarioController2.default.post(req, res, 'professorisf')
     
@@ -24,7 +24,8 @@ class ProfessorIsFController {
                 login: req.body.login,
                 poca: req.body.poca,
                 inicio: req.body.inicio,
-                fim: req.body.fim
+                fim: req.body.fim,
+                cursista: cursista
             })
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)

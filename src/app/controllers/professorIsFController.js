@@ -5,7 +5,7 @@ import InstituicaoEnsino from "../models/instituicaoensino";
 import usuarioController from "./usuarioController";
 
 class ProfessorIsFController {
-    async post(req, res) {
+    async post(req, res, cursista) {
         try {
             await usuarioController.post(req, res, 'professorisf')
     
@@ -24,7 +24,8 @@ class ProfessorIsFController {
                 login: req.body.login,
                 poca: req.body.poca,
                 inicio: req.body.inicio,
-                fim: req.body.fim
+                fim: req.body.fim,
+                cursista: cursista
             })
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)

@@ -2,7 +2,7 @@
 var _instituicaoensino = require('../models/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
 
 class instituicaoEnsinoController {
-    async post(req, res){
+    async post(req, res, brasileira){
         try {
             const instituicaoExistente = await _instituicaoensino2.default.findOne({
                 where: {
@@ -16,13 +16,11 @@ class instituicaoEnsinoController {
                 })
             }
     
-            const instituicao = await _instituicaoensino2.default.create({
+            return await _instituicaoensino2.default.create({
                 nome: req.body.nome,
                 documentoVinculo: req.body.documentoVinculo,
-                brasileira: req.body.brasileira
+                brasileira: brasileira
             })
-    
-            return res.status(201).json(instituicao)
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
