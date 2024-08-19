@@ -1,7 +1,11 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _professorisfministraturmaoc = require('../models/professorisfministraturmaoc'); var _professorisfministraturmaoc2 = _interopRequireDefault(_professorisfministraturmaoc);
+"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }// Models
+var _professorisfministraturmaoc = require('../models/professorisfministraturmaoc'); var _professorisfministraturmaoc2 = _interopRequireDefault(_professorisfministraturmaoc);
 var _proeficienciaprofessorisf = require('../models/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
 var _turmaoc = require('../models/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
 var _curso = require('../models/curso'); var _curso2 = _interopRequireDefault(_curso);
+
+// Classe auxiliar
+var _nivelFactory = require('../utils/factories/nivelFactory'); var _nivelFactory2 = _interopRequireDefault(_nivelFactory);
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
@@ -20,7 +24,8 @@ class ProfessorIsFMinistraTurmaOCController {
                     idTurma: req.body.idTurma
                 }
             })
-    
+            console.log(turma)
+
             const curso = await _curso2.default.findOne({
                 where: {
                     idCurso: turma.idCurso
@@ -34,29 +39,18 @@ class ProfessorIsFMinistraTurmaOCController {
                 }
             })
     
-            if(curso.idioma === 'japones') {
-                if(proeficienciaProfessor == null) {
-                    return res.status(422).json({
-                        msg: `É preciso validar sua proeficiência no idioma para poder ministrar uma turma`
-                    })
-                }
-                if(curso.nivel < proeficienciaProfessor.nivel){
-                    return res.status(422).json({
-                        msg: `${req.loginUsuario} possui proeficiencia ${proeficienciaProfessor.nivel} que é abaixo da proeficiencia do curso (${curso.nivel})`
-                    })
-                }
-            } else {
-                if(proeficienciaProfessor == null) {
-                    return res.status(422).json({
-                        msg: `É preciso validar sua proeficiência no idioma para poder ministrar uma turma`
-                    })
-                }
-                if(curso.nivel > proeficienciaProfessor.nivel){
-                    return res.status(422).json({
-                        msg: `${req.loginUsuario} possui proeficiencia ${proeficienciaProfessor.nivel} que é abaixo da proeficiencia do curso (${curso.nivel})`
-                    })
-                }
+            const nivelProeficiencia = _nivelFactory2.default.createInstanceOfNivel(curso.idioma)
+            const diferencaEntreNivel = nivelProeficiencia.distanciaEntreNiveis(proeficienciaProfessor ? proeficienciaProfessor.nivel : 'nenhum', curso.nivel)
+            console.log(proeficienciaProfessor)
+            // console.log(proeficienciaProfessor.nivel)
+            console.log(curso.nivel)
+            console.log(diferencaEntreNivel)
+            if(diferencaEntreNivel < 0) {
+                return res.status(422).json({
+                    msg: `${req.loginUsuario} possui proeficiencia abaixo da proeficiencia do curso (${curso.nivel})`
+                })
             }
+
 
             const relacaoExistente = await _professorisfministraturmaoc2.default.findOne({
                 where: {

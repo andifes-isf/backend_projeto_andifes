@@ -1,7 +1,11 @@
+// Models
 import ProfessorIsFMinistraTurmaOC from "../models/professorisfministraturmaoc"
 import ProeficienciaProfessorIsf from '../models/proeficienciaprofessorisf'
 import TurmaOC from '../models/turmaoc'
 import Curso from '../models/curso'
+
+// Classe auxiliar
+import nivelFactory from '../utils/factories/nivelFactory'
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
@@ -20,7 +24,8 @@ class ProfessorIsFMinistraTurmaOCController {
                     idTurma: req.body.idTurma
                 }
             })
-    
+            console.log(turma)
+
             const curso = await Curso.findOne({
                 where: {
                     idCurso: turma.idCurso
@@ -34,29 +39,18 @@ class ProfessorIsFMinistraTurmaOCController {
                 }
             })
     
-            if(curso.idioma === 'japones') {
-                if(proeficienciaProfessor == null) {
-                    return res.status(422).json({
-                        msg: `É preciso validar sua proeficiência no idioma para poder ministrar uma turma`
-                    })
-                }
-                if(curso.nivel < proeficienciaProfessor.nivel){
-                    return res.status(422).json({
-                        msg: `${req.loginUsuario} possui proeficiencia ${proeficienciaProfessor.nivel} que é abaixo da proeficiencia do curso (${curso.nivel})`
-                    })
-                }
-            } else {
-                if(proeficienciaProfessor == null) {
-                    return res.status(422).json({
-                        msg: `É preciso validar sua proeficiência no idioma para poder ministrar uma turma`
-                    })
-                }
-                if(curso.nivel > proeficienciaProfessor.nivel){
-                    return res.status(422).json({
-                        msg: `${req.loginUsuario} possui proeficiencia ${proeficienciaProfessor.nivel} que é abaixo da proeficiencia do curso (${curso.nivel})`
-                    })
-                }
+            const nivelProeficiencia = nivelFactory.createInstanceOfNivel(curso.idioma)
+            const diferencaEntreNivel = nivelProeficiencia.distanciaEntreNiveis(proeficienciaProfessor ? proeficienciaProfessor.nivel : 'nenhum', curso.nivel)
+            console.log(proeficienciaProfessor)
+            // console.log(proeficienciaProfessor.nivel)
+            console.log(curso.nivel)
+            console.log(diferencaEntreNivel)
+            if(diferencaEntreNivel < 0) {
+                return res.status(422).json({
+                    msg: `${req.loginUsuario} possui proeficiencia abaixo da proeficiencia do curso (${curso.nivel})`
+                })
             }
+
 
             const relacaoExistente = await ProfessorIsFMinistraTurmaOC.findOne({
                 where: {
