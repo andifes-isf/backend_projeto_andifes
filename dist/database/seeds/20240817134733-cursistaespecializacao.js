@@ -8,16 +8,13 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const cursistas = [
       {
-        login: "Carlos",
-        idioma: "ingles",
-        nivel: "C1",
-        comprovante: "comprovante de proeficiencia nivel C1"
+        login: "Carlos"
       },
       {
-        login: "Pedro",
-        idioma: "ingles",
-        nivel: "C2",
-        comprovante: "comprovante de proeficiencia nivel B2"
+        login: "Pedro"
+      },
+      {
+        login: "Pietro"
       }
     ]
 

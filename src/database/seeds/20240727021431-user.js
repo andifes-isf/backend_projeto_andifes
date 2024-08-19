@@ -174,6 +174,34 @@ module.exports = {
         senha: 'senha',
         tipo: 'alunoisf'
       },
+      {
+        login: 'Yumi',
+        nome: 'Yumi',
+        sobrenome: 'Uyeta',
+        DDI: 55,
+        DDD: 16,
+        telefone: 153489180,
+        etnia: 'amarelo',
+        genero: 'feminino',
+        nomeEmail: 'yu',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'professorisf'
+      },
+      {
+        login: 'Enio',
+        nome: 'Enio',
+        sobrenome: 'Uyeta',
+        DDI: 55,
+        DDD: 16,
+        telefone: 153486110,
+        etnia: 'amarelo',
+        genero: 'masculino',
+        nomeEmail: 'enio',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'professorisf'
+      },
     ]
 
     await Usuario.bulkCreate(usuarios, { individualHooks: true })
