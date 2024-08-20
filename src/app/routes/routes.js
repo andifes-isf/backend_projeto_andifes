@@ -22,6 +22,7 @@ import proeficienciaProfessorIsFRoutes from "./proeficienciaProfessorIsFRoutes"
 import alunoEstrangeiroRoutes from './alunoEstrangeiroRoutes'
 import cursistaEspecializacaoRoutes from './cursistaEspecializacaoRoutes'
 import alunoGraduacaoRoutes from './alunoGraduacaoRoutes'
+import ofertaColetivaRoutes from './ofertaColetivaRoutes'
 
 const router = new Router()
 
@@ -53,6 +54,7 @@ router.use('/instituicao_ensino_brasileira', instituicaoEnsinoBrasileiraRoutes)
 router.use('/instituicao_ensino_estrangeira', instituicaoEnsinoEstrangeiraRoutes)
 
 // Curso Oferta Coletiva
+router.use('/oferta_coletiva', ofertaColetivaRoutes)
 router.use('/curso', cursoRoutes)
 router.use('/turma_oc', turmaOCRoutes)
 

@@ -21,6 +21,7 @@ import InstituicaoEnsinoBrasileira from '../app/models/instituicaoensinobrasilei
 import InstituicaoEnsinoEstrangeira from '../app/models/instituicaoensinoestrangeira'
 import CursistaEspecializacao from '../app/models/cursistaespecializacao'
 import AlunoGraduacao from '../app/models/alunograduacao'
+import OfertaColetiva from '../app/models/ofertacoletiva'
 
 // buffer
 const models = [Usuario,
@@ -40,7 +41,8 @@ const models = [Usuario,
     ComprovanteProfessorInstituicao,
     ProeficienciaAlunoIsf,
     ProeficienciaProfessorIsf,
-    AlunoEstrangeiro
+    AlunoEstrangeiro,
+    OfertaColetiva
 ]
 
 class DataBase{

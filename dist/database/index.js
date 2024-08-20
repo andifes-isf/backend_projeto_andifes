@@ -21,6 +21,7 @@ var _instituicaoensinobrasileira = require('../app/models/instituicaoensinobrasi
 var _instituicaoensinoestrangeira = require('../app/models/instituicaoensinoestrangeira'); var _instituicaoensinoestrangeira2 = _interopRequireDefault(_instituicaoensinoestrangeira);
 var _cursistaespecializacao = require('../app/models/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
 var _alunograduacao = require('../app/models/alunograduacao'); var _alunograduacao2 = _interopRequireDefault(_alunograduacao);
+var _ofertacoletiva = require('../app/models/ofertacoletiva'); var _ofertacoletiva2 = _interopRequireDefault(_ofertacoletiva);
 
 // buffer
 const models = [_usuario2.default,
@@ -40,7 +41,8 @@ const models = [_usuario2.default,
     _comprovanteprofessorinstituicao2.default,
     _proeficienciaalunoisf2.default,
     _proeficienciaprofessorisf2.default,
-    _alunoestrangeiro2.default
+    _alunoestrangeiro2.default,
+    _ofertacoletiva2.default
 ]
 
 class DataBase{

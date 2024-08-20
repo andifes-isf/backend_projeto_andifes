@@ -22,6 +22,7 @@ var _proeficienciaProfessorIsFRoutes = require('./proeficienciaProfessorIsFRoute
 var _alunoEstrangeiroRoutes = require('./alunoEstrangeiroRoutes'); var _alunoEstrangeiroRoutes2 = _interopRequireDefault(_alunoEstrangeiroRoutes);
 var _cursistaEspecializacaoRoutes = require('./cursistaEspecializacaoRoutes'); var _cursistaEspecializacaoRoutes2 = _interopRequireDefault(_cursistaEspecializacaoRoutes);
 var _alunoGraduacaoRoutes = require('./alunoGraduacaoRoutes'); var _alunoGraduacaoRoutes2 = _interopRequireDefault(_alunoGraduacaoRoutes);
+var _ofertaColetivaRoutes = require('./ofertaColetivaRoutes'); var _ofertaColetivaRoutes2 = _interopRequireDefault(_ofertaColetivaRoutes);
 
 const router = new (0, _express.Router)()
 
@@ -53,6 +54,7 @@ router.use('/instituicao_ensino_brasileira', _instituicaoEnsinoBrasileiraRoutes2
 router.use('/instituicao_ensino_estrangeira', _instituicaoEnsinoEstrangeiraRoutes2.default)
 
 // Curso Oferta Coletiva
+router.use('/oferta_coletiva', _ofertaColetivaRoutes2.default)
 router.use('/curso', _cursoRoutes2.default)
 router.use('/turma_oc', _turmaOCRoutes2.default)
 
