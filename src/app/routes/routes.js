@@ -3,25 +3,35 @@ import { Router } from "express"
 // Autenticação
 import SessionController from '../controllers/authentication/SessionController'
 
-// Models
-import usuarioRoutes from './usuarioRoutes'
-import professorIsFRoutes from './professorIsFRoutes'
-import instituicaoEnsinoRoutes from './instituicaoEnsinoRoutes'
+////// Rotas
+
+// instituicao  
 import instituicaoEnsinoBrasileiraRoutes from './instituicaoEnsinoBrasileiraRoutes'
 import instituicaoEnsinoEstrangeiraRoutes from './instituicaoEnsinoEstrangeiraRoutes'
-import cursoRoutes from './cursoRoutes'
-import comprovanteAlunoInstituicaoRoutes from './comprovanteAlunoInstituicaoRoutes'
-import alunoIsFRoutes from './alunoIsFRoutes'
-import alunoDeInstituicaoRoutes from './alunoDeInstituicaoRoutes'
-import turmaOCRoutes from './turmaOCRoutes'
-import professorIsFMinistraTurmaOCRoutes from "./professorIsFMinistraTurmaOCRoutes"
+import instituicaoEnsinoRoutes from './instituicaoEnsinoRoutes'
+
+// ofertacoletiva
 import alunoIsFParticipaTurmaOCRoutes from "./alunoIsFParticipaTurmaOCRoutes"
-import comprovanteProfessorInstituicaoRoutes from "./comprovanteProfessorInstituicaoRoutes"
+import cursoRoutes from './cursoRoutes'
+import professorIsFMinistraTurmaOCRoutes from "./professorIsFMinistraTurmaOCRoutes"
+import turmaOCRoutes from './turmaOCRoutes'
+
+// proeficiencia
 import proeficienciaAlunoIsFRoutes from "./proeficienciaAlunoIsFRoutes"
 import proeficienciaProfessorIsFRoutes from "./proeficienciaProfessorIsFRoutes"
+
+// usuario_pertence_instituicao
+import comprovanteAlunoInstituicaoRoutes from './comprovanteAlunoInstituicaoRoutes'
+import comprovanteProfessorInstituicaoRoutes from "./comprovanteProfessorInstituicaoRoutes"
+
+// usuarios
+import alunoDeInstituicaoRoutes from './alunoDeInstituicaoRoutes'
 import alunoEstrangeiroRoutes from './alunoEstrangeiroRoutes'
-import cursistaEspecializacaoRoutes from './cursistaEspecializacaoRoutes'
 import alunoGraduacaoRoutes from './alunoGraduacaoRoutes'
+import alunoIsFRoutes from './alunoIsFRoutes'
+import cursistaEspecializacaoRoutes from './cursistaEspecializacaoRoutes'
+import professorIsFRoutes from './professorIsFRoutes'
+import usuarioRoutes from './usuarioRoutes'
 
 const router = new Router()
 

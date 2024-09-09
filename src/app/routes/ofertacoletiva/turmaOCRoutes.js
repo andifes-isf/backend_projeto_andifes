@@ -1,6 +1,6 @@
 import { Router } from "express"
-import turmaOCController from "../controllers/ofertacoletiva/turmaOCController"
-import AuthMiddleware from '../../app/middlewares/auth'
+import turmaOCController from "../../controllers/ofertacoletiva/turmaOCController"
+import AuthMiddleware from '../../middlewares/auth'
 
 const router = new Router()
 

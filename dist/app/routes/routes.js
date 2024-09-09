@@ -3,25 +3,35 @@
 // Autenticação
 var _SessionController = require('../controllers/authentication/SessionController'); var _SessionController2 = _interopRequireDefault(_SessionController);
 
-// Models
-var _usuarioRoutes = require('./usuarioRoutes'); var _usuarioRoutes2 = _interopRequireDefault(_usuarioRoutes);
-var _professorIsFRoutes = require('./professorIsFRoutes'); var _professorIsFRoutes2 = _interopRequireDefault(_professorIsFRoutes);
-var _instituicaoEnsinoRoutes = require('./instituicaoEnsinoRoutes'); var _instituicaoEnsinoRoutes2 = _interopRequireDefault(_instituicaoEnsinoRoutes);
+////// Rotas
+
+// instituicao  
 var _instituicaoEnsinoBrasileiraRoutes = require('./instituicaoEnsinoBrasileiraRoutes'); var _instituicaoEnsinoBrasileiraRoutes2 = _interopRequireDefault(_instituicaoEnsinoBrasileiraRoutes);
 var _instituicaoEnsinoEstrangeiraRoutes = require('./instituicaoEnsinoEstrangeiraRoutes'); var _instituicaoEnsinoEstrangeiraRoutes2 = _interopRequireDefault(_instituicaoEnsinoEstrangeiraRoutes);
-var _cursoRoutes = require('./cursoRoutes'); var _cursoRoutes2 = _interopRequireDefault(_cursoRoutes);
-var _comprovanteAlunoInstituicaoRoutes = require('./comprovanteAlunoInstituicaoRoutes'); var _comprovanteAlunoInstituicaoRoutes2 = _interopRequireDefault(_comprovanteAlunoInstituicaoRoutes);
-var _alunoIsFRoutes = require('./alunoIsFRoutes'); var _alunoIsFRoutes2 = _interopRequireDefault(_alunoIsFRoutes);
-var _alunoDeInstituicaoRoutes = require('./alunoDeInstituicaoRoutes'); var _alunoDeInstituicaoRoutes2 = _interopRequireDefault(_alunoDeInstituicaoRoutes);
-var _turmaOCRoutes = require('./turmaOCRoutes'); var _turmaOCRoutes2 = _interopRequireDefault(_turmaOCRoutes);
-var _professorIsFMinistraTurmaOCRoutes = require('./professorIsFMinistraTurmaOCRoutes'); var _professorIsFMinistraTurmaOCRoutes2 = _interopRequireDefault(_professorIsFMinistraTurmaOCRoutes);
+var _instituicaoEnsinoRoutes = require('./instituicaoEnsinoRoutes'); var _instituicaoEnsinoRoutes2 = _interopRequireDefault(_instituicaoEnsinoRoutes);
+
+// ofertacoletiva
 var _alunoIsFParticipaTurmaOCRoutes = require('./alunoIsFParticipaTurmaOCRoutes'); var _alunoIsFParticipaTurmaOCRoutes2 = _interopRequireDefault(_alunoIsFParticipaTurmaOCRoutes);
-var _comprovanteProfessorInstituicaoRoutes = require('./comprovanteProfessorInstituicaoRoutes'); var _comprovanteProfessorInstituicaoRoutes2 = _interopRequireDefault(_comprovanteProfessorInstituicaoRoutes);
+var _cursoRoutes = require('./cursoRoutes'); var _cursoRoutes2 = _interopRequireDefault(_cursoRoutes);
+var _professorIsFMinistraTurmaOCRoutes = require('./professorIsFMinistraTurmaOCRoutes'); var _professorIsFMinistraTurmaOCRoutes2 = _interopRequireDefault(_professorIsFMinistraTurmaOCRoutes);
+var _turmaOCRoutes = require('./turmaOCRoutes'); var _turmaOCRoutes2 = _interopRequireDefault(_turmaOCRoutes);
+
+// proeficiencia
 var _proeficienciaAlunoIsFRoutes = require('./proeficienciaAlunoIsFRoutes'); var _proeficienciaAlunoIsFRoutes2 = _interopRequireDefault(_proeficienciaAlunoIsFRoutes);
 var _proeficienciaProfessorIsFRoutes = require('./proeficienciaProfessorIsFRoutes'); var _proeficienciaProfessorIsFRoutes2 = _interopRequireDefault(_proeficienciaProfessorIsFRoutes);
+
+// usuario_pertence_instituicao
+var _comprovanteAlunoInstituicaoRoutes = require('./comprovanteAlunoInstituicaoRoutes'); var _comprovanteAlunoInstituicaoRoutes2 = _interopRequireDefault(_comprovanteAlunoInstituicaoRoutes);
+var _comprovanteProfessorInstituicaoRoutes = require('./comprovanteProfessorInstituicaoRoutes'); var _comprovanteProfessorInstituicaoRoutes2 = _interopRequireDefault(_comprovanteProfessorInstituicaoRoutes);
+
+// usuarios
+var _alunoDeInstituicaoRoutes = require('./alunoDeInstituicaoRoutes'); var _alunoDeInstituicaoRoutes2 = _interopRequireDefault(_alunoDeInstituicaoRoutes);
 var _alunoEstrangeiroRoutes = require('./alunoEstrangeiroRoutes'); var _alunoEstrangeiroRoutes2 = _interopRequireDefault(_alunoEstrangeiroRoutes);
-var _cursistaEspecializacaoRoutes = require('./cursistaEspecializacaoRoutes'); var _cursistaEspecializacaoRoutes2 = _interopRequireDefault(_cursistaEspecializacaoRoutes);
 var _alunoGraduacaoRoutes = require('./alunoGraduacaoRoutes'); var _alunoGraduacaoRoutes2 = _interopRequireDefault(_alunoGraduacaoRoutes);
+var _alunoIsFRoutes = require('./alunoIsFRoutes'); var _alunoIsFRoutes2 = _interopRequireDefault(_alunoIsFRoutes);
+var _cursistaEspecializacaoRoutes = require('./cursistaEspecializacaoRoutes'); var _cursistaEspecializacaoRoutes2 = _interopRequireDefault(_cursistaEspecializacaoRoutes);
+var _professorIsFRoutes = require('./professorIsFRoutes'); var _professorIsFRoutes2 = _interopRequireDefault(_professorIsFRoutes);
+var _usuarioRoutes = require('./usuarioRoutes'); var _usuarioRoutes2 = _interopRequireDefault(_usuarioRoutes);
 
 const router = new (0, _express.Router)()
 
