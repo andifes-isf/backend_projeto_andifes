@@ -1,5 +1,5 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _express = require('express');
-var _instituicaoEnsinoBrasileiraController = require('../controllers/instituicaoEnsinoBrasileiraController'); var _instituicaoEnsinoBrasileiraController2 = _interopRequireDefault(_instituicaoEnsinoBrasileiraController);
+var _instituicaoEnsinoBrasileiraController = require('../controllers/instituicao/instituicaoEnsinoBrasileiraController'); var _instituicaoEnsinoBrasileiraController2 = _interopRequireDefault(_instituicaoEnsinoBrasileiraController);
 
 const router = new (0, _express.Router)()
 

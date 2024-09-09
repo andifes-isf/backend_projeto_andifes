@@ -1,11 +1,11 @@
 // Models
-import ProfessorIsFMinistraTurmaOC from "../models/ofertacoletiva/professorisfministraturmaoc"
-import ProeficienciaProfessorIsf from '../models/proeficiencia/proeficienciaprofessorisf'
-import TurmaOC from '../models/ofertacoletiva/turmaoc'
-import Curso from '../models/ofertacoletiva/curso'
+import ProfessorIsFMinistraTurmaOC from "../../models/ofertacoletiva/professorisfministraturmaoc"
+import ProeficienciaProfessorIsf from '../../models/proeficiencia/proeficienciaprofessorisf'
+import TurmaOC from '../../models/ofertacoletiva/turmaoc'
+import Curso from '../../models/ofertacoletiva/curso'
 
 // Classe auxiliar
-import nivelFactory from '../utils/factories/nivelFactory'
+import nivelFactory from '../../utils/factories/nivelFactory'
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {

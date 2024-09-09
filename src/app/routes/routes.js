@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 // Autenticação
-import SessionController from '../controllers/SessionController'
+import SessionController from '../controllers/authentication/SessionController'
 
 // Models
 import usuarioRoutes from './usuarioRoutes'

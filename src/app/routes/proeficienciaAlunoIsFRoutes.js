@@ -1,6 +1,6 @@
 import { Router } from "express"
 import AuthMiddleware from '../../app/middlewares/auth'
-import ProeficienciaAlunoIsFController from "../controllers/proeficienciaAlunoIsFController"
+import ProeficienciaAlunoIsFController from "../controllers/proeficiencia/proeficienciaAlunoIsFController"
 
 const router = new Router()
 

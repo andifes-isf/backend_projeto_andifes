@@ -1,4 +1,4 @@
-import Curso from "../models/ofertacoletiva/curso";
+import Curso from "../../models/ofertacoletiva/curso";
 
 class cursoController {
     async post(req, res) {

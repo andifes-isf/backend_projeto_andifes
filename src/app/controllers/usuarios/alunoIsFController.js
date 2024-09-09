@@ -1,8 +1,8 @@
 import * as Yup from 'yup'
-import AlunoIsF from '../models/usuarios/alunoisf'
+import AlunoIsF from '../../models/usuarios/alunoisf'
 import usuarioController from './usuarioController'
-import TurmaOC from '../models/ofertacoletiva/turmaoc'
-import Curso from '../models/ofertacoletiva/curso'
+import TurmaOC from '../../models/ofertacoletiva/turmaoc'
+import Curso from '../../models/ofertacoletiva/curso'
 
 class alunoIsFController {
     async post(req, res, deInstituicao) {

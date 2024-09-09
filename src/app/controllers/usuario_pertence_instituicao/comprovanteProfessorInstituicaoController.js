@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import ComprovanteProfessorInstituicao from '../models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'
+import ComprovanteProfessorInstituicao from '../../models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'
 
 class ComprovanteProfessorInstituicaoController {
     async post(req, res) {  

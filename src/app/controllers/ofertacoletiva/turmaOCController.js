@@ -1,6 +1,6 @@
-import TurmaOC from "../models/ofertacoletiva/turmaoc";
-import Curso from '../models/ofertacoletiva/curso'
-import ProfessorIsF from '../models/usuarios/professorisf'
+import TurmaOC from "../../models/ofertacoletiva/turmaoc";
+import Curso from '../../models/ofertacoletiva/curso'
+import ProfessorIsF from '../../models/usuarios/professorisf'
 
 class turmaOCController {
     async post(req, res) {        

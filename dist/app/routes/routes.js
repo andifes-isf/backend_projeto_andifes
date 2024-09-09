@@ -1,7 +1,7 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _express = require('express');
 
 // Autenticação
-var _SessionController = require('../controllers/SessionController'); var _SessionController2 = _interopRequireDefault(_SessionController);
+var _SessionController = require('../controllers/authentication/SessionController'); var _SessionController2 = _interopRequireDefault(_SessionController);
 
 // Models
 var _usuarioRoutes = require('./usuarioRoutes'); var _usuarioRoutes2 = _interopRequireDefault(_usuarioRoutes);

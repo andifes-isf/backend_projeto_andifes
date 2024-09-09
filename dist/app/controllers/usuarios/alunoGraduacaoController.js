@@ -1,15 +1,15 @@
-import { Sequelize } from "sequelize";
-import AlunoGraduacao from "../models/usuarios/alunograduacao";
-import Usuario from "../models/usuarios/usuario";
-import ProfessorIsF from "../models/usuarios/professorisf";
-import ProfessorIsFController from './professorIsFController'
+"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize');
+var _alunograduacao = require('../../models/usuarios/alunograduacao'); var _alunograduacao2 = _interopRequireDefault(_alunograduacao);
+var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
+var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
 
 class AlunoGraduacaoController {
     async post(req, res) {
         try {    
-            await ProfessorIsFController.post(req, res, 0)
+            await _professorIsFController2.default.post(req, res, 0)
             
-            const alunoGraduacaoExistente = await AlunoGraduacao.findOne({
+            const alunoGraduacaoExistente = await _alunograduacao2.default.findOne({
                 where: {
                     login: req.body.login
                 }
@@ -21,7 +21,7 @@ class AlunoGraduacaoController {
                 })
             }
             
-            const cursista = await AlunoGraduacao.create({
+            const cursista = await _alunograduacao2.default.create({
                 login: req.body.login
             })
     
@@ -34,15 +34,15 @@ class AlunoGraduacaoController {
 
     async get(_, res){
         try {
-            const alunos = await AlunoGraduacao.findAll({
+            const alunos = await _alunograduacao2.default.findAll({
                 include: [
                     {
-                        model: ProfessorIsF,
+                        model: _professorisf2.default,
                         attributes: {
                             exclude: ['login'],
                         },
                         include: [{
-                            model: Usuario,
+                            model: _usuario2.default,
                             attributes: {
                                 exclude: ['login', 'senha_encriptada', 'ativo', 'tipo']
                             }
@@ -62,4 +62,4 @@ class AlunoGraduacaoController {
     }
 }
 
-export default new AlunoGraduacaoController()
+exports. default = new AlunoGraduacaoController()

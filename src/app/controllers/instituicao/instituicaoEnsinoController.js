@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import InstituicaoEnsino from '../models/instituicao/instituicaoensino'
+import InstituicaoEnsino from '../../models/instituicao/instituicaoensino'
 
 class instituicaoEnsinoController {
     async post(req, res, brasileira){

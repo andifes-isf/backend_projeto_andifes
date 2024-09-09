@@ -1,6 +1,6 @@
 import { Router } from "express"
 import AuthMiddleware from '../../app/middlewares/auth'
-import comprovanteAlunoInstituicaoController from "../controllers/comprovanteAlunoInstituicaoController"
+import comprovanteAlunoInstituicaoController from "../controllers/usuario_pertence_instituicao/comprovanteAlunoInstituicaoController"
 
 const router = new Router()
 

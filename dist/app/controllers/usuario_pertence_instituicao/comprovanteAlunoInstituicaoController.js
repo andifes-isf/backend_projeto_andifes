@@ -1,0 +1,44 @@
+"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
+var _comprovantealunoinstituicao = require('../../models/usuario_pertence_instituicao/comprovantealunoinstituicao'); var _comprovantealunoinstituicao2 = _interopRequireDefault(_comprovantealunoinstituicao);
+
+class ComprovanteAlunoInstituicaoController {
+    async post(req, res) {
+        try {
+            if(!(req.tipoUsuario === 'alunoisf')){
+                console.log(req.tipoUsuario)
+                return res.status(403).json({
+                    error: 'Pagina nao encontrada'
+                })
+            }
+
+            const comprovanteExistente = await _comprovantealunoinstituicao2.default.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idInstituicao: req.body.idInstituicao,
+                    inicio: req.body.inicio
+                }
+            })
+    
+            if(comprovanteExistente) {
+                return res.status(409).json({
+                    msg: "Comprovante de Aluno ja cadastrado"
+                })
+            }
+            
+            const comprovante = await _comprovantealunoinstituicao2.default.create({
+                idInstituicao: req.body.idInstituicao,
+                login: req.loginUsuario,
+                inicio: req.body.inicio,
+                termino: req.body.termino || null,
+                comprovante: req.body.comprovante
+            })
+    
+            return res.status(201).json(comprovante)    
+        } catch (error) {
+            return res.status(500).json(error.message)
+        }
+
+    }
+}
+
+exports. default = new ComprovanteAlunoInstituicaoController()

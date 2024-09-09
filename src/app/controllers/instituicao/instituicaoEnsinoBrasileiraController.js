@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import InstituicaoEnsinoBrasileira from '../models/instituicao/instituicaoensinobrasileira'
+import InstituicaoEnsinoBrasileira from '../../models/instituicao/instituicaoensinobrasileira'
 import instituicaoEnsinoController from './instituicaoEnsinoController'
 
 class instituicaoEnsinoBrasileiraController {

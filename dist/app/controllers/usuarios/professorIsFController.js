@@ -1,15 +1,15 @@
-import { Sequelize } from "sequelize";
-import ProfessorIsF from "../models/usuarios/professorisf";
-import Usuario from "../models/usuarios/usuario";
-import InstituicaoEnsino from "../models/instituicao/instituicaoensino";
-import usuarioController from "./usuarioController";
+"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize');
+var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
+var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _instituicaoensino = require('../../models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
+var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
 class ProfessorIsFController {
     async post(req, res, cursista) {
         try {
-            await usuarioController.post(req, res, 'professorisf')
+            await _usuarioController2.default.post(req, res, 'professorisf')
     
-            const professorExistente = await ProfessorIsF.findOne({
+            const professorExistente = await _professorisf2.default.findOne({
                 where: {
                     login: req.body.login,
                     inicio: req.body.inicio
@@ -20,7 +20,7 @@ class ProfessorIsFController {
                 return 0
             }
             
-            return await ProfessorIsF.create({
+            return await _professorisf2.default.create({
                 login: req.body.login,
                 poca: req.body.poca,
                 inicio: req.body.inicio,
@@ -35,14 +35,14 @@ class ProfessorIsFController {
 
     async get(_, res){
         try {
-            const professores = await ProfessorIsF.findAll({
+            const professores = await _professorisf2.default.findAll({
                 include: [
                     {
-                        model: Usuario,
+                        model: _usuario2.default,
                         attributes: {
                             include: [
-                                [Sequelize.fn('CONCAT_WS', ' ', Sequelize.col('Usuario.nome'), Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
-                                [Sequelize.fn('CONCAT_WS', '@', Sequelize.col('nomeEmail'), Sequelize.col('dominio')), 'email']
+                                [_sequelize.Sequelize.fn('CONCAT_WS', ' ', _sequelize.Sequelize.col('Usuario.nome'), _sequelize.Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
+                                [_sequelize.Sequelize.fn('CONCAT_WS', '@', _sequelize.Sequelize.col('nomeEmail'), _sequelize.Sequelize.col('dominio')), 'email']
                             ],
                             exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
                         }
@@ -52,7 +52,7 @@ class ProfessorIsFController {
                         // Precisaria testar, mas acredito que se quisermos pegar todas as relações que um professor tem com alguma instituição de ensino, a gente teria que 
                         // incluir primeiro o comprovanteprofessorinstituicao e através dele incluir as instituicoesensino
 
-                        model: InstituicaoEnsino,
+                        model: _instituicaoensino2.default,
                         attributes: {
                             exclude: ['idInstituicao']
                         },
@@ -73,4 +73,4 @@ class ProfessorIsFController {
     }
 }
 
-export default new ProfessorIsFController()
+exports. default = new ProfessorIsFController()

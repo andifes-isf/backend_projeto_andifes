@@ -1,5 +1,5 @@
 import { Router } from "express"
-import professorIsFMinistraTurmaOC from "../controllers/professorIsFMinistraTurmaOCController"
+import professorIsFMinistraTurmaOC from "../controllers/ofertacoletiva/professorIsFMinistraTurmaOCController"
 import AuthMiddleware from '../../app/middlewares/auth'
 
 const router = new Router()

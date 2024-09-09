@@ -1,27 +1,27 @@
 import { Sequelize } from "sequelize";
-import CursistaEspecializacao from "../models/usuarios/cursistaespecializacao";
-import Usuario from "../models/usuarios/usuario";
-import ProfessorIsF from "../models/usuarios/professorisf";
-import ProfessorIsFController from '../controllers/professorIsFController'
+import AlunoGraduacao from "../../models/usuarios/alunograduacao";
+import Usuario from "../../models/usuarios/usuario";
+import ProfessorIsF from "../../models/usuarios/professorisf";
+import ProfessorIsFController from './professorIsFController'
 
-class CursistaEspecializacaoController {
+class AlunoGraduacaoController {
     async post(req, res) {
         try {    
-            await ProfessorIsFController.post(req, res, 1)
+            await ProfessorIsFController.post(req, res, 0)
             
-            const cursistaExistente = await CursistaEspecializacao.findOne({
+            const alunoGraduacaoExistente = await AlunoGraduacao.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(cursistaExistente) {
+            if(alunoGraduacaoExistente) {
                 return res.status(409).json({
                     msg: "Cursista de especializacao ja cadastrado"
                 })
             }
             
-            const cursista = await CursistaEspecializacao.create({
+            const cursista = await AlunoGraduacao.create({
                 login: req.body.login
             })
     
@@ -34,7 +34,7 @@ class CursistaEspecializacaoController {
 
     async get(_, res){
         try {
-            const cursistas = await CursistaEspecializacao.findAll({
+            const alunos = await AlunoGraduacao.findAll({
                 include: [
                     {
                         model: ProfessorIsF,
@@ -48,10 +48,12 @@ class CursistaEspecializacaoController {
                             }
                         }]
                     }
-                ]
+                ],
+                logging: console.log
             })
-
-            return res.status(200).json(cursistas)
+            
+            return res.status(200).json(alunos)
+            
         } catch (error) {
             console.log(error)
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
@@ -60,4 +62,4 @@ class CursistaEspecializacaoController {
     }
 }
 
-export default new CursistaEspecializacaoController()
+export default new AlunoGraduacaoController()

@@ -1,5 +1,5 @@
 import { Router } from "express"
-import alunoIsFController from "../controllers/alunoIsFController"
+import alunoIsFController from "../controllers/usuarios/alunoIsFController"
 
 const router = new Router()
 

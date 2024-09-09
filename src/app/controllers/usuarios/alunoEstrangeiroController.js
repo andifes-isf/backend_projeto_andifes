@@ -1,16 +1,15 @@
 import * as Yup from 'yup'
-import AlunoDeInstituicao from '../models/usuarios/alunodeinstituicao'
+import AlunoEstrangeiro from '../../models/usuarios/alunoestrangeiro'
 import alunoIsFController from './alunoIsFController'
-import InstituicaoEnsino from '../models/instituicao/instituicaoensino'
-import AlunoIsF from '../models/usuarios/alunoisf'
-import Usuario from '../models/usuarios/usuario'
+import AlunoIsF from '../../models/usuarios/alunoisf'
+import Usuario from '../../models/usuarios/usuario'
 
-class alunoDeinstituicaoController {
+class alunoEstrangeiroController {
     async post(req, res) {
         try {
-            await alunoIsFController.post(req, res, 1)
+            await alunoIsFController.post(req, res, 0)
             
-            const alunoExistente = await AlunoDeInstituicao.findOne({
+            const alunoExistente = await AlunoEstrangeiro.findOne({
                 where: {
                     login: req.body.login
                 }
@@ -22,15 +21,17 @@ class alunoDeinstituicaoController {
                 })
             }
     
-            const aluno = await AlunoDeInstituicao.create({
-                nDocumento: req.body.nDocumento,
-                cargo: req.body.cargo,
-                areaAtuacao: req.body.areaAtuacao,
-                login: req.body.login
+            const aluno = await AlunoEstrangeiro.create({
+                paisOrigem: req.body.paisOrigem,
+                comprovante: req.body.comprovante,
+                tipo: req.body.tipo,
+                login: req.body.login,
+                codigo: req.body.codigo
             })
         
             return res.status(201).json(aluno)
         } catch (error) {
+            console.log(error)
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 
@@ -38,7 +39,7 @@ class alunoDeinstituicaoController {
 
     async get(_, res) {
         try {
-            const alunos = await AlunoDeInstituicao.findAll({
+            const alunos = await AlunoEstrangeiro.findAll({
                 include: [
                     {
                         model: AlunoIsF,
@@ -51,18 +52,6 @@ class alunoDeinstituicaoController {
                                 exclude: ['login', 'senha_encriptada', 'ativo', 'tipo']
                             }
                         }]
-                    },    
-                    {
-                        model: InstituicaoEnsino,
-                        attributes: {
-                            exclude: ['idInstituicao']
-                        },
-                        through: {
-                            attributes: {
-                                exclude: ['login', 'idInstituicao'],
-                                include: ['inicio']
-                            }
-                        }
                     }
                 ]
             })
@@ -74,4 +63,4 @@ class alunoDeinstituicaoController {
     }
 }
 
-export default new alunoDeinstituicaoController()
+export default new alunoEstrangeiroController()
