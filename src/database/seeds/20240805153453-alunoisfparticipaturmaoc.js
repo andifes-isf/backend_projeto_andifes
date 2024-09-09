@@ -1,7 +1,7 @@
 'use strict';
 
 import '../../database'
-import AlunoIsFParticipaTurmaOC from '../../app/models/alunoisfparticipaturmaoc';
+import AlunoIsFParticipaTurmaOC from '../../app/models/ofertacoletiva/alunoisfparticipaturmaoc';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

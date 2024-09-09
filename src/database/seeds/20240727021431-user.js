@@ -1,7 +1,7 @@
 "use strict"
 
 import '../../database'  // Importa para garantir que os models sejam inicializados
-import Usuario from '../../app/models/usuario'
+import Usuario from '../../app/models/usuarios/usuario'
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {

@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
-import AlunoGraduacao from "../models/alunograduacao";
-import Usuario from "../models/usuario";
-import ProfessorIsF from "../models/professorisf";
+import AlunoGraduacao from "../models/usuarios/alunograduacao";
+import Usuario from "../models/usuarios/usuario";
+import ProfessorIsF from "../models/usuarios/professorisf";
 import ProfessorIsFController from './professorIsFController'
 
 class AlunoGraduacaoController {

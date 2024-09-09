@@ -1,8 +1,8 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }// Models
-var _professorisfministraturmaoc = require('../models/professorisfministraturmaoc'); var _professorisfministraturmaoc2 = _interopRequireDefault(_professorisfministraturmaoc);
-var _proeficienciaprofessorisf = require('../models/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
-var _turmaoc = require('../models/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
-var _curso = require('../models/curso'); var _curso2 = _interopRequireDefault(_curso);
+var _professorisfministraturmaoc = require('../models/ofertacoletiva/professorisfministraturmaoc'); var _professorisfministraturmaoc2 = _interopRequireDefault(_professorisfministraturmaoc);
+var _proeficienciaprofessorisf = require('../models/proeficiencia/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
+var _turmaoc = require('../models/ofertacoletiva/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
+var _curso = require('../models/ofertacoletiva/curso'); var _curso2 = _interopRequireDefault(_curso);
 
 // Classe auxiliar
 var _nivelFactory = require('../utils/factories/nivelFactory'); var _nivelFactory2 = _interopRequireDefault(_nivelFactory);
@@ -10,21 +10,38 @@ var _nivelFactory = require('../utils/factories/nivelFactory'); var _nivelFactor
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
         try {
-            
-            // Precisa verificar se um Docente Orientador pode associar um orientando a uma turma
-    
             if(!(req.tipoUsuario === 'professorisf')){
                 return res.status(403).json({
                     error: 'Acesso negado'
                 })
             }
-    
+            
+            // Verifica se o professor já está ministrando a turma
+            const professorNaTurma = await _professorisfministraturmaoc2.default.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idTurma: req.body.idTurma
+                }
+            })
+
+            if(professorNaTurma){
+                return res.status(409).json({
+                    msg: "Professor ja ministrando a turma"
+                })
+            }
+
+            // Precisa verificar se um Docente Orientador pode associar um orientando a uma turma
             const turma = await _turmaoc2.default.findOne({
                 where: {
                     idTurma: req.body.idTurma
                 }
             })
-            console.log(turma)
+
+            if(!turma){
+                return res.status(422).json({
+                    msg: "Turma nao encontrada"
+                })
+            }
 
             const curso = await _curso2.default.findOne({
                 where: {

@@ -1,8 +1,8 @@
 // Models
-import ProfessorIsFMinistraTurmaOC from "../models/professorisfministraturmaoc"
-import ProeficienciaProfessorIsf from '../models/proeficienciaprofessorisf'
-import TurmaOC from '../models/turmaoc'
-import Curso from '../models/curso'
+import ProfessorIsFMinistraTurmaOC from "../models/ofertacoletiva/professorisfministraturmaoc"
+import ProeficienciaProfessorIsf from '../models/proeficiencia/proeficienciaprofessorisf'
+import TurmaOC from '../models/ofertacoletiva/turmaoc'
+import Curso from '../models/ofertacoletiva/curso'
 
 // Classe auxiliar
 import nivelFactory from '../utils/factories/nivelFactory'
@@ -10,21 +10,38 @@ import nivelFactory from '../utils/factories/nivelFactory'
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
         try {
-            
-            // Precisa verificar se um Docente Orientador pode associar um orientando a uma turma
-    
             if(!(req.tipoUsuario === 'professorisf')){
                 return res.status(403).json({
                     error: 'Acesso negado'
                 })
             }
-    
+            
+            // Verifica se o professor já está ministrando a turma
+            const professorNaTurma = await ProfessorIsFMinistraTurmaOC.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idTurma: req.body.idTurma
+                }
+            })
+
+            if(professorNaTurma){
+                return res.status(409).json({
+                    msg: "Professor ja ministrando a turma"
+                })
+            }
+
+            // Precisa verificar se um Docente Orientador pode associar um orientando a uma turma
             const turma = await TurmaOC.findOne({
                 where: {
                     idTurma: req.body.idTurma
                 }
             })
-            console.log(turma)
+
+            if(!turma){
+                return res.status(422).json({
+                    msg: "Turma nao encontrada"
+                })
+            }
 
             const curso = await Curso.findOne({
                 where: {

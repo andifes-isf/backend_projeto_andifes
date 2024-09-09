@@ -1,7 +1,7 @@
 'use strict'
 
 import '../../database'
-import AlunoIsF from '../../app/models/alunoisf'
+import AlunoIsF from '../../app/models/usuarios/alunoisf'
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

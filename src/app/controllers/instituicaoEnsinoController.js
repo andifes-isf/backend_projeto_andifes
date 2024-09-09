@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import InstituicaoEnsino from '../models/instituicaoensino'
+import InstituicaoEnsino from '../models/instituicao/instituicaoensino'
 
 class instituicaoEnsinoController {
     async post(req, res, brasileira){
@@ -11,9 +11,7 @@ class instituicaoEnsinoController {
             })
     
             if(instituicaoExistente) {
-                return res.status(409).json({
-                    msg: "Instituicao de Ensino ja cadastrada"
-                })
+                return 0
             }
     
             return await InstituicaoEnsino.create({
@@ -22,6 +20,7 @@ class instituicaoEnsinoController {
                 brasileira: brasileira
             })
         } catch (error) {
+            console.log(error)
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
     }

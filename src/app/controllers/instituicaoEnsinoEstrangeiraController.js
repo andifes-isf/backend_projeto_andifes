@@ -1,11 +1,11 @@
 import * as Yup from 'yup'
-import InstituicaoEnsinoEstrangeira from '../models/instituicaoensinoestrangeira'
-import InstituicaoEnsino from '../models/instituicaoensino'
+import InstituicaoEnsinoEstrangeira from '../models/instituicao/instituicaoensinoestrangeira'
+import instituicaoEnsinoController from './instituicaoEnsinoController'
 
 class instituicaoEnsinoEstrangeiraController {
     async post(req, res){
         try {
-            await InstituicaoEnsino.post(req, res, 0)
+            await instituicaoEnsinoController.post(req, res, 0)
 
             const instituicaoExistente = await InstituicaoEnsinoEstrangeira.findOne({
                 where: {

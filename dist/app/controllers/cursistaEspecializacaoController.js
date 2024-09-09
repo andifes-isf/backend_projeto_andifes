@@ -1,7 +1,7 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize');
-var _cursistaespecializacao = require('../models/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
-var _usuario = require('../models/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
-var _professorisf = require('../models/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
+var _cursistaespecializacao = require('../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
+var _usuario = require('../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _professorisf = require('../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 var _professorIsFController = require('../controllers/professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
 
 class CursistaEspecializacaoController {
@@ -48,12 +48,10 @@ class CursistaEspecializacaoController {
                             }
                         }]
                     }
-                ],
-                logging: console.log
+                ]
             })
-            
+
             return res.status(200).json(cursistas)
-            
         } catch (error) {
             console.log(error)
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)

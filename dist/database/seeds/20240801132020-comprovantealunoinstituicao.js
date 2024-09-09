@@ -1,7 +1,7 @@
 "use strict"; function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }'use strict';
 
 require('../../database');
-var _comprovantealunoinstituicao = require('../../app/models/comprovantealunoinstituicao'); var _comprovantealunoinstituicao2 = _interopRequireDefault(_comprovantealunoinstituicao);
+var _comprovantealunoinstituicao = require('../../app/models/usuario_pertence_instituicao/comprovantealunoinstituicao'); var _comprovantealunoinstituicao2 = _interopRequireDefault(_comprovantealunoinstituicao);
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

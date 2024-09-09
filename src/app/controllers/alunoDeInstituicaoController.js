@@ -1,9 +1,9 @@
 import * as Yup from 'yup'
-import AlunoDeInstituicao from '../models/alunodeinstituicao'
+import AlunoDeInstituicao from '../models/usuarios/alunodeinstituicao'
 import alunoIsFController from './alunoIsFController'
-import InstituicaoEnsino from '../models/instituicaoensino'
-import AlunoIsF from '../models/alunoisf'
-import Usuario from '../models/usuario'
+import InstituicaoEnsino from '../models/instituicao/instituicaoensino'
+import AlunoIsF from '../models/usuarios/alunoisf'
+import Usuario from '../models/usuarios/usuario'
 
 class alunoDeinstituicaoController {
     async post(req, res) {

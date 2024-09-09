@@ -1,8 +1,8 @@
 "use strict"; function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }'use strict';
 
 require('../../database');
-var _instituicaoensino = require('../../app/models/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
-var _instituicaoensinoestrangeira = require('../../app/models/instituicaoensinoestrangeira'); var _instituicaoensinoestrangeira2 = _interopRequireDefault(_instituicaoensinoestrangeira);
+var _instituicaoensino = require('../../app/models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
+var _instituicaoensinoestrangeira = require('../../app/models/instituicao/instituicaoensinoestrangeira'); var _instituicaoensinoestrangeira2 = _interopRequireDefault(_instituicaoensinoestrangeira);
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

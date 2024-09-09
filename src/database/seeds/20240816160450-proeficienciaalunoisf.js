@@ -1,7 +1,7 @@
 'use strict';
 
 import '../../database'
-import ProeficiencieAlunoIsF from '../../app/models/proeficienciaalunoisf';
+import ProeficiencieAlunoIsF from '../../app/models/proeficiencia/proeficienciaalunoisf';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

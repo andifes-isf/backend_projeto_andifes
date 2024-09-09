@@ -1,7 +1,7 @@
 'use strict';
 
 import '../../database'
-import TurmaOC from '../../app/models/turmaoc';
+import TurmaOC from '../../app/models/ofertacoletiva/turmaoc';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -129,6 +129,24 @@ module.exports = {
         idCurso: 4,
         nVagas: 50,
         nome: "2024/2_italianobasico1_turma2",
+        nInscritos: 30,
+        nConcluintes: 20,
+        nReprovados: 1
+      },
+      {
+        idTurma: 15,
+        idCurso: 14,
+        nVagas: 50,
+        nome: "2024/2_alemaointermediario1_turma2",
+        nInscritos: 30,
+        nConcluintes: 20,
+        nReprovados: 1
+      },
+      {
+        idTurma: 16,
+        idCurso: 9,
+        nVagas: 50,
+        nome: "2024/2_inglesintermediario1_turma2",
         nInscritos: 30,
         nConcluintes: 20,
         nReprovados: 1

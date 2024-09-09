@@ -1,8 +1,8 @@
 'use strict';
 
 import '../../database'
-import InstituicaoEnsino from '../../app/models/instituicaoensino';
-import InstituicaoEnsinoEstrangeira from '../../app/models/instituicaoensinoestrangeira';
+import InstituicaoEnsino from '../../app/models/instituicao/instituicaoensino';
+import InstituicaoEnsinoEstrangeira from '../../app/models/instituicao/instituicaoensinoestrangeira';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

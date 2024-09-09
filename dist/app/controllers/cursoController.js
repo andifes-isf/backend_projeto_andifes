@@ -1,4 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _curso = require('../models/curso'); var _curso2 = _interopRequireDefault(_curso);
+"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _curso = require('../models/ofertacoletiva/curso'); var _curso2 = _interopRequireDefault(_curso);
 
 class cursoController {
     async post(req, res) {

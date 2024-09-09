@@ -1,7 +1,7 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize');
-var _professorisf = require('../models/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
-var _usuario = require('../models/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
-var _instituicaoensino = require('../models/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
+var _professorisf = require('../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
+var _usuario = require('../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _instituicaoensino = require('../models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
 class ProfessorIsFController {

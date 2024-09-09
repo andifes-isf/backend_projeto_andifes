@@ -1,9 +1,9 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
-var _alunodeinstituicao = require('../models/alunodeinstituicao'); var _alunodeinstituicao2 = _interopRequireDefault(_alunodeinstituicao);
+var _alunodeinstituicao = require('../models/usuarios/alunodeinstituicao'); var _alunodeinstituicao2 = _interopRequireDefault(_alunodeinstituicao);
 var _alunoIsFController = require('./alunoIsFController'); var _alunoIsFController2 = _interopRequireDefault(_alunoIsFController);
-var _instituicaoensino = require('../models/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
-var _alunoisf = require('../models/alunoisf'); var _alunoisf2 = _interopRequireDefault(_alunoisf);
-var _usuario = require('../models/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _instituicaoensino = require('../models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
+var _alunoisf = require('../models/usuarios/alunoisf'); var _alunoisf2 = _interopRequireDefault(_alunoisf);
+var _usuario = require('../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 class alunoDeinstituicaoController {
     async post(req, res) {

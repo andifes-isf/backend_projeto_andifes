@@ -1,7 +1,7 @@
 'use strict';
 
 import '../../database'
-import ComprovanteProfessorInstituicao from '../../app/models/comprovanteprofessorinstituicao';
+import ComprovanteProfessorInstituicao from '../../app/models/usuario_pertence_instituicao/comprovanteprofessorinstituicao';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

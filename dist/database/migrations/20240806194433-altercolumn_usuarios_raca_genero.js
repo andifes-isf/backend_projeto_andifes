@@ -30,8 +30,26 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction(transaction => {
-      return queryInterface.removeColumn('turmaoc', 'nome', { transaction: transaction })
+    return queryInterface.sequelize.transaction(async transaction => {
+      await queryInterface.changeColumn(
+        'usuario', 
+        'etnia', 
+        {
+          type: Sequelize.ENUM('amarelo', 'branco', 'preto', 'indigena'),
+          allowNull: false
+        },
+        {
+          transaction: transaction
+        }
+      )
+
+      await queryInterface.changeColumn(
+        'usuario',
+        'genero',
+        {
+          type: Sequelize.ENUM('feminino', 'masculino','outros')
+        }
+      )
     }) 
   }
 };

@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import proeficienciaProfessorIsF from '../models/proeficienciaprofessorisf'
+import proeficienciaProfessorIsF from '../models/proeficiencia/proeficienciaprofessorisf'
 
 class ProeficienciaProfessorIsFController {
     async post(req, res) {

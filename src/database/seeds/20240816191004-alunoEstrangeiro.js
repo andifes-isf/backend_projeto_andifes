@@ -1,7 +1,7 @@
 'use strict';
 
 import '../../database'
-import AlunoEstrangeiro from '../../app/models/alunoestrangeiro';
+import AlunoEstrangeiro from '../../app/models/usuarios/alunoestrangeiro';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

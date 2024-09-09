@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
-import CursistaEspecializacao from "../models/cursistaespecializacao";
-import Usuario from "../models/usuario";
-import ProfessorIsF from "../models/professorisf";
+import CursistaEspecializacao from "../models/usuarios/cursistaespecializacao";
+import Usuario from "../models/usuarios/usuario";
+import ProfessorIsF from "../models/usuarios/professorisf";
 import ProfessorIsFController from '../controllers/professorIsFController'
 
 class CursistaEspecializacaoController {
@@ -48,12 +48,10 @@ class CursistaEspecializacaoController {
                             }
                         }]
                     }
-                ],
-                logging: console.log
+                ]
             })
-            
+
             return res.status(200).json(cursistas)
-            
         } catch (error) {
             console.log(error)
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
