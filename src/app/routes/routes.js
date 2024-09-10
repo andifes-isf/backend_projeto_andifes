@@ -1,69 +1,77 @@
 import { Router } from "express"
 
+////// Importações para as rotas
+
 // Autenticação
 import SessionController from '../controllers/authentication/SessionController'
 
-////// Rotas
+// curso_especializacao
+import disciplinaEspecializacaoRoutes from "./curso_especializacao/disciplinaEspecializacaoRoutes"
 
 // instituicao  
-import instituicaoEnsinoBrasileiraRoutes from './instituicaoEnsinoBrasileiraRoutes'
-import instituicaoEnsinoEstrangeiraRoutes from './instituicaoEnsinoEstrangeiraRoutes'
-import instituicaoEnsinoRoutes from './instituicaoEnsinoRoutes'
+import instituicaoEnsinoBrasileiraRoutes from './instituicao/instituicaoEnsinoBrasileiraRoutes'
+import instituicaoEnsinoEstrangeiraRoutes from './instituicao/instituicaoEnsinoEstrangeiraRoutes'
+import instituicaoEnsinoRoutes from './instituicao/instituicaoEnsinoRoutes'
 
 // ofertacoletiva
-import alunoIsFParticipaTurmaOCRoutes from "./alunoIsFParticipaTurmaOCRoutes"
-import cursoRoutes from './cursoRoutes'
-import professorIsFMinistraTurmaOCRoutes from "./professorIsFMinistraTurmaOCRoutes"
-import turmaOCRoutes from './turmaOCRoutes'
+import alunoIsFParticipaTurmaOCRoutes from "./ofertacoletiva/alunoIsFParticipaTurmaOCRoutes"
+import cursoRoutes from './ofertacoletiva/cursoRoutes'
+import professorIsFMinistraTurmaOCRoutes from "./ofertacoletiva/professorIsFMinistraTurmaOCRoutes"
+import turmaOCRoutes from './ofertacoletiva/turmaOCRoutes'
 
 // proeficiencia
-import proeficienciaAlunoIsFRoutes from "./proeficienciaAlunoIsFRoutes"
-import proeficienciaProfessorIsFRoutes from "./proeficienciaProfessorIsFRoutes"
+import proeficienciaAlunoIsFRoutes from "./proeficiencia/proeficienciaAlunoIsFRoutes"
+import proeficienciaProfessorIsFRoutes from "./proeficiencia/proeficienciaProfessorIsFRoutes"
 
 // usuario_pertence_instituicao
-import comprovanteAlunoInstituicaoRoutes from './comprovanteAlunoInstituicaoRoutes'
-import comprovanteProfessorInstituicaoRoutes from "./comprovanteProfessorInstituicaoRoutes"
+import comprovanteAlunoInstituicaoRoutes from './usuario_pertence_instituicao/comprovanteAlunoInstituicaoRoutes'
+import comprovanteProfessorInstituicaoRoutes from "./usuario_pertence_instituicao/comprovanteProfessorInstituicaoRoutes"
 
 // usuarios
-import alunoDeInstituicaoRoutes from './alunoDeInstituicaoRoutes'
-import alunoEstrangeiroRoutes from './alunoEstrangeiroRoutes'
-import alunoGraduacaoRoutes from './alunoGraduacaoRoutes'
-import alunoIsFRoutes from './alunoIsFRoutes'
-import cursistaEspecializacaoRoutes from './cursistaEspecializacaoRoutes'
-import professorIsFRoutes from './professorIsFRoutes'
-import usuarioRoutes from './usuarioRoutes'
+import alunoDeInstituicaoRoutes from './usuarios/alunoDeInstituicaoRoutes'
+import alunoEstrangeiroRoutes from './usuarios/alunoEstrangeiroRoutes'
+import alunoGraduacaoRoutes from './usuarios/alunoGraduacaoRoutes'
+import alunoIsFRoutes from './usuarios/alunoIsFRoutes'
+import cursistaEspecializacaoRoutes from './usuarios/cursistaEspecializacaoRoutes'
+import professorIsFRoutes from './usuarios/professorIsFRoutes'
+import usuarioRoutes from './usuarios/usuarioRoutes'
 
 const router = new Router()
 
-// Rotas de autenticação
+////// Rotas
+
+// authentication
 router.post('/login', SessionController.store)
 
-// Rotas de uso
-router.use('/usuario', usuarioRoutes)
+// curso_especializacao
+router.use('/disciplina_especializacao', disciplinaEspecializacaoRoutes)
 
-// Rotas de alunos
-router.use('/aluno_isf', alunoIsFRoutes)
-router.use('/aluno_estrangeiro', alunoEstrangeiroRoutes)
-router.use('/aluno_deinstituicao', alunoDeInstituicaoRoutes)
-router.use('/comprovante_aluno_instituicao', comprovanteAlunoInstituicaoRoutes)
-router.use('/alunoisf_participa_turmaoc', alunoIsFParticipaTurmaOCRoutes)
-router.use('/proeficiencia_alunoisf', proeficienciaAlunoIsFRoutes)
-
-// Rotas de professor
-router.use('/professor_isf', professorIsFRoutes)
-router.use('/cursista_especializacao', cursistaEspecializacaoRoutes)
-router.use('/aluno_graduacao', alunoGraduacaoRoutes)
-router.use('/professorisf_ministra_turmaoc', professorIsFMinistraTurmaOCRoutes)
-router.use('/comprovante_professor_instituicao', comprovanteProfessorInstituicaoRoutes)
-router.use('/proeficiencia_professorisf', proeficienciaProfessorIsFRoutes)
-
-// Rotas de Instituições
-router.use('/instituicao_ensino', instituicaoEnsinoRoutes)
+// instituicao
 router.use('/instituicao_ensino_brasileira', instituicaoEnsinoBrasileiraRoutes)
 router.use('/instituicao_ensino_estrangeira', instituicaoEnsinoEstrangeiraRoutes)
+router.use('/instituicao_ensino', instituicaoEnsinoRoutes)
 
-// Curso Oferta Coletiva
+// ofertacoletiva
+router.use('/alunoisf_participa_turmaoc', alunoIsFParticipaTurmaOCRoutes)
 router.use('/curso', cursoRoutes)
+router.use('/professorisf_ministra_turmaoc', professorIsFMinistraTurmaOCRoutes)
 router.use('/turma_oc', turmaOCRoutes)
+
+// proeficiencia
+router.use('/proeficiencia_alunoisf', proeficienciaAlunoIsFRoutes)
+router.use('/proeficiencia_professorisf', proeficienciaProfessorIsFRoutes)
+
+// usuario_pertence_instituicao
+router.use('/comprovante_aluno_instituicao', comprovanteAlunoInstituicaoRoutes)
+router.use('/comprovante_professor_instituicao', comprovanteProfessorInstituicaoRoutes)
+
+// usuarios
+router.use('/aluno_deinstituicao', alunoDeInstituicaoRoutes)
+router.use('/aluno_estrangeiro', alunoEstrangeiroRoutes)
+router.use('/aluno_graduacao', alunoGraduacaoRoutes)
+router.use('/aluno_isf', alunoIsFRoutes)
+router.use('/cursista_especializacao', cursistaEspecializacaoRoutes)
+router.use('/professor_isf', professorIsFRoutes)
+router.use('/usuario', usuarioRoutes)
 
 export default router
