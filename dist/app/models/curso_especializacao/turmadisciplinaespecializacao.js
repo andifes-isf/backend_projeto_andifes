@@ -4,7 +4,7 @@ class TurmaDisciplinaEspecializacao extends _sequelize.Model {
     static init(sequelize) {
         super.init(
             {
-                nome: {
+                disciplina: {
                     type: _sequelize2.default.STRING,
                     allowNull: false,
                     primaryKey: true
@@ -12,7 +12,12 @@ class TurmaDisciplinaEspecializacao extends _sequelize.Model {
                 idTurma: {
                     type: _sequelize2.default.BIGINT,
                     allowNull: false,
-                    primaryKey: true
+                    primaryKey: true,
+                    autoIncrement: true
+                },
+                nome: {
+                    type: _sequelize2.default.STRING,
+                    unique: true
                 },
                 mesOferta: {
                     type: _sequelize2.default.ENUM('janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')

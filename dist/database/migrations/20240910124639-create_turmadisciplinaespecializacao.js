@@ -4,15 +4,20 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('turmadisciplinaespecializacao', {
-      nome: {
+      idTurma: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+      },
+      disciplina: {
         type: Sequelize.STRING,
         allowNull: false,
         primaryKey: true
       },
-      idTurma: {
-        type: Sequelize.BIGINT,
-        allowNull: false,
-        primaryKey: true
+      nome: {
+        type: Sequelize.STRING,
+        unique: true
       },
       mesOferta: {
         type: Sequelize.ENUM('janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')
@@ -31,18 +36,18 @@ module.exports = {
       numeroDesistentes: {
         type: Sequelize.INTEGER
       },
-      numeroAprovador: {
+      numeroAprovados: {
         type: Sequelize.INTEGER
       },
-      numeroReprovador: {
+      numeroReprovados: {
         type: Sequelize.INTEGER
       }
     })
 
     await queryInterface.addConstraint('turmadisciplinaespecializacao', {
-      fields: ['nome'],
+      fields: ['disciplina'],
       type: 'foreign key',
-      name: 'fk_nome_turmadisciplinaespecializacao',
+      name: 'fk_disciplina_turmadisciplinaespecializacao',
       references: {
         table: 'disciplinaespecializacao',
         field: 'nome'

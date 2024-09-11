@@ -1,10 +1,10 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
-var _turmadisciplinaespecializacao = require('../../models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
+import * as Yup from 'yup'
+import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
 
 class turmaDisciplinaEspecializacaoController {
     async post(req, res){
         try {
-            const turmaExistente = await _turmadisciplinaespecializacao2.default.findOne({
+            const turmaExistente = await TurmaDisciplinaEspecializacao.findOne({
                 where: {
                     nome: req.body.nome,
                 }
@@ -16,7 +16,7 @@ class turmaDisciplinaEspecializacaoController {
                 })
             }
 
-            const turma = await _turmadisciplinaespecializacao2.default.create({
+            const turma = await TurmaDisciplinaEspecializacao.create({
                 disciplina: req.body.disciplina,
                 nome: req.body.nome,
                 mesOferta: req.body.mesOferta,
@@ -36,7 +36,7 @@ class turmaDisciplinaEspecializacaoController {
 
     async get(_, res) {
         try {
-            const turmas = await _turmadisciplinaespecializacao2.default.findAll()
+            const turmas = await TurmaDisciplinaEspecializacao.findAll()
 
             return res.status(200).json(turmas)
         } catch (error) {
@@ -45,4 +45,4 @@ class turmaDisciplinaEspecializacaoController {
     }
 }
 
-exports. default = new turmaDisciplinaEspecializacaoController()
+export default new turmaDisciplinaEspecializacaoController()

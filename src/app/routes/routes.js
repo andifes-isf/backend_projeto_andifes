@@ -7,6 +7,7 @@ import SessionController from '../controllers/authentication/SessionController'
 
 // curso_especializacao
 import disciplinaEspecializacaoRoutes from "./curso_especializacao/disciplinaEspecializacaoRoutes"
+import turmaDisciplinaEspecializacaoRoutes from './curso_especializacao/turmaDisciplinaEspecializacaoRoutes'
 
 // instituicao  
 import instituicaoEnsinoBrasileiraRoutes from './instituicao/instituicaoEnsinoBrasileiraRoutes'
@@ -35,6 +36,7 @@ import alunoIsFRoutes from './usuarios/alunoIsFRoutes'
 import cursistaEspecializacaoRoutes from './usuarios/cursistaEspecializacaoRoutes'
 import professorIsFRoutes from './usuarios/professorIsFRoutes'
 import usuarioRoutes from './usuarios/usuarioRoutes'
+import TurmaDisciplinaEspecializacao from "../models/curso_especializacao/turmadisciplinaespecializacao"
 
 const router = new Router()
 
@@ -45,6 +47,7 @@ router.post('/login', SessionController.store)
 
 // curso_especializacao
 router.use('/disciplina_especializacao', disciplinaEspecializacaoRoutes)
+router.use('/turma_especializacao', turmaDisciplinaEspecializacaoRoutes)
 
 // instituicao
 router.use('/instituicao_ensino_brasileira', instituicaoEnsinoBrasileiraRoutes)

@@ -7,6 +7,7 @@ var _SessionController = require('../controllers/authentication/SessionControlle
 
 // curso_especializacao
 var _disciplinaEspecializacaoRoutes = require('./curso_especializacao/disciplinaEspecializacaoRoutes'); var _disciplinaEspecializacaoRoutes2 = _interopRequireDefault(_disciplinaEspecializacaoRoutes);
+var _turmaDisciplinaEspecializacaoRoutes = require('./curso_especializacao/turmaDisciplinaEspecializacaoRoutes'); var _turmaDisciplinaEspecializacaoRoutes2 = _interopRequireDefault(_turmaDisciplinaEspecializacaoRoutes);
 
 // instituicao  
 var _instituicaoEnsinoBrasileiraRoutes = require('./instituicao/instituicaoEnsinoBrasileiraRoutes'); var _instituicaoEnsinoBrasileiraRoutes2 = _interopRequireDefault(_instituicaoEnsinoBrasileiraRoutes);
@@ -35,6 +36,7 @@ var _alunoIsFRoutes = require('./usuarios/alunoIsFRoutes'); var _alunoIsFRoutes2
 var _cursistaEspecializacaoRoutes = require('./usuarios/cursistaEspecializacaoRoutes'); var _cursistaEspecializacaoRoutes2 = _interopRequireDefault(_cursistaEspecializacaoRoutes);
 var _professorIsFRoutes = require('./usuarios/professorIsFRoutes'); var _professorIsFRoutes2 = _interopRequireDefault(_professorIsFRoutes);
 var _usuarioRoutes = require('./usuarios/usuarioRoutes'); var _usuarioRoutes2 = _interopRequireDefault(_usuarioRoutes);
+var _turmadisciplinaespecializacao = require('../models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
 
 const router = new (0, _express.Router)()
 
@@ -45,6 +47,7 @@ router.post('/login', _SessionController2.default.store)
 
 // curso_especializacao
 router.use('/disciplina_especializacao', _disciplinaEspecializacaoRoutes2.default)
+router.use('/turma_especializacao', _turmaDisciplinaEspecializacaoRoutes2.default)
 
 // instituicao
 router.use('/instituicao_ensino_brasileira', _instituicaoEnsinoBrasileiraRoutes2.default)
