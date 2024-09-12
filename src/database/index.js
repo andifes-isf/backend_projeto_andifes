@@ -1,28 +1,40 @@
 import Sequelize from 'sequelize'
 import DatabaseConfig from '../config/database'
 
-// Models
-import Usuario from '../app/models/usuarios/usuario'
-import AlunoIsF from '../app/models/usuarios/alunoisf'
-import ProfessorIsF from '../app/models/usuarios/professorisf'
-import AlunoDeInstituicao from '../app/models/usuarios/alunodeinstituicao'
-import InstituicaoEnsino from '../app/models/instituicao/instituicaoensino'
-import ComprovanteAlunoInstituicao from '../app/models/usuario_pertence_instituicao/comprovantealunoinstituicao'
-import Curso from '../app/models/ofertacoletiva/curso'
-import TurmaOC from '../app/models/ofertacoletiva/turmaoc'
-import ProfessorIsFMinistraTurmaOC from '../app/models/ofertacoletiva/professorisfministraturmaoc'
-import AlunoIsFParticipaTurmaOC from '../app/models/ofertacoletiva/alunoisfparticipaturmaoc'
-import ComprovanteProfessorInstituicao from '../app/models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'
-import ComprovanteProfessorInstituicao from '../app/models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'
-import ProeficienciaAlunoIsf from '../app/models/proeficiencia/proeficienciaalunoisf'
-import ProeficienciaProfessorIsf from '../app/models/proeficiencia/proeficienciaprofessorisf'
-import AlunoEstrangeiro from '../app/models/usuarios/alunoestrangeiro'
-import InstituicaoEnsinoBrasileira from '../app/models/instituicao/instituicaoensinobrasileira'
-import InstituicaoEnsinoEstrangeira from '../app/models/instituicao/instituicaoensinoestrangeira'
-import CursistaEspecializacao from '../app/models/usuarios/cursistaespecializacao'
-import AlunoGraduacao from '../app/models/usuarios/alunograduacao'
+//// Models
+
+// curso_especializacao
 import DisciplinaEspecializacao from '../app/models/curso_especializacao/disciplinaespecializacao'
 import TurmaDisciplinaEspecializacao from '../app/models/curso_especializacao/turmadisciplinaespecializacao'
+
+// instituicao
+import InstituicaoEnsinoBrasileira from '../app/models/instituicao/instituicaoensinobrasileira'
+import InstituicaoEnsinoEstrangeira from '../app/models/instituicao/instituicaoensinoestrangeira'
+import InstituicaoEnsino from '../app/models/instituicao/instituicaoensino'
+
+// ofertacoletiva
+import AlunoIsFParticipaTurmaOC from '../app/models/ofertacoletiva/alunoisfparticipaturmaoc'
+import Curso from '../app/models/ofertacoletiva/curso'
+import ProfessorIsFMinistraTurmaOC from '../app/models/ofertacoletiva/professorisfministraturmaoc'
+import TurmaOC from '../app/models/ofertacoletiva/turmaoc'
+
+// proeficiencia
+import ProeficienciaAlunoIsf from '../app/models/proeficiencia/proeficienciaalunoisf'
+import ProeficienciaProfessorIsf from '../app/models/proeficiencia/proeficienciaprofessorisf'
+
+// usuario_pertence_instituicao
+import ComprovanteAlunoInstituicao from '../app/models/usuario_pertence_instituicao/comprovantealunoinstituicao'
+import ComprovanteProfessorInstituicao from '../app/models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'
+
+// usuarios
+import AlunoDeInstituicao from '../app/models/usuarios/alunodeinstituicao'
+import AlunoEstrangeiro from '../app/models/usuarios/alunoestrangeiro'
+import AlunoGraduacao from '../app/models/usuarios/alunograduacao'
+import AlunoIsF from '../app/models/usuarios/alunoisf'
+import CoordenadorNacionalIdioma from '../app/models/usuarios/coordenadornacionalIdioma'
+import CursistaEspecializacao from '../app/models/usuarios/cursistaespecializacao'
+import ProfessorIsF from '../app/models/usuarios/professorisf'
+import Usuario from '../app/models/usuarios/usuario'
 
 // buffer
 const models = [Usuario,
@@ -44,7 +56,8 @@ const models = [Usuario,
     ProeficienciaProfessorIsf,
     AlunoEstrangeiro,
     DisciplinaEspecializacao,
-    TurmaDisciplinaEspecializacao
+    TurmaDisciplinaEspecializacao,
+    CoordenadorNacionalIdioma
 ]
 
 class DataBase{

@@ -33,10 +33,10 @@ import alunoDeInstituicaoRoutes from './usuarios/alunoDeInstituicaoRoutes'
 import alunoEstrangeiroRoutes from './usuarios/alunoEstrangeiroRoutes'
 import alunoGraduacaoRoutes from './usuarios/alunoGraduacaoRoutes'
 import alunoIsFRoutes from './usuarios/alunoIsFRoutes'
+import coordenadorNacionalIdiomaRoutes from "./usuarios/coordenadorNacionalIdiomaRoutes"
 import cursistaEspecializacaoRoutes from './usuarios/cursistaEspecializacaoRoutes'
 import professorIsFRoutes from './usuarios/professorIsFRoutes'
 import usuarioRoutes from './usuarios/usuarioRoutes'
-import TurmaDisciplinaEspecializacao from "../models/curso_especializacao/turmadisciplinaespecializacao"
 
 const router = new Router()
 
@@ -73,6 +73,7 @@ router.use('/aluno_deinstituicao', alunoDeInstituicaoRoutes)
 router.use('/aluno_estrangeiro', alunoEstrangeiroRoutes)
 router.use('/aluno_graduacao', alunoGraduacaoRoutes)
 router.use('/aluno_isf', alunoIsFRoutes)
+router.use('/coordenador_nacional_idioma', coordenadorNacionalIdiomaRoutes)
 router.use('/cursista_especializacao', cursistaEspecializacaoRoutes)
 router.use('/professor_isf', professorIsFRoutes)
 router.use('/usuario', usuarioRoutes)

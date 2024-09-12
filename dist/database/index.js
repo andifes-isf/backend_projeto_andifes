@@ -1,28 +1,40 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize'); var _sequelize2 = _interopRequireDefault(_sequelize);
 var _database = require('../config/database'); var _database2 = _interopRequireDefault(_database);
 
-// Models
-var _usuario = require('../app/models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
-var _alunoisf = require('../app/models/usuarios/alunoisf'); var _alunoisf2 = _interopRequireDefault(_alunoisf);
-var _professorisf = require('../app/models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
-var _alunodeinstituicao = require('../app/models/usuarios/alunodeinstituicao'); var _alunodeinstituicao2 = _interopRequireDefault(_alunodeinstituicao);
-var _instituicaoensino = require('../app/models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
-var _comprovantealunoinstituicao = require('../app/models/usuario_pertence_instituicao/comprovantealunoinstituicao'); var _comprovantealunoinstituicao2 = _interopRequireDefault(_comprovantealunoinstituicao);
-var _curso = require('../app/models/ofertacoletiva/curso'); var _curso2 = _interopRequireDefault(_curso);
-var _turmaoc = require('../app/models/ofertacoletiva/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
-var _professorisfministraturmaoc = require('../app/models/ofertacoletiva/professorisfministraturmaoc'); var _professorisfministraturmaoc2 = _interopRequireDefault(_professorisfministraturmaoc);
-var _alunoisfparticipaturmaoc = require('../app/models/ofertacoletiva/alunoisfparticipaturmaoc'); var _alunoisfparticipaturmaoc2 = _interopRequireDefault(_alunoisfparticipaturmaoc);
-var _comprovanteprofessorinstituicao = require('../app/models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'); var _comprovanteprofessorinstituicao2 = _interopRequireDefault(_comprovanteprofessorinstituicao);
+//// Models
 
-var _proeficienciaalunoisf = require('../app/models/proeficiencia/proeficienciaalunoisf'); var _proeficienciaalunoisf2 = _interopRequireDefault(_proeficienciaalunoisf);
-var _proeficienciaprofessorisf = require('../app/models/proeficiencia/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
-var _alunoestrangeiro = require('../app/models/usuarios/alunoestrangeiro'); var _alunoestrangeiro2 = _interopRequireDefault(_alunoestrangeiro);
-var _instituicaoensinobrasileira = require('../app/models/instituicao/instituicaoensinobrasileira'); var _instituicaoensinobrasileira2 = _interopRequireDefault(_instituicaoensinobrasileira);
-var _instituicaoensinoestrangeira = require('../app/models/instituicao/instituicaoensinoestrangeira'); var _instituicaoensinoestrangeira2 = _interopRequireDefault(_instituicaoensinoestrangeira);
-var _cursistaespecializacao = require('../app/models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
-var _alunograduacao = require('../app/models/usuarios/alunograduacao'); var _alunograduacao2 = _interopRequireDefault(_alunograduacao);
+// curso_especializacao
 var _disciplinaespecializacao = require('../app/models/curso_especializacao/disciplinaespecializacao'); var _disciplinaespecializacao2 = _interopRequireDefault(_disciplinaespecializacao);
 var _turmadisciplinaespecializacao = require('../app/models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
+
+// instituicao
+var _instituicaoensinobrasileira = require('../app/models/instituicao/instituicaoensinobrasileira'); var _instituicaoensinobrasileira2 = _interopRequireDefault(_instituicaoensinobrasileira);
+var _instituicaoensinoestrangeira = require('../app/models/instituicao/instituicaoensinoestrangeira'); var _instituicaoensinoestrangeira2 = _interopRequireDefault(_instituicaoensinoestrangeira);
+var _instituicaoensino = require('../app/models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
+
+// ofertacoletiva
+var _alunoisfparticipaturmaoc = require('../app/models/ofertacoletiva/alunoisfparticipaturmaoc'); var _alunoisfparticipaturmaoc2 = _interopRequireDefault(_alunoisfparticipaturmaoc);
+var _curso = require('../app/models/ofertacoletiva/curso'); var _curso2 = _interopRequireDefault(_curso);
+var _professorisfministraturmaoc = require('../app/models/ofertacoletiva/professorisfministraturmaoc'); var _professorisfministraturmaoc2 = _interopRequireDefault(_professorisfministraturmaoc);
+var _turmaoc = require('../app/models/ofertacoletiva/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
+
+// proeficiencia
+var _proeficienciaalunoisf = require('../app/models/proeficiencia/proeficienciaalunoisf'); var _proeficienciaalunoisf2 = _interopRequireDefault(_proeficienciaalunoisf);
+var _proeficienciaprofessorisf = require('../app/models/proeficiencia/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
+
+// usuario_pertence_instituicao
+var _comprovantealunoinstituicao = require('../app/models/usuario_pertence_instituicao/comprovantealunoinstituicao'); var _comprovantealunoinstituicao2 = _interopRequireDefault(_comprovantealunoinstituicao);
+var _comprovanteprofessorinstituicao = require('../app/models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'); var _comprovanteprofessorinstituicao2 = _interopRequireDefault(_comprovanteprofessorinstituicao);
+
+// usuarios
+var _alunodeinstituicao = require('../app/models/usuarios/alunodeinstituicao'); var _alunodeinstituicao2 = _interopRequireDefault(_alunodeinstituicao);
+var _alunoestrangeiro = require('../app/models/usuarios/alunoestrangeiro'); var _alunoestrangeiro2 = _interopRequireDefault(_alunoestrangeiro);
+var _alunograduacao = require('../app/models/usuarios/alunograduacao'); var _alunograduacao2 = _interopRequireDefault(_alunograduacao);
+var _alunoisf = require('../app/models/usuarios/alunoisf'); var _alunoisf2 = _interopRequireDefault(_alunoisf);
+var _coordenadornacionalIdioma = require('../app/models/usuarios/coordenadornacionalIdioma'); var _coordenadornacionalIdioma2 = _interopRequireDefault(_coordenadornacionalIdioma);
+var _cursistaespecializacao = require('../app/models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
+var _professorisf = require('../app/models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
+var _usuario = require('../app/models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 // buffer
 const models = [_usuario2.default,
@@ -44,7 +56,8 @@ const models = [_usuario2.default,
     _proeficienciaprofessorisf2.default,
     _alunoestrangeiro2.default,
     _disciplinaespecializacao2.default,
-    _turmadisciplinaespecializacao2.default
+    _turmadisciplinaespecializacao2.default,
+    _coordenadornacionalIdioma2.default
 ]
 
 class DataBase{

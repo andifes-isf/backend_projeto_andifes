@@ -33,10 +33,10 @@ var _alunoDeInstituicaoRoutes = require('./usuarios/alunoDeInstituicaoRoutes'); 
 var _alunoEstrangeiroRoutes = require('./usuarios/alunoEstrangeiroRoutes'); var _alunoEstrangeiroRoutes2 = _interopRequireDefault(_alunoEstrangeiroRoutes);
 var _alunoGraduacaoRoutes = require('./usuarios/alunoGraduacaoRoutes'); var _alunoGraduacaoRoutes2 = _interopRequireDefault(_alunoGraduacaoRoutes);
 var _alunoIsFRoutes = require('./usuarios/alunoIsFRoutes'); var _alunoIsFRoutes2 = _interopRequireDefault(_alunoIsFRoutes);
+var _coordenadorNacionalIdiomaRoutes = require('./usuarios/coordenadorNacionalIdiomaRoutes'); var _coordenadorNacionalIdiomaRoutes2 = _interopRequireDefault(_coordenadorNacionalIdiomaRoutes);
 var _cursistaEspecializacaoRoutes = require('./usuarios/cursistaEspecializacaoRoutes'); var _cursistaEspecializacaoRoutes2 = _interopRequireDefault(_cursistaEspecializacaoRoutes);
 var _professorIsFRoutes = require('./usuarios/professorIsFRoutes'); var _professorIsFRoutes2 = _interopRequireDefault(_professorIsFRoutes);
 var _usuarioRoutes = require('./usuarios/usuarioRoutes'); var _usuarioRoutes2 = _interopRequireDefault(_usuarioRoutes);
-var _turmadisciplinaespecializacao = require('../models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
 
 const router = new (0, _express.Router)()
 
@@ -73,6 +73,7 @@ router.use('/aluno_deinstituicao', _alunoDeInstituicaoRoutes2.default)
 router.use('/aluno_estrangeiro', _alunoEstrangeiroRoutes2.default)
 router.use('/aluno_graduacao', _alunoGraduacaoRoutes2.default)
 router.use('/aluno_isf', _alunoIsFRoutes2.default)
+router.use('/coordenador_nacional_idioma', _coordenadorNacionalIdiomaRoutes2.default)
 router.use('/cursista_especializacao', _cursistaEspecializacaoRoutes2.default)
 router.use('/professor_isf', _professorIsFRoutes2.default)
 router.use('/usuario', _usuarioRoutes2.default)

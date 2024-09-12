@@ -202,6 +202,23 @@ module.exports = {
         senha: 'senha',
         tipo: 'professorisf'
       },
+
+      // COORDENADOR NACIONAL
+
+      {
+        login: 'Manuel',
+        nome: 'Manuel',
+        sobrenome: 'Teixeira',
+        DDI: 55,
+        DDD: 16,
+        telefone: 156486110,
+        etnia: 'branco',
+        genero: 'masculino',
+        nomeEmail: 'manuel',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'coordenadornacionalidioma'
+      },
     ]
 
     await Usuario.bulkCreate(usuarios, { individualHooks: true })
