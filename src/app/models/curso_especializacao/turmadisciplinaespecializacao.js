@@ -50,7 +50,7 @@ class TurmaDisciplinaEspecializacao extends Model {
                         min: 0,
                         customValidator(value) {
                             if(value + this.numeroEvadidos + this.numeroReprovados + this.numeroAprovados > this.numeroInscritos) {
-                                throw new Error('Quantidade de desistente, reprovador, evadidos e concluintes é maior do que a quantidade de inscritos')
+                                throw new Error('Quantidade de desistentes, reprovados, evadidos e concluintes é maior do que a quantidade de inscritos')
                             }
                         }
                     }
