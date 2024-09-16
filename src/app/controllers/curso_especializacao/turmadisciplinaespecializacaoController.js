@@ -43,6 +43,36 @@ class turmaDisciplinaEspecializacaoController {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
     }
+
+    async updateData(req, res){
+        try {
+            // Buscando registro no banco de dados
+            const turma = await TurmaDisciplinaEspecializacao.findOne({
+                where: {
+                    nome: req.params.nome
+                }
+            })
+
+            if(!turma){
+                return res.status(404).json({
+                    error: "Turma nao encontrada"
+                })
+            }
+
+            // Atualizando o registro
+            const numeroVagas = req.body.numeroVagas
+            const numeroMinimoAlunos = req.body.numeroMinimoAlunos
+            
+            turma.numeroVagas = numeroVagas === undefined ? turma.numeroVagas : numeroVagas
+            turma.numeroMinimoAlunos = numeroMinimoAlunos === undefined ? turma.numeroMinimoAlunos : numeroMinimoAlunos
+
+            await turma.save()
+
+            return res.status(201).json(turma)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 export default new turmaDisciplinaEspecializacaoController()
