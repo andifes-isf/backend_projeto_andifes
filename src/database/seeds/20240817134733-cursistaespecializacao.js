@@ -8,14 +8,11 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const cursistas = [
       {
-        login: "Carlos"
-      },
-      {
         login: "Pedro"
       },
       {
-        login: "Pietro"
-      }
+        login: "Kactus"
+      },
     ]
 
     try {  

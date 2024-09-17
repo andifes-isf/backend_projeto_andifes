@@ -66,10 +66,18 @@ class CursistaEspecializacaoController {
 
     async postMaterial(req, res){
         try {
+            console.log(req.tipoUsuario)
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Verifica se o material já existe
             const materialExistente = await _materialcursista2.default.findOne({
                 where: {
                     nome: req.body.nome,
-                    login: req.body.login
+                    login: req.loginUsuario
                 }
             })
 
@@ -80,7 +88,7 @@ class CursistaEspecializacaoController {
             }
 
             const material = await _materialcursista2.default.create({
-                login: req.body.login,
+                login: req.loginUsuario,
                 idioma: req.body.idioma,
                 nome: req.body.nome,
                 nivel: req.body.nivel,
@@ -111,6 +119,26 @@ class CursistaEspecializacaoController {
             const materiais = await _materialcursista2.default.findAll({
                 where: {
                     login: req.params.login
+                }
+            })
+
+            return res.status(200).json(materiais)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async getMeusMateriais(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }            
+
+            const materiais = await _materialcursista2.default.findAll({
+                where: {
+                    login: req.loginUsuario
                 }
             })
 

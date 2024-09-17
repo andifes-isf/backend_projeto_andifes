@@ -32,16 +32,8 @@ module.exports = {
         deInstituicao: 1
       },
       {
-        login: 'Kactus',
-        deInstituicao: 0
-      },
-      {
         login: 'Victin',
         deInstituicao: 0
-      },
-      {
-        login: 'JP',
-        deInstituicao: 1
       },
     ]
 

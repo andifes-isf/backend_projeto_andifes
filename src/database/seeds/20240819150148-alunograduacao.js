@@ -8,10 +8,10 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const alunos = [
       {
-        login: "Yumi"
+        login: "Pietro"
       },
       {
-        login: "Enio"
+        login: "Carlos"
       }
     ]
 

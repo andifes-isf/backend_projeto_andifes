@@ -6,6 +6,9 @@ import Usuario from '../../app/models/usuarios/usuario'
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const usuarios = [
+
+      // Aluno IsF
+
       {
         login: 'Arata',
         nome: 'Rafael',
@@ -91,6 +94,23 @@ module.exports = {
         tipo: 'alunoisf'
       },
       {
+        login: 'Victin',
+        nome: 'Victor',
+        sobrenome: 'Shimano',
+        DDI: 55,
+        DDD: 16,
+        telefone: 123486880,
+        etnia: 'amarelo',
+        genero: 'masculino',
+        nomeEmail: 'fuds',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'alunoisf'
+      },
+
+      // Professor IsF
+
+      {
         login: 'Carlos',
         nome: 'Carlos',
         sobrenome: 'Mattos',
@@ -118,6 +138,9 @@ module.exports = {
         senha: 'senha',
         tipo: 'professorisf'
       },
+
+      // Cursista
+
       {
         login: 'Pedro',
         nome: 'Pedro',
@@ -130,7 +153,7 @@ module.exports = {
         nomeEmail: 'pedro',
         dominio: 'gmail.com',
         senha: 'senha',
-        tipo: 'professorisf'
+        tipo: 'cursista'
       },
       {
         login: 'Kactus',
@@ -144,66 +167,52 @@ module.exports = {
         nomeEmail: 'kactus',
         dominio: 'gmail.com',
         senha: 'senha',
-        tipo: 'alunoisf'
+        tipo: 'Cursista'
       },
-      {
-        login: 'Victin',
-        nome: 'Victor',
-        sobrenome: 'Shimano',
-        DDI: 55,
-        DDD: 16,
-        telefone: 123486880,
-        etnia: 'amarelo',
-        genero: 'masculino',
-        nomeEmail: 'fuds',
-        dominio: 'gmail.com',
-        senha: 'senha',
-        tipo: 'alunoisf'
-      },
-      {
-        login: 'JP',
-        nome: 'João',
-        sobrenome: 'Silva',
-        DDI: 55,
-        DDD: 16,
-        telefone: 153486180,
-        etnia: 'branco',
-        genero: 'masculino',
-        nomeEmail: 'jp',
-        dominio: 'gmail.com',
-        senha: 'senha',
-        tipo: 'alunoisf'
-      },
-      {
-        login: 'Yumi',
-        nome: 'Yumi',
-        sobrenome: 'Uyeta',
-        DDI: 55,
-        DDD: 16,
-        telefone: 153489180,
-        etnia: 'amarelo',
-        genero: 'feminino',
-        nomeEmail: 'yu',
-        dominio: 'gmail.com',
-        senha: 'senha',
-        tipo: 'professorisf'
-      },
-      {
-        login: 'Enio',
-        nome: 'Enio',
-        sobrenome: 'Uyeta',
-        DDI: 55,
-        DDD: 16,
-        telefone: 153486110,
-        etnia: 'amarelo',
-        genero: 'masculino',
-        nomeEmail: 'enio',
-        dominio: 'gmail.com',
-        senha: 'senha',
-        tipo: 'professorisf'
-      },
+      // {
+      //   login: 'JP',
+      //   nome: 'João',
+      //   sobrenome: 'Silva',
+      //   DDI: 55,
+      //   DDD: 16,
+      //   telefone: 153486180,
+      //   etnia: 'branco',
+      //   genero: 'masculino',
+      //   nomeEmail: 'jp',
+      //   dominio: 'gmail.com',
+      //   senha: 'senha',
+      //   tipo: 'alunoisf'
+      // },
+      // {
+      //   login: 'Yumi',
+      //   nome: 'Yumi',
+      //   sobrenome: 'Uyeta',
+      //   DDI: 55,
+      //   DDD: 16,
+      //   telefone: 153489180,
+      //   etnia: 'amarelo',
+      //   genero: 'feminino',
+      //   nomeEmail: 'yu',
+      //   dominio: 'gmail.com',
+      //   senha: 'senha',
+      //   tipo: 'professorisf'
+      // },
+      // {
+      //   login: 'Enio',
+      //   nome: 'Enio',
+      //   sobrenome: 'Uyeta',
+      //   DDI: 55,
+      //   DDD: 16,
+      //   telefone: 153486110,
+      //   etnia: 'amarelo',
+      //   genero: 'masculino',
+      //   nomeEmail: 'enio',
+      //   dominio: 'gmail.com',
+      //   senha: 'senha',
+      //   tipo: 'professorisf'
+      // },
 
-      // COORDENADOR NACIONAL
+      // COORDENADOR NACIONAL IDIOMA
 
       {
         login: 'Manuel',

@@ -26,17 +26,11 @@ module.exports = {
         cursista: 1
       },
       {
-        login: "Yumi",
-        poca: "Certificado POCA da Yumi",
+        login: "Kactus",
+        poca: "Certificado POCA da Kaory",
         inicio: "2024-01-20",
-        cursista: 0
+        cursista: 1
       },
-      {
-        login: "Enio",
-        poca: "Certificado POCA do Enio",
-        inicio: "2024-01-20",
-        cursista: 0
-      }
     ]
 
     await ProfessorIsF.bulkCreate(professores, { individualHooks: true })
