@@ -1,10 +1,17 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
+
+// Models
 var _coordenadornacionalIdioma = require('../../models/usuarios/coordenadornacionalIdioma'); var _coordenadornacionalIdioma2 = _interopRequireDefault(_coordenadornacionalIdioma);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+
+// Controllers
+var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
 class coordenadorNacionalIdiomaController {
     async post(req, res) {
         try {            
+            await _usuarioController2.default.post(req, res, 'coordenadornacionalidioma')
+
             const coordenadorExistente = await _coordenadornacionalIdioma2.default.findOne({
                 where: {
                     login: req.body.login

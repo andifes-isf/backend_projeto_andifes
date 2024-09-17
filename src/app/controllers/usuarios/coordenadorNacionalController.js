@@ -1,18 +1,18 @@
 import * as Yup from 'yup'
 
 // Models
-import CoordenadorNacionalIdioma from '../../models/usuarios/coordenadornacionalIdioma'
+import CoordenadorNacional from '../../models/usuarios/coordenadornacional'
 import Usuario from '../../models/usuarios/usuario'
 
 // Controllers
-import UsuarioController from './usuarioController'
+import usuarioController from './usuarioController'
 
-class coordenadorNacionalIdiomaController {
+class coordenadorNacionalController {
     async post(req, res) {
         try {            
-            await UsuarioController.post(req, res, 'coordenadornacionalidioma')
+            await usuarioController.post(req, res, 'coordenadornacional')
 
-            const coordenadorExistente = await CoordenadorNacionalIdioma.findOne({
+            const coordenadorExistente = await CoordenadorNacional.findOne({
                 where: {
                     login: req.body.login
                 }
@@ -24,9 +24,8 @@ class coordenadorNacionalIdiomaController {
                 })
             }
     
-            const coordenador = await CoordenadorNacionalIdioma.create({
+            const coordenador = await CoordenadorNacional.create({
                 login: req.body.login,
-                idioma: req.body.idioma
             })
 
             return res.status(201).json(coordenador)
@@ -37,7 +36,7 @@ class coordenadorNacionalIdiomaController {
 
     async get(_, res){
         try {
-            const coordenadores = await CoordenadorNacionalIdioma.findAll({
+            const coordenadores = await CoordenadorNacional.findAll({
                 include: [
                     {
                         model: Usuario,
@@ -55,4 +54,4 @@ class coordenadorNacionalIdiomaController {
     }
 }
 
-export default new coordenadorNacionalIdiomaController()
+export default new coordenadorNacionalController()

@@ -116,6 +116,20 @@ class CursistaEspecializacaoController {
 
     async getMateriaisDoCursista(req, res){
         try {
+            // Verifica se o login passado é de um cursista
+            const cursista = await CursistaEspecializacao.count({
+                where: {
+                    login: req.params.login
+                }
+            })
+
+            if(cursista === 0){
+                return res.status(422).json({
+                    msg: 'Cursista nao encontrado'
+                })
+            }
+
+
             const materiais = await MaterialCursista.findAll({
                 where: {
                     login: req.params.login

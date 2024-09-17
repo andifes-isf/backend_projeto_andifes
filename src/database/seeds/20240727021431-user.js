@@ -169,34 +169,40 @@ module.exports = {
         senha: 'senha',
         tipo: 'Cursista'
       },
-      // {
-      //   login: 'JP',
-      //   nome: 'João',
-      //   sobrenome: 'Silva',
-      //   DDI: 55,
-      //   DDD: 16,
-      //   telefone: 153486180,
-      //   etnia: 'branco',
-      //   genero: 'masculino',
-      //   nomeEmail: 'jp',
-      //   dominio: 'gmail.com',
-      //   senha: 'senha',
-      //   tipo: 'alunoisf'
-      // },
-      // {
-      //   login: 'Yumi',
-      //   nome: 'Yumi',
-      //   sobrenome: 'Uyeta',
-      //   DDI: 55,
-      //   DDD: 16,
-      //   telefone: 153489180,
-      //   etnia: 'amarelo',
-      //   genero: 'feminino',
-      //   nomeEmail: 'yu',
-      //   dominio: 'gmail.com',
-      //   senha: 'senha',
-      //   tipo: 'professorisf'
-      // },
+
+      // Coordenador Nacional
+
+      {
+        login: 'JP',
+        nome: 'João',
+        sobrenome: 'Silva',
+        DDI: 55,
+        DDD: 16,
+        telefone: 153486180,
+        etnia: 'branco',
+        genero: 'masculino',
+        nomeEmail: 'jp',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'coordenadornacional'
+      },
+
+      // Coordenador nacional idioma
+
+      {
+        login: 'Yumi',
+        nome: 'Yumi',
+        sobrenome: 'Uyeta',
+        DDI: 55,
+        DDD: 16,
+        telefone: 153489180,
+        etnia: 'amarelo',
+        genero: 'feminino',
+        nomeEmail: 'yu',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'coordenadornacionalidioma'
+      },
       // {
       //   login: 'Enio',
       //   nome: 'Enio',

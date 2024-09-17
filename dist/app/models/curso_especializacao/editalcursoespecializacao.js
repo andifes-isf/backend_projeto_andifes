@@ -1,31 +1,36 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize'); var _sequelize2 = _interopRequireDefault(_sequelize);
 
-class CoordenadorNacional extends _sequelize.Model {
+class EditalCursoEspecializacao extends _sequelize.Model {
     static init (sequelize) {
         super.init(
             {
-                login: {
+                ano: {
+                    type: _sequelize2.default.CHAR(4),
+                    primaryKey: true
+                },
+                documento: {
+                    type: _sequelize2.default.TEXT,
+                    allowNull: false
+                },
+                link: {
                     type: _sequelize2.default.STRING,
-                    primaryKey: true,
-                    references: {
-                        model: 'usuarios',
-                        key: 'login',
-                        name: 'fk_login_coordenadornacional'
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
-                }
+                    allowNull: false,
+                },
+                listaAprovados: {
+                    type: _sequelize2.default.TEXT,
+                    allowNull: false
+                },
             },
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'coordenadornacional',
+                tableName: 'editalcursoespecializacao',
                 indexes: [{
                     name: "primary_key",
                     unique: true,
                     using: 'BTREE',
                     fields: [
-                        { name: "login" }
+                        { name: "ano" }
                     ]
                 }]
             }
@@ -33,12 +38,6 @@ class CoordenadorNacional extends _sequelize.Model {
 
         return this
         
-    }
-
-    static associate(models) {
-        this.belongsTo(models.Usuario, {
-            foreignKey: 'login'
-        })
     }
 }
 

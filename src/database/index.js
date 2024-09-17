@@ -32,6 +32,7 @@ import AlunoDeInstituicao from '../app/models/usuarios/alunodeinstituicao'
 import AlunoEstrangeiro from '../app/models/usuarios/alunoestrangeiro'
 import AlunoGraduacao from '../app/models/usuarios/alunograduacao'
 import AlunoIsF from '../app/models/usuarios/alunoisf'
+import CoordenadorNacional from '../app/models/usuarios/coordenadornacional'
 import CoordenadorNacionalIdioma from '../app/models/usuarios/coordenadornacionalIdioma'
 import CursistaEspecializacao from '../app/models/usuarios/cursistaespecializacao'
 import ProfessorIsF from '../app/models/usuarios/professorisf'
@@ -59,7 +60,8 @@ const models = [Usuario,
     DisciplinaEspecializacao,
     TurmaDisciplinaEspecializacao,
     CoordenadorNacionalIdioma,
-    MaterialCursista
+    MaterialCursista,
+    CoordenadorNacional
 ]
 
 class DataBase{

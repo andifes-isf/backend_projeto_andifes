@@ -1,11 +1,11 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize'); var _sequelize2 = _interopRequireDefault(_sequelize);
+import Sequelize, { Model } from 'sequelize'
 
-class CoordenadorNacional extends _sequelize.Model {
+class CoordenadorNacional extends Model {
     static init (sequelize) {
         super.init(
             {
                 login: {
-                    type: _sequelize2.default.STRING,
+                    type: Sequelize.STRING,
                     primaryKey: true,
                     references: {
                         model: 'usuarios',
@@ -42,4 +42,4 @@ class CoordenadorNacional extends _sequelize.Model {
     }
 }
 
-exports. default = CoordenadorNacional
+export default CoordenadorNacional
