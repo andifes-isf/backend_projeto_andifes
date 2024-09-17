@@ -36,6 +36,10 @@ class CursistaEspecializacao extends _sequelize.Model {
     }
 
     static associate(models) {
+        this.hasMany(models.MaterialCursista, {
+            foreignKey: 'login'
+        })
+
         this.belongsTo(models.ProfessorIsF, {
             foreignKey: 'login'
         })

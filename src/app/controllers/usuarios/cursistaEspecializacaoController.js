@@ -1,7 +1,12 @@
 import { Sequelize } from "sequelize";
+
+// Models
 import CursistaEspecializacao from "../../models/usuarios/cursistaespecializacao";
-import Usuario from "../../models/usuarios/usuario";
+import MaterialCursista from "../../models/curso_especializacao/materialcursista";
 import ProfessorIsF from "../../models/usuarios/professorisf";
+import Usuario from "../../models/usuarios/usuario";
+
+// Controllers
 import ProfessorIsFController from './professorIsFController'
 
 class CursistaEspecializacaoController {
@@ -57,6 +62,62 @@ class CursistaEspecializacaoController {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 
+    }
+
+    async postMaterial(req, res){
+        try {
+            const materialExistente = await MaterialCursista.findOne({
+                where: {
+                    nome: req.body.nome,
+                    login: req.body.login
+                }
+            })
+
+            if(materialExistente){
+                return res.status(409).json({
+                    msg: "Material ja existente"
+                })
+            }
+
+            const material = await MaterialCursista.create({
+                login: req.body.login,
+                idioma: req.body.idioma,
+                nome: req.body.nome,
+                nivel: req.body.nivel,
+                ementa: req.body.ementa,
+                cargaHoraria: req.body.cargaHoraria,
+            })
+
+            return res.status(201).json(material)
+
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+
+    }
+
+    async getMateriais(_, res){
+        try {
+            const materiais = await MaterialCursista.findAll()
+
+            return res.status(200).json(materiais)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async getMateriaisDoCursista(req, res){
+        try {
+            const materiais = await MaterialCursista.findAll({
+                where: {
+                    login: req.params.login
+                }
+            })
+
+            return res.status(200).json(materiais)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
     }
 }
 

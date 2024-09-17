@@ -7,4 +7,10 @@ router.post('/', cursistaEspecializacaoController.post)
 
 router.get('/', cursistaEspecializacaoController.get)
 
+router.post('/inserir_material', cursistaEspecializacaoController.postMaterial)
+
+router.get('/visualizar_materiais/:login', cursistaEspecializacaoController.getMateriaisDoCursista)
+
+router.get('/visualizar_materiais', cursistaEspecializacaoController.getMateriais)
+
 export default router

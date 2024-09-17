@@ -1,7 +1,12 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize');
+
+// Models
 var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
-var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _materialcursista = require('../../models/curso_especializacao/materialcursista'); var _materialcursista2 = _interopRequireDefault(_materialcursista);
 var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
+var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+
+// Controllers
 var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
 
 class CursistaEspecializacaoController {
@@ -57,6 +62,62 @@ class CursistaEspecializacaoController {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 
+    }
+
+    async postMaterial(req, res){
+        try {
+            const materialExistente = await _materialcursista2.default.findOne({
+                where: {
+                    nome: req.body.nome,
+                    login: req.body.login
+                }
+            })
+
+            if(materialExistente){
+                return res.status(409).json({
+                    msg: "Material ja existente"
+                })
+            }
+
+            const material = await _materialcursista2.default.create({
+                login: req.body.login,
+                idioma: req.body.idioma,
+                nome: req.body.nome,
+                nivel: req.body.nivel,
+                ementa: req.body.ementa,
+                cargaHoraria: req.body.cargaHoraria,
+            })
+
+            return res.status(201).json(material)
+
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+
+    }
+
+    async getMateriais(_, res){
+        try {
+            const materiais = await _materialcursista2.default.findAll()
+
+            return res.status(200).json(materiais)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async getMateriaisDoCursista(req, res){
+        try {
+            const materiais = await _materialcursista2.default.findAll({
+                where: {
+                    login: req.params.login
+                }
+            })
+
+            return res.status(200).json(materiais)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
     }
 }
 

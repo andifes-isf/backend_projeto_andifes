@@ -6,6 +6,7 @@ var _database = require('../config/database'); var _database2 = _interopRequireD
 // curso_especializacao
 var _disciplinaespecializacao = require('../app/models/curso_especializacao/disciplinaespecializacao'); var _disciplinaespecializacao2 = _interopRequireDefault(_disciplinaespecializacao);
 var _turmadisciplinaespecializacao = require('../app/models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
+var _materialcursista = require('../app/models/curso_especializacao/materialcursista'); var _materialcursista2 = _interopRequireDefault(_materialcursista);
 
 // instituicao
 var _instituicaoensinobrasileira = require('../app/models/instituicao/instituicaoensinobrasileira'); var _instituicaoensinobrasileira2 = _interopRequireDefault(_instituicaoensinobrasileira);
@@ -57,7 +58,8 @@ const models = [_usuario2.default,
     _alunoestrangeiro2.default,
     _disciplinaespecializacao2.default,
     _turmadisciplinaespecializacao2.default,
-    _coordenadornacionalIdioma2.default
+    _coordenadornacionalIdioma2.default,
+    _materialcursista2.default
 ]
 
 class DataBase{

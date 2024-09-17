@@ -6,9 +6,13 @@
     "dev": "nodemon dist/server && cls",
     "build": "sucrase ./src -d ./dist --transforms imports",
     "start": "yarn build && node ./dist/server.js",
+    
     "migrate": "yarn build && sequelize db:migrate --config dist/config/database.js --migrations-path dist/database/migrations",
+    "migrate-undo": "sequelize db:migrate:undo",
+
     "seed": "yarn build && sequelize db:seed:all --config dist/config/database.js --seeders-path dist/database/seeds",
-    "undo-seed": "yarn build && sequelize db:seed:undo:all --config dist/config/database.js --seeders-path dist/database/seeds",
+    "seed-undo": "yarn build && sequelize db:seed:undo:all",
+    
     "dev:debug": "nodemon --inspect src/server"
   },
   "keywords": [],

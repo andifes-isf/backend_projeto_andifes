@@ -6,6 +6,7 @@ import DatabaseConfig from '../config/database'
 // curso_especializacao
 import DisciplinaEspecializacao from '../app/models/curso_especializacao/disciplinaespecializacao'
 import TurmaDisciplinaEspecializacao from '../app/models/curso_especializacao/turmadisciplinaespecializacao'
+import MaterialCursista from '../app/models/curso_especializacao/materialcursista'
 
 // instituicao
 import InstituicaoEnsinoBrasileira from '../app/models/instituicao/instituicaoensinobrasileira'
@@ -57,7 +58,8 @@ const models = [Usuario,
     AlunoEstrangeiro,
     DisciplinaEspecializacao,
     TurmaDisciplinaEspecializacao,
-    CoordenadorNacionalIdioma
+    CoordenadorNacionalIdioma,
+    MaterialCursista
 ]
 
 class DataBase{
