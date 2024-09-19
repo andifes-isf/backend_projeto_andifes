@@ -40,30 +40,43 @@ import ProfessorIsF from '../app/models/usuarios/professorisf'
 import Usuario from '../app/models/usuarios/usuario'
 
 // buffer
-const models = [Usuario,
-    AlunoIsF,
-    AlunoDeInstituicao,
+const models = [
+    // curso_especializacao
+    DisciplinaEspecializacao,
+    MaterialCursista,
+    TurmaDisciplinaEspecializacao,
+
+    // instituicao
     InstituicaoEnsino, 
     InstituicaoEnsinoBrasileira,
     InstituicaoEnsinoEstrangeira,
-    ComprovanteAlunoInstituicao,
-    ProfessorIsF,
-    CursistaEspecializacao,
-    AlunoGraduacao,
+    
+    // ofertacoletiva
     Curso,
     TurmaOC,
     ProfessorIsFMinistraTurmaOC,
     AlunoIsFParticipaTurmaOC,
-    ComprovanteProfessorInstituicao,
+    
+    // proficiencia
     ProeficienciaAlunoIsf,
     ProeficienciaProfessorIsf,
+
+    // usuario_pertence_instituicao
+    ComprovanteAlunoInstituicao,
+    ComprovanteProfessorInstituicao,
+
+    // usuarios
+    AlunoDeInstituicao,
     AlunoEstrangeiro,
-    DisciplinaEspecializacao,
-    TurmaDisciplinaEspecializacao,
+    AlunoGraduacao,
+    AlunoIsF,
     CoordenadorNacionalIdioma,
-    MaterialCursista,
     CoordenadorNacional,
-    DocenteOrientador
+    CursistaEspecializacao,
+    DocenteOrientador,
+    ProfessorIsF,
+    Usuario
+
 ]
 
 class DataBase{
