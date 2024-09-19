@@ -18,9 +18,26 @@ module.exports = {
       },
       listaAprovados: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: true
       },
+      criador: {
+        type: Sequelize.STRING,
+        allowNull: false
+      }
     })
+
+    await queryInterface.addConstraint('editalcursoespecializacao', {
+      fields: ['criador'],
+      type: 'foreign key',
+      name: 'fk_criador_editalcursoespecializacao',
+      references: {
+        table: 'coordenadornacional',
+        field: 'login'
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
+    })
+
   },
 
   down: async (queryInterface, Sequelize) => {

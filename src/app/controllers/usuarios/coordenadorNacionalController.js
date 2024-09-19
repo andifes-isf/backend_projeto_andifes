@@ -2,6 +2,7 @@ import * as Yup from 'yup'
 
 // Models
 import CoordenadorNacional from '../../models/usuarios/coordenadornacional'
+import EditalCursoEspecializacao from '../../models/curso_especializacao/editalcursoespecializacao'
 import Usuario from '../../models/usuarios/usuario'
 
 // Controllers
@@ -48,6 +49,43 @@ class coordenadorNacionalController {
             })
     
             return res.status(200).json(coordenadores)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async postEdital(req, res){
+        try {
+            // Verifica se o usuario logado é um coordenador nacional
+            if(!(req.tipoUsuario === 'coordenadornacional')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Verifica se já existe
+            const editalExistente = await EditalCursoEspecializacao.findOne({
+                where: {
+                    ano: req.body.ano
+                }
+            })
+
+            if(editalExistente) {
+                return res.status(409).json({
+                    error: `Edital de ${req.body.ano} ja cadastrado`
+                })
+            }
+
+            // Cria edital
+            const edital = await EditalCursoEspecializacao.create({
+                ano: req.body.ano,
+                documento: req.body.documento,
+                link: req.body.link,
+                criador: req.loginUsuario
+            })
+
+            return res.status(201).json(edital)
+
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }

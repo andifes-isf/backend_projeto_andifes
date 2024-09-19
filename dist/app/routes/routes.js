@@ -7,6 +7,7 @@ var _SessionController = require('../controllers/authentication/SessionControlle
 
 // curso_especializacao
 var _disciplinaEspecializacaoRoutes = require('./curso_especializacao/disciplinaEspecializacaoRoutes'); var _disciplinaEspecializacaoRoutes2 = _interopRequireDefault(_disciplinaEspecializacaoRoutes);
+var _editalEspecializacaoRoutes = require('./curso_especializacao/editalEspecializacaoRoutes'); var _editalEspecializacaoRoutes2 = _interopRequireDefault(_editalEspecializacaoRoutes);
 var _turmaDisciplinaEspecializacaoRoutes = require('./curso_especializacao/turmaDisciplinaEspecializacaoRoutes'); var _turmaDisciplinaEspecializacaoRoutes2 = _interopRequireDefault(_turmaDisciplinaEspecializacaoRoutes);
 
 // instituicao  
@@ -49,6 +50,7 @@ router.post('/login', _SessionController2.default.store)
 
 // curso_especializacao
 router.use('/disciplina_especializacao', _disciplinaEspecializacaoRoutes2.default)
+router.use('/edital_especializacao', _editalEspecializacaoRoutes2.default)
 router.use('/turma_especializacao', _turmaDisciplinaEspecializacaoRoutes2.default)
 
 // instituicao

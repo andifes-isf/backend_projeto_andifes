@@ -18,8 +18,12 @@ class EditalCursoEspecializacao extends Model {
                 },
                 listaAprovados: {
                     type: Sequelize.TEXT,
-                    allowNull: false
+                    allowNull: true
                 },
+                criador: {
+                    type: Sequelize.STRING,
+                    allowNull: false
+                }
             },
             {
                 sequelize,
@@ -41,4 +45,4 @@ class EditalCursoEspecializacao extends Model {
     }
 }
 
-export default CoordenadorNacional
+export default EditalCursoEspecializacao

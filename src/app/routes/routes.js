@@ -7,6 +7,7 @@ import SessionController from '../controllers/authentication/SessionController'
 
 // curso_especializacao
 import disciplinaEspecializacaoRoutes from "./curso_especializacao/disciplinaEspecializacaoRoutes"
+import editalEspecializacaoRoutes from './curso_especializacao/editalEspecializacaoRoutes'
 import turmaDisciplinaEspecializacaoRoutes from './curso_especializacao/turmaDisciplinaEspecializacaoRoutes'
 
 // instituicao  
@@ -49,6 +50,7 @@ router.post('/login', SessionController.store)
 
 // curso_especializacao
 router.use('/disciplina_especializacao', disciplinaEspecializacaoRoutes)
+router.use('/edital_especializacao', editalEspecializacaoRoutes)
 router.use('/turma_especializacao', turmaDisciplinaEspecializacaoRoutes)
 
 // instituicao

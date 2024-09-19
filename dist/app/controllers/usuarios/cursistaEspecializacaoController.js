@@ -66,7 +66,6 @@ class CursistaEspecializacaoController {
 
     async postMaterial(req, res){
         try {
-            console.log(req.tipoUsuario)
             if(!(req.tipoUsuario === 'cursista')){
                 return res.status(403).json({
                     error: 'Acesso negado'

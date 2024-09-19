@@ -2,6 +2,7 @@
 
 // Models
 var _coordenadornacional = require('../../models/usuarios/coordenadornacional'); var _coordenadornacional2 = _interopRequireDefault(_coordenadornacional);
+var _editalcursoespecializacao = require('../../models/curso_especializacao/editalcursoespecializacao'); var _editalcursoespecializacao2 = _interopRequireDefault(_editalcursoespecializacao);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 // Controllers
@@ -48,6 +49,43 @@ class coordenadorNacionalController {
             })
     
             return res.status(200).json(coordenadores)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async postEdital(req, res){
+        try {
+            // Verifica se o usuario logado é um coordenador nacional
+            if(!(req.tipoUsuario === 'coordenadornacional')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Verifica se já existe
+            const editalExistente = await _editalcursoespecializacao2.default.findOne({
+                where: {
+                    ano: req.body.ano
+                }
+            })
+
+            if(editalExistente) {
+                return res.status(409).json({
+                    error: `Edital de ${req.body.ano} ja cadastrado`
+                })
+            }
+
+            // Cria edital
+            const edital = await _editalcursoespecializacao2.default.create({
+                ano: req.body.ano,
+                documento: req.body.documento,
+                link: req.body.link,
+                criador: req.loginUsuario
+            })
+
+            return res.status(201).json(edital)
+
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
