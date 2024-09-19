@@ -35,6 +35,7 @@ import AlunoIsF from '../app/models/usuarios/alunoisf'
 import CoordenadorNacional from '../app/models/usuarios/coordenadornacional'
 import CoordenadorNacionalIdioma from '../app/models/usuarios/coordenadornacionalIdioma'
 import CursistaEspecializacao from '../app/models/usuarios/cursistaespecializacao'
+import DocenteOrientador from '../app/models/usuarios/docenteorientador'
 import ProfessorIsF from '../app/models/usuarios/professorisf'
 import Usuario from '../app/models/usuarios/usuario'
 
@@ -61,7 +62,8 @@ const models = [Usuario,
     TurmaDisciplinaEspecializacao,
     CoordenadorNacionalIdioma,
     MaterialCursista,
-    CoordenadorNacional
+    CoordenadorNacional,
+    DocenteOrientador
 ]
 
 class DataBase{

@@ -36,6 +36,7 @@ import alunoIsFRoutes from './usuarios/alunoIsFRoutes'
 import coordenadorNacionalIdiomaRoutes from "./usuarios/coordenadorNacionalIdiomaRoutes"
 import coordenadorNacionalRoutes from "./usuarios/coordenadorNacionalRoutes"
 import cursistaEspecializacaoRoutes from './usuarios/cursistaEspecializacaoRoutes'
+import docenteOrientadorRoutes from './usuarios/docenteOrientadorRoutes'
 import professorIsFRoutes from './usuarios/professorIsFRoutes'
 import usuarioRoutes from './usuarios/usuarioRoutes'
 
@@ -77,6 +78,7 @@ router.use('/aluno_isf', alunoIsFRoutes)
 router.use('/coordenador_nacional_idioma', coordenadorNacionalIdiomaRoutes)
 router.use('/coordenador_nacional', coordenadorNacionalRoutes)
 router.use('/cursista_especializacao', cursistaEspecializacaoRoutes)
+router.use('/docente_orientador', docenteOrientadorRoutes)
 router.use('/professor_isf', professorIsFRoutes)
 router.use('/usuario', usuarioRoutes)
 

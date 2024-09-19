@@ -35,6 +35,7 @@ var _alunoisf = require('../app/models/usuarios/alunoisf'); var _alunoisf2 = _in
 var _coordenadornacional = require('../app/models/usuarios/coordenadornacional'); var _coordenadornacional2 = _interopRequireDefault(_coordenadornacional);
 var _coordenadornacionalIdioma = require('../app/models/usuarios/coordenadornacionalIdioma'); var _coordenadornacionalIdioma2 = _interopRequireDefault(_coordenadornacionalIdioma);
 var _cursistaespecializacao = require('../app/models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
+var _docenteorientador = require('../app/models/usuarios/docenteorientador'); var _docenteorientador2 = _interopRequireDefault(_docenteorientador);
 var _professorisf = require('../app/models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 var _usuario = require('../app/models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
@@ -61,7 +62,8 @@ const models = [_usuario2.default,
     _turmadisciplinaespecializacao2.default,
     _coordenadornacionalIdioma2.default,
     _materialcursista2.default,
-    _coordenadornacional2.default
+    _coordenadornacional2.default,
+    _docenteorientador2.default
 ]
 
 class DataBase{

@@ -36,6 +36,7 @@ var _alunoIsFRoutes = require('./usuarios/alunoIsFRoutes'); var _alunoIsFRoutes2
 var _coordenadorNacionalIdiomaRoutes = require('./usuarios/coordenadorNacionalIdiomaRoutes'); var _coordenadorNacionalIdiomaRoutes2 = _interopRequireDefault(_coordenadorNacionalIdiomaRoutes);
 var _coordenadorNacionalRoutes = require('./usuarios/coordenadorNacionalRoutes'); var _coordenadorNacionalRoutes2 = _interopRequireDefault(_coordenadorNacionalRoutes);
 var _cursistaEspecializacaoRoutes = require('./usuarios/cursistaEspecializacaoRoutes'); var _cursistaEspecializacaoRoutes2 = _interopRequireDefault(_cursistaEspecializacaoRoutes);
+var _docenteOrientadorRoutes = require('./usuarios/docenteOrientadorRoutes'); var _docenteOrientadorRoutes2 = _interopRequireDefault(_docenteOrientadorRoutes);
 var _professorIsFRoutes = require('./usuarios/professorIsFRoutes'); var _professorIsFRoutes2 = _interopRequireDefault(_professorIsFRoutes);
 var _usuarioRoutes = require('./usuarios/usuarioRoutes'); var _usuarioRoutes2 = _interopRequireDefault(_usuarioRoutes);
 
@@ -77,6 +78,7 @@ router.use('/aluno_isf', _alunoIsFRoutes2.default)
 router.use('/coordenador_nacional_idioma', _coordenadorNacionalIdiomaRoutes2.default)
 router.use('/coordenador_nacional', _coordenadorNacionalRoutes2.default)
 router.use('/cursista_especializacao', _cursistaEspecializacaoRoutes2.default)
+router.use('/docente_orientador', _docenteOrientadorRoutes2.default)
 router.use('/professor_isf', _professorIsFRoutes2.default)
 router.use('/usuario', _usuarioRoutes2.default)
 
