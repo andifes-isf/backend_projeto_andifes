@@ -10,10 +10,6 @@ router.get('/', _cursistaEspecializacaoController2.default.get)
 
 router.post('/inserir_material', _auth2.default, _cursistaEspecializacaoController2.default.postMaterial)
 
-router.get('/visualizar_materiais/:login', _cursistaEspecializacaoController2.default.getMateriaisDoCursista)
-
-router.get('/visualizar_materiais', _cursistaEspecializacaoController2.default.getMateriais)
-
 router.get('/meus_materiais', _auth2.default, _cursistaEspecializacaoController2.default.getMeusMateriais)
 
 exports. default = router

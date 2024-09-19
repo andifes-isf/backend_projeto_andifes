@@ -10,10 +10,6 @@ router.get('/', cursistaEspecializacaoController.get)
 
 router.post('/inserir_material', AuthMiddleware, cursistaEspecializacaoController.postMaterial)
 
-router.get('/visualizar_materiais/:login', cursistaEspecializacaoController.getMateriaisDoCursista)
-
-router.get('/visualizar_materiais', cursistaEspecializacaoController.getMateriais)
-
 router.get('/meus_materiais', AuthMiddleware, cursistaEspecializacaoController.getMeusMateriais)
 
 export default router

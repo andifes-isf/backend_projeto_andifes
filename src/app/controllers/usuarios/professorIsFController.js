@@ -7,7 +7,7 @@ import usuarioController from "./usuarioController";
 class ProfessorIsFController {
     async post(req, res, cursista) {
         try {
-            await usuarioController.post(req, res, 'professorisf')
+            await usuarioController.post(req, res, cursista ? 'cursista' : 'professorisf')
     
             const professorExistente = await ProfessorIsF.findOne({
                 where: {
@@ -19,7 +19,7 @@ class ProfessorIsFController {
             if(professorExistente) {
                 return 0
             }
-            
+
             return await ProfessorIsF.create({
                 login: req.body.login,
                 poca: req.body.poca,

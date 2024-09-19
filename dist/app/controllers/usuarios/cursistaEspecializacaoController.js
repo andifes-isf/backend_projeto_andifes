@@ -32,6 +32,7 @@ class CursistaEspecializacaoController {
     
             return res.status(201).json(cursista)
         } catch (error) {
+            console.log(error)
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 
@@ -49,7 +50,7 @@ class CursistaEspecializacaoController {
                         include: [{
                             model: _usuario2.default,
                             attributes: {
-                                exclude: ['login', 'senha_encriptada', 'ativo', 'tipo']
+                                exclude: ['login', 'senha_encriptada', 'ativo']
                             }
                         }]
                     }
@@ -101,44 +102,6 @@ class CursistaEspecializacaoController {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 
-    }
-
-    async getMateriais(_, res){
-        try {
-            const materiais = await _materialcursista2.default.findAll()
-
-            return res.status(200).json(materiais)
-        } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
-        }
-    }
-
-    async getMateriaisDoCursista(req, res){
-        try {
-            // Verifica se o login passado é de um cursista
-            const cursista = await _cursistaespecializacao2.default.count({
-                where: {
-                    login: req.params.login
-                }
-            })
-
-            if(cursista === 0){
-                return res.status(422).json({
-                    msg: 'Cursista nao encontrado'
-                })
-            }
-
-
-            const materiais = await _materialcursista2.default.findAll({
-                where: {
-                    login: req.params.login
-                }
-            })
-
-            return res.status(200).json(materiais)
-        } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
-        }
     }
 
     async getMeusMateriais(req, res){

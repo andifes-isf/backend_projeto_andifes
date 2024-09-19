@@ -7,7 +7,7 @@ var _usuarioController = require('./usuarioController'); var _usuarioController2
 class ProfessorIsFController {
     async post(req, res, cursista) {
         try {
-            await _usuarioController2.default.post(req, res, 'professorisf')
+            await _usuarioController2.default.post(req, res, cursista ? 'cursista' : 'professorisf')
     
             const professorExistente = await _professorisf2.default.findOne({
                 where: {
@@ -19,7 +19,7 @@ class ProfessorIsFController {
             if(professorExistente) {
                 return 0
             }
-            
+
             return await _professorisf2.default.create({
                 login: req.body.login,
                 poca: req.body.poca,
