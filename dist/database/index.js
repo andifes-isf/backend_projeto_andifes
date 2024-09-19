@@ -40,30 +40,43 @@ var _professorisf = require('../app/models/usuarios/professorisf'); var _profess
 var _usuario = require('../app/models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 // buffer
-const models = [_usuario2.default,
-    _alunoisf2.default,
-    _alunodeinstituicao2.default,
+const models = [
+    // curso_especializacao
+    _disciplinaespecializacao2.default,
+    _materialcursista2.default,
+    _turmadisciplinaespecializacao2.default,
+
+    // instituicao
     _instituicaoensino2.default, 
     _instituicaoensinobrasileira2.default,
     _instituicaoensinoestrangeira2.default,
-    _comprovantealunoinstituicao2.default,
-    _professorisf2.default,
-    _cursistaespecializacao2.default,
-    _alunograduacao2.default,
+    
+    // ofertacoletiva
     _curso2.default,
     _turmaoc2.default,
     _professorisfministraturmaoc2.default,
     _alunoisfparticipaturmaoc2.default,
-    _comprovanteprofessorinstituicao2.default,
+    
+    // proficiencia
     _proeficienciaalunoisf2.default,
     _proeficienciaprofessorisf2.default,
+
+    // usuario_pertence_instituicao
+    _comprovantealunoinstituicao2.default,
+    _comprovanteprofessorinstituicao2.default,
+
+    // usuarios
+    _alunodeinstituicao2.default,
     _alunoestrangeiro2.default,
-    _disciplinaespecializacao2.default,
-    _turmadisciplinaespecializacao2.default,
+    _alunograduacao2.default,
+    _alunoisf2.default,
     _coordenadornacionalIdioma2.default,
-    _materialcursista2.default,
     _coordenadornacional2.default,
-    _docenteorientador2.default
+    _cursistaespecializacao2.default,
+    _docenteorientador2.default,
+    _professorisf2.default,
+    _usuario2.default
+
 ]
 
 class DataBase{
