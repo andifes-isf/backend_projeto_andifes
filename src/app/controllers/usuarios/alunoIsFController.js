@@ -1,8 +1,14 @@
 import * as Yup from 'yup'
+
+// Models
 import AlunoIsF from '../../models/usuarios/alunoisf'
-import usuarioController from './usuarioController'
 import TurmaOC from '../../models/ofertacoletiva/turmaoc'
 import Curso from '../../models/ofertacoletiva/curso'
+import proeficienciaAlunoIsF from '../../models/proeficiencia/proeficienciaalunoisf'
+
+// Controller
+import usuarioController from './usuarioController'
+
 
 class alunoIsFController {
     async post(req, res, deInstituicao) {
@@ -49,6 +55,61 @@ class alunoIsFController {
             })
     
             return res.status(200).json(alunos)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async postProeficiencia(req, res) {
+        try {
+            if(!(req.tipoUsuario === 'alunoisf')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+    
+            const proeficiaenciaExistente = await proeficienciaAlunoIsF.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idioma: req.body.idioma,
+                    nivel: req.body.nivel
+                }
+            })
+    
+            if(proeficiaenciaExistente) {
+                return res.status(422).json({
+                    msg: "Proeficiencia do aluno ja cadastrada"
+                })
+            }
+            
+            const proeficiaencia = await proeficienciaAlunoIsF.create({
+                login: req.loginUsuario,
+                nivel: req.body.nivel,
+                idioma: req.body.idioma,
+                comprovante: req.body.comprovante
+            })
+    
+            return res.status(201).json(proeficiaencia)    
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async getMinhaProeficiencia(req, res) {
+        try {
+            if(!(req.tipoUsuario === "alunoisf")){
+                return res.status(403).json({
+                    error: "Acesso negado"
+                })
+            }
+
+            const proeficiaencias = await proeficienciaAlunoIsF.findAll({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+
+            return res.status(200).json(proeficiaencias)
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
