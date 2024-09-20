@@ -5,7 +5,7 @@ import TurmaOC from '../../models/ofertacoletiva/turmaoc'
 import Curso from '../../models/ofertacoletiva/curso'
 
 // Classe auxiliar
-import nivelFactory from '../../utils/factories/nivelFactory'
+import nivelFactory from '../../utils/niveis/nivelFactory'
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {

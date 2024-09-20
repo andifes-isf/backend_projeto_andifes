@@ -5,7 +5,7 @@ var _turmaoc = require('../../models/ofertacoletiva/turmaoc'); var _turmaoc2 = _
 var _curso = require('../../models/ofertacoletiva/curso'); var _curso2 = _interopRequireDefault(_curso);
 
 // Classe auxiliar
-var _nivelFactory = require('../../utils/factories/nivelFactory'); var _nivelFactory2 = _interopRequireDefault(_nivelFactory);
+var _nivelFactory = require('../../utils/niveis/nivelFactory'); var _nivelFactory2 = _interopRequireDefault(_nivelFactory);
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
