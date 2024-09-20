@@ -17,9 +17,24 @@ class ComprovanteProfessorInstituicao extends Model {
         inicio: {
           type: Sequelize.DATEONLY,
           allowNull: false,
-          primaryKey: true
+          primaryKey: true,
+          validate: {
+            isBefore: {
+              args: new Date().toISOString(), // Data atual no formato ISO
+              msg: 'A data do evento deve ser anterior à data atual.',
+            },
+          }
         },
-        termino: Sequelize.DATEONLY,
+        termino: {
+          type: Sequelize.DATEONLY,
+          validate: {
+              isAfterBegin(value) {
+                  if(this.inicio > value) {
+                      throw new Error('A data de termino nao pode ser anterior a data de inicio')
+                  }
+              }
+          }
+      },
         comprovante: {
           type: Sequelize.TEXT,
           allowNull: false,
