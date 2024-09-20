@@ -23,7 +23,6 @@ import professorIsFMinistraTurmaOCRoutes from "./ofertacoletiva/professorIsFMini
 import turmaOCRoutes from './ofertacoletiva/turmaOCRoutes'
 
 // usuario_pertence_instituicao
-import comprovanteAlunoInstituicaoRoutes from './usuario_pertence_instituicao/comprovanteAlunoInstituicaoRoutes'
 import comprovanteProfessorInstituicaoRoutes from "./usuario_pertence_instituicao/comprovanteProfessorInstituicaoRoutes"
 
 // usuarios
@@ -63,7 +62,6 @@ router.use('/professorisf_ministra_turmaoc', professorIsFMinistraTurmaOCRoutes)
 router.use('/turma_oc', turmaOCRoutes)
 
 // usuario_pertence_instituicao
-router.use('/comprovante_aluno_instituicao', comprovanteAlunoInstituicaoRoutes)
 router.use('/comprovante_professor_instituicao', comprovanteProfessorInstituicaoRoutes)
 
 // usuarios

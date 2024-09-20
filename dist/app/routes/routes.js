@@ -23,7 +23,6 @@ var _professorIsFMinistraTurmaOCRoutes = require('./ofertacoletiva/professorIsFM
 var _turmaOCRoutes = require('./ofertacoletiva/turmaOCRoutes'); var _turmaOCRoutes2 = _interopRequireDefault(_turmaOCRoutes);
 
 // usuario_pertence_instituicao
-var _comprovanteAlunoInstituicaoRoutes = require('./usuario_pertence_instituicao/comprovanteAlunoInstituicaoRoutes'); var _comprovanteAlunoInstituicaoRoutes2 = _interopRequireDefault(_comprovanteAlunoInstituicaoRoutes);
 var _comprovanteProfessorInstituicaoRoutes = require('./usuario_pertence_instituicao/comprovanteProfessorInstituicaoRoutes'); var _comprovanteProfessorInstituicaoRoutes2 = _interopRequireDefault(_comprovanteProfessorInstituicaoRoutes);
 
 // usuarios
@@ -63,7 +62,6 @@ router.use('/professorisf_ministra_turmaoc', _professorIsFMinistraTurmaOCRoutes2
 router.use('/turma_oc', _turmaOCRoutes2.default)
 
 // usuario_pertence_instituicao
-router.use('/comprovante_aluno_instituicao', _comprovanteAlunoInstituicaoRoutes2.default)
 router.use('/comprovante_professor_instituicao', _comprovanteProfessorInstituicaoRoutes2.default)
 
 // usuarios

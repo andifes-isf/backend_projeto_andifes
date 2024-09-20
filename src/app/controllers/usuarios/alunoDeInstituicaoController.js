@@ -1,9 +1,13 @@
 import * as Yup from 'yup'
+
+// Models
 import AlunoDeInstituicao from '../../models/usuarios/alunodeinstituicao'
-import alunoIsFController from './alunoIsFController'
-import InstituicaoEnsino from '../../models/instituicao/instituicaoensino'
 import AlunoIsF from '../../models/usuarios/alunoisf'
+import ComprovanteAlunoInstituicao from '../../models/usuario_pertence_instituicao/comprovantealunoinstituicao'
 import Usuario from '../../models/usuarios/usuario'
+
+// Controller
+import alunoIsFController from './alunoIsFController'
 
 class alunoDeinstituicaoController {
     async post(req, res) {
@@ -70,6 +74,82 @@ class alunoDeinstituicaoController {
             return res.status(200).json(alunos)
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async postInstituicao(req, res){
+        try {
+            if(!(req.tipoUsuario === 'alunoisf')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const comprovanteExistente = await ComprovanteAlunoInstituicao.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idInstituicao: req.body.idInstituicao,
+                    inicio: req.body.inicio
+                }
+            })
+    
+            if(comprovanteExistente) {
+                return res.status(409).json({
+                    msg: "Comprovante de Aluno ja cadastrado"
+                })
+            }
+            
+            const comprovante = await ComprovanteAlunoInstituicao.create({
+                idInstituicao: req.body.idInstituicao,
+                login: req.loginUsuario,
+                inicio: req.body.inicio,
+                termino: req.body.termino || null,
+                comprovante: req.body.comprovante
+            })
+    
+            return res.status(201).json(comprovante)    
+        } catch (error) {
+            return res.status(500).json(error.message)
+        }
+    }
+
+    async getMinhasInstituicoes(req, res){
+        try {
+            if(!(AlunoDeInstituicao.findOne({where: {login: req.loginUsuario}}))){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const instituicoes = await ComprovanteAlunoInstituicao.findAll({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+
+            return res.status(200).json(instituicoes)
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getInstituicaoAtual(req, res){
+        try {
+            if(!(AlunoDeInstituicao.findOne({where: {login: req.loginUsuario}}))){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const instituicao = await ComprovanteAlunoInstituicao.findOne({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+
+            return res.status(200).json(instituicao)
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
     }
 }

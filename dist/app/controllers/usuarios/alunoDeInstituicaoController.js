@@ -1,9 +1,13 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
+
+// Models
 var _alunodeinstituicao = require('../../models/usuarios/alunodeinstituicao'); var _alunodeinstituicao2 = _interopRequireDefault(_alunodeinstituicao);
-var _alunoIsFController = require('./alunoIsFController'); var _alunoIsFController2 = _interopRequireDefault(_alunoIsFController);
-var _instituicaoensino = require('../../models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
 var _alunoisf = require('../../models/usuarios/alunoisf'); var _alunoisf2 = _interopRequireDefault(_alunoisf);
+var _comprovantealunoinstituicao = require('../../models/usuario_pertence_instituicao/comprovantealunoinstituicao'); var _comprovantealunoinstituicao2 = _interopRequireDefault(_comprovantealunoinstituicao);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+
+// Controller
+var _alunoIsFController = require('./alunoIsFController'); var _alunoIsFController2 = _interopRequireDefault(_alunoIsFController);
 
 class alunoDeinstituicaoController {
     async post(req, res) {
@@ -53,7 +57,7 @@ class alunoDeinstituicaoController {
                         }]
                     },    
                     {
-                        model: _instituicaoensino2.default,
+                        model: InstituicaoEnsino,
                         attributes: {
                             exclude: ['idInstituicao']
                         },
@@ -70,6 +74,82 @@ class alunoDeinstituicaoController {
             return res.status(200).json(alunos)
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async postInstituicao(req, res){
+        try {
+            if(!(req.tipoUsuario === 'alunoisf')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const comprovanteExistente = await _comprovantealunoinstituicao2.default.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idInstituicao: req.body.idInstituicao,
+                    inicio: req.body.inicio
+                }
+            })
+    
+            if(comprovanteExistente) {
+                return res.status(409).json({
+                    msg: "Comprovante de Aluno ja cadastrado"
+                })
+            }
+            
+            const comprovante = await _comprovantealunoinstituicao2.default.create({
+                idInstituicao: req.body.idInstituicao,
+                login: req.loginUsuario,
+                inicio: req.body.inicio,
+                termino: req.body.termino || null,
+                comprovante: req.body.comprovante
+            })
+    
+            return res.status(201).json(comprovante)    
+        } catch (error) {
+            return res.status(500).json(error.message)
+        }
+    }
+
+    async getMinhasInstituicoes(req, res){
+        try {
+            if(!(_alunodeinstituicao2.default.findOne({where: {login: req.loginUsuario}}))){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const instituicoes = await _comprovantealunoinstituicao2.default.findAll({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+
+            return res.status(200).json(instituicoes)
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getInstituicaoAtual(req, res){
+        try {
+            if(!(_alunodeinstituicao2.default.findOne({where: {login: req.loginUsuario}}))){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const instituicao = await _comprovantealunoinstituicao2.default.findOne({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+
+            return res.status(200).json(instituicao)
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
     }
 }

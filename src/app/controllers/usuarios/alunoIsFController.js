@@ -2,9 +2,9 @@ import * as Yup from 'yup'
 
 // Models
 import AlunoIsF from '../../models/usuarios/alunoisf'
-import TurmaOC from '../../models/ofertacoletiva/turmaoc'
 import Curso from '../../models/ofertacoletiva/curso'
 import proeficienciaAlunoIsF from '../../models/proeficiencia/proeficienciaalunoisf'
+import TurmaOC from '../../models/ofertacoletiva/turmaoc'
 
 // Controller
 import usuarioController from './usuarioController'
