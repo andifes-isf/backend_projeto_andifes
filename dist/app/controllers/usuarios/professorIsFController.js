@@ -2,6 +2,7 @@
 var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 var _instituicaoensino = require('../../models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
+var _proeficienciaprofessorisf = require('../../models/proeficiencia/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
 class ProfessorIsFController {
@@ -70,6 +71,61 @@ class ProfessorIsFController {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 
+    }
+
+    async postProeficiencia(req, res) {
+        try {
+            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+    
+            const proeficiaenciaExistente = await _proeficienciaprofessorisf2.default.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idioma: req.body.idioma,
+                    nivel: req.body.nivel
+                }
+            })
+    
+            if(proeficiaenciaExistente) {
+                return res.status(422).json({
+                    msg: "Proeficiencia do professor ja cadastrada"
+                })
+            }
+    
+            const proeficiencia = await _proeficienciaprofessorisf2.default.create({
+                login: req.loginUsuario,
+                nivel: req.body.nivel,
+                idioma: req.body.idioma,
+                comprovante: req.body.comprovante
+            })
+    
+            return res.status(201).json(proeficiencia)   
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async getMinhaProeficiencia(req, res) {
+        try {
+            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+                return res.status(403).json({
+                    error: "Acesso negado"
+                })
+            }
+
+            const proeficiencias = await _proeficienciaprofessorisf2.default.findAll({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+
+            return res.status(200).json(proeficiencias)
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
     }
 }
 

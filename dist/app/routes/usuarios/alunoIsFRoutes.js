@@ -4,8 +4,6 @@ var _alunoIsFController = require('../../controllers/usuarios/alunoIsFController
 
 const router = new (0, _express.Router)()
 
-router.post('/', _alunoIsFController2.default.post)
-
 router.get('/', _alunoIsFController2.default.get)
 
 router.post('/adicionar_proeficiencia', _auth2.default, _alunoIsFController2.default.postProeficiencia)

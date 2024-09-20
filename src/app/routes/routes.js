@@ -22,10 +22,6 @@ import cursoRoutes from './ofertacoletiva/cursoRoutes'
 import professorIsFMinistraTurmaOCRoutes from "./ofertacoletiva/professorIsFMinistraTurmaOCRoutes"
 import turmaOCRoutes from './ofertacoletiva/turmaOCRoutes'
 
-// proeficiencia
-import proeficienciaAlunoIsFRoutes from "./proeficiencia/proeficienciaAlunoIsFRoutes"
-import proeficienciaProfessorIsFRoutes from "./proeficiencia/proeficienciaProfessorIsFRoutes"
-
 // usuario_pertence_instituicao
 import comprovanteAlunoInstituicaoRoutes from './usuario_pertence_instituicao/comprovanteAlunoInstituicaoRoutes'
 import comprovanteProfessorInstituicaoRoutes from "./usuario_pertence_instituicao/comprovanteProfessorInstituicaoRoutes"
@@ -65,10 +61,6 @@ router.use('/alunoisf_participa_turmaoc', alunoIsFParticipaTurmaOCRoutes)
 router.use('/curso', cursoRoutes)
 router.use('/professorisf_ministra_turmaoc', professorIsFMinistraTurmaOCRoutes)
 router.use('/turma_oc', turmaOCRoutes)
-
-// proeficiencia
-router.use('/proeficiencia_alunoisf', proeficienciaAlunoIsFRoutes)
-router.use('/proeficiencia_professorisf', proeficienciaProfessorIsFRoutes)
 
 // usuario_pertence_instituicao
 router.use('/comprovante_aluno_instituicao', comprovanteAlunoInstituicaoRoutes)
