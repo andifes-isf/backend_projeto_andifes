@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import AlunoDeInstituicao from '../../models/usuarios/alunodeinstituicao'
 import AlunoIsF from '../../models/usuarios/alunoisf'
 import ComprovanteAlunoInstituicao from '../../models/usuario_pertence_instituicao/comprovantealunoinstituicao'
+import InstituicaoEnsino from '../../models/instituicao/instituicaoensino'
 import Usuario from '../../models/usuarios/usuario'
 
 // Controller
@@ -121,13 +122,13 @@ class alunoDeinstituicaoController {
                 })
             }
 
-            const instituicoes = await ComprovanteAlunoInstituicao.findAll({
+            const comprovantes = await ComprovanteAlunoInstituicao.findAll({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(instituicoes)
+            return res.status(200).json(comprovantes)
         } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
@@ -141,13 +142,13 @@ class alunoDeinstituicaoController {
                 })
             }
 
-            const instituicao = await ComprovanteAlunoInstituicao.findOne({
+            const comprovante = await ComprovanteAlunoInstituicao.findOne({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(instituicao)
+            return res.status(200).json(comprovante)
         } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }

@@ -4,6 +4,7 @@
 var _alunodeinstituicao = require('../../models/usuarios/alunodeinstituicao'); var _alunodeinstituicao2 = _interopRequireDefault(_alunodeinstituicao);
 var _alunoisf = require('../../models/usuarios/alunoisf'); var _alunoisf2 = _interopRequireDefault(_alunoisf);
 var _comprovantealunoinstituicao = require('../../models/usuario_pertence_instituicao/comprovantealunoinstituicao'); var _comprovantealunoinstituicao2 = _interopRequireDefault(_comprovantealunoinstituicao);
+var _instituicaoensino = require('../../models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 // Controller
@@ -57,7 +58,7 @@ class alunoDeinstituicaoController {
                         }]
                     },    
                     {
-                        model: InstituicaoEnsino,
+                        model: _instituicaoensino2.default,
                         attributes: {
                             exclude: ['idInstituicao']
                         },
@@ -121,13 +122,13 @@ class alunoDeinstituicaoController {
                 })
             }
 
-            const instituicoes = await _comprovantealunoinstituicao2.default.findAll({
+            const comprovantes = await _comprovantealunoinstituicao2.default.findAll({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(instituicoes)
+            return res.status(200).json(comprovantes)
         } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
@@ -141,13 +142,13 @@ class alunoDeinstituicaoController {
                 })
             }
 
-            const instituicao = await _comprovantealunoinstituicao2.default.findOne({
+            const comprovante = await _comprovantealunoinstituicao2.default.findOne({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(instituicao)
+            return res.status(200).json(comprovante)
         } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }

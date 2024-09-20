@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import ProfessorIsF from "../../models/usuarios/professorisf";
 import Usuario from "../../models/usuarios/usuario";
+import ComprovanteProfessorInstituicao from '../../models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'
 import InstituicaoEnsino from "../../models/instituicao/instituicaoensino";
 import proeficienciaProfessorIsF from '../../models/proeficiencia/proeficienciaprofessorisf'
 import usuarioController from "./usuarioController";
@@ -123,6 +124,83 @@ class ProfessorIsFController {
             })
 
             return res.status(200).json(proeficiencias)
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async postInstituicao(req, res) {  
+        try {
+            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+                console.log(req.tipoUsuario)
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+    
+            const comprovanteExistente = await ComprovanteProfessorInstituicao.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idInstituicao: req.body.idInstituicao,
+                    inicio: req.body.inicio
+                }
+            })
+    
+            if(comprovanteExistente) {
+                return res.status(409).json({
+                    msg: "Comprovante de Professor ja cadastrado"
+                })
+            }
+            
+            const comprovante = await ComprovanteProfessorInstituicao.create({
+                idInstituicao: req.body.idInstituicao,
+                login: req.loginUsuario,
+                inicio: req.body.inicio,
+                termino: req.body.termino || null,
+                comprovante: req.body.comprovante
+            })
+    
+            return res.status(201).json(comprovante)    
+        } catch (error) {
+            return res.status(500).json(error.message)
+        }
+    }
+
+    async getMinhasInstituicoes(req, res){
+        try {
+            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const comprovantes = await ComprovanteProfessorInstituicao.findAll({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+
+            return res.status(200).json(comprovantes)
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getInstituicaoAtual(req, res){
+        try {
+            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const comprovante = await ComprovanteProfessorInstituicao.findOne({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+
+            return res.status(200).json(comprovante)
         } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }

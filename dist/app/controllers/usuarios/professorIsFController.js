@@ -1,6 +1,7 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize');
 var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _comprovanteprofessorinstituicao = require('../../models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'); var _comprovanteprofessorinstituicao2 = _interopRequireDefault(_comprovanteprofessorinstituicao);
 var _instituicaoensino = require('../../models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
 var _proeficienciaprofessorisf = require('../../models/proeficiencia/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
@@ -123,6 +124,83 @@ class ProfessorIsFController {
             })
 
             return res.status(200).json(proeficiencias)
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async postInstituicao(req, res) {  
+        try {
+            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+                console.log(req.tipoUsuario)
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+    
+            const comprovanteExistente = await _comprovanteprofessorinstituicao2.default.findOne({
+                where: {
+                    login: req.loginUsuario,
+                    idInstituicao: req.body.idInstituicao,
+                    inicio: req.body.inicio
+                }
+            })
+    
+            if(comprovanteExistente) {
+                return res.status(409).json({
+                    msg: "Comprovante de Professor ja cadastrado"
+                })
+            }
+            
+            const comprovante = await _comprovanteprofessorinstituicao2.default.create({
+                idInstituicao: req.body.idInstituicao,
+                login: req.loginUsuario,
+                inicio: req.body.inicio,
+                termino: req.body.termino || null,
+                comprovante: req.body.comprovante
+            })
+    
+            return res.status(201).json(comprovante)    
+        } catch (error) {
+            return res.status(500).json(error.message)
+        }
+    }
+
+    async getMinhasInstituicoes(req, res){
+        try {
+            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const comprovantes = await _comprovanteprofessorinstituicao2.default.findAll({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+
+            return res.status(200).json(comprovantes)
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getInstituicaoAtual(req, res){
+        try {
+            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const comprovante = await _comprovanteprofessorinstituicao2.default.findOne({
+                where: {
+                    login: req.loginUsuario
+                }
+            })
+
+            return res.status(200).json(comprovante)
         } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }

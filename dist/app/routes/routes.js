@@ -22,9 +22,6 @@ var _cursoRoutes = require('./ofertacoletiva/cursoRoutes'); var _cursoRoutes2 = 
 var _professorIsFMinistraTurmaOCRoutes = require('./ofertacoletiva/professorIsFMinistraTurmaOCRoutes'); var _professorIsFMinistraTurmaOCRoutes2 = _interopRequireDefault(_professorIsFMinistraTurmaOCRoutes);
 var _turmaOCRoutes = require('./ofertacoletiva/turmaOCRoutes'); var _turmaOCRoutes2 = _interopRequireDefault(_turmaOCRoutes);
 
-// usuario_pertence_instituicao
-var _comprovanteProfessorInstituicaoRoutes = require('./usuario_pertence_instituicao/comprovanteProfessorInstituicaoRoutes'); var _comprovanteProfessorInstituicaoRoutes2 = _interopRequireDefault(_comprovanteProfessorInstituicaoRoutes);
-
 // usuarios
 var _alunoDeInstituicaoRoutes = require('./usuarios/alunoDeInstituicaoRoutes'); var _alunoDeInstituicaoRoutes2 = _interopRequireDefault(_alunoDeInstituicaoRoutes);
 var _alunoEstrangeiroRoutes = require('./usuarios/alunoEstrangeiroRoutes'); var _alunoEstrangeiroRoutes2 = _interopRequireDefault(_alunoEstrangeiroRoutes);
@@ -60,9 +57,6 @@ router.use('/alunoisf_participa_turmaoc', _alunoIsFParticipaTurmaOCRoutes2.defau
 router.use('/curso', _cursoRoutes2.default)
 router.use('/professorisf_ministra_turmaoc', _professorIsFMinistraTurmaOCRoutes2.default)
 router.use('/turma_oc', _turmaOCRoutes2.default)
-
-// usuario_pertence_instituicao
-router.use('/comprovante_professor_instituicao', _comprovanteProfessorInstituicaoRoutes2.default)
 
 // usuarios
 router.use('/aluno_deinstituicao', _alunoDeInstituicaoRoutes2.default)
