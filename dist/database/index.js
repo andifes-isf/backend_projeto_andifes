@@ -4,6 +4,7 @@ var _database = require('../config/database'); var _database2 = _interopRequireD
 //// Models
 
 // curso_especializacao
+var _alteracaoturmaespecializacao = require('../app/models/curso_especializacao/alteracaoturmaespecializacao'); var _alteracaoturmaespecializacao2 = _interopRequireDefault(_alteracaoturmaespecializacao);
 var _disciplinaespecializacao = require('../app/models/curso_especializacao/disciplinaespecializacao'); var _disciplinaespecializacao2 = _interopRequireDefault(_disciplinaespecializacao);
 var _editalcursoespecializacao = require('../app/models/curso_especializacao/editalcursoespecializacao'); var _editalcursoespecializacao2 = _interopRequireDefault(_editalcursoespecializacao);
 var _turmadisciplinaespecializacao = require('../app/models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
@@ -43,6 +44,7 @@ var _usuario = require('../app/models/usuarios/usuario'); var _usuario2 = _inter
 // buffer
 const models = [
     // curso_especializacao
+    _alteracaoturmaespecializacao2.default,
     _disciplinaespecializacao2.default,
     _editalcursoespecializacao2.default,
     _materialcursista2.default,

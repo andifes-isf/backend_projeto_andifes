@@ -4,6 +4,7 @@ import DatabaseConfig from '../config/database'
 //// Models
 
 // curso_especializacao
+import AlteracaoTurmaEspecializacao from '../app/models/curso_especializacao/alteracaoturmaespecializacao'
 import DisciplinaEspecializacao from '../app/models/curso_especializacao/disciplinaespecializacao'
 import EditalCursoEspecializacao from '../app/models/curso_especializacao/editalcursoespecializacao'
 import TurmaDisciplinaEspecializacao from '../app/models/curso_especializacao/turmadisciplinaespecializacao'
@@ -43,6 +44,7 @@ import Usuario from '../app/models/usuarios/usuario'
 // buffer
 const models = [
     // curso_especializacao
+    AlteracaoTurmaEspecializacao,
     DisciplinaEspecializacao,
     EditalCursoEspecializacao,
     MaterialCursista,
