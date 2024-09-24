@@ -24,6 +24,12 @@ module.exports = {
         idInstituicao: 1,
         inicio: "2021-04-20",
         comprovante: "Comprovante de Pietro na UFSCar"
+      },
+      {
+        login: "Kactus",
+        idInstituicao: 4,
+        inicio: "2021-04-20",
+        comprovante: "Comprovante de Kactus na UFTPR"
       }
     ]
 

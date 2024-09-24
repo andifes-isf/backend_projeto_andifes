@@ -10,80 +10,57 @@ module.exports = {
       {
         login: "Arata",
         idioma: "ingles",
-        nivel: "A1",
-        comprovante: "comprovante de proeficiencia nivel A1"
-      },
-      {
-        login: "Arata",
-        idioma: "japones",
-        nivel: "N4",
-        comprovante: "comprovante de proeficiencia nivel N4"
-      },
-      {
-        login: "Balla",
-        idioma: "ingles",
-        nivel: "B2",
-        comprovante: "comprovante de proeficiencia nivel B2"
-      },
-      {
-        login: "Balla",
-        idioma: "ingles",
         nivel: "B1",
         comprovante: "comprovante de proeficiencia nivel B1"
       },
       {
-        login: "Bruno",
+        login: "Arata",
         idioma: "ingles",
-        nivel: "C2",
-        comprovante: "comprovante de proeficiencia nivel C2"
+        nivel: "A1",
+        comprovante: "comprovante de proeficiencia nivel A1"
+      },
+      {
+        login: "Balla",
+        idioma: "frances",
+        nivel: "A2",
+        comprovante: "comprovante de proeficiencia nivel A2"
       },
       {
         login: "Bruno",
-        idioma: "frances",
+        idioma: "ingles",
         nivel: "A1",
         comprovante: "comprovante de proeficiencia nivel A1"
       },
       {
         login: "Portix",
         idioma: "ingles",
-        nivel: "C2",
-        comprovante: "comprovante de proeficiencia nivel C2"
+        nivel: "C1",
+        comprovante: "comprovante de proeficiencia nivel C1"
       },
       {
-        login: "Portix",
+        login: "Guto",
         idioma: "italiano",
         nivel: "B1",
         comprovante: "comprovante de proeficiencia nivel B1"
       },
       {
-        login: "Guto",
-        idioma: "ingles",
-        nivel: "B1",
-        comprovante: "comprovante de proeficiencia nivel B1"
-      },
-      {
-        login: "Guto",
-        idioma: "ingles",
-        nivel: "B2",
-        comprovante: "comprovante de proeficiencia nivel B2"
-      },
-      {
         login: "Gaby",
         idioma: "ingles",
-        nivel: "A2",
-        comprovante: "comprovante de proeficiencia nivel A2"
+        nivel: "A1",
+        comprovante: "comprovante de proeficiencia nivel A1"
       },
       {
-        login: "Gaby",
-        idioma: "ingles",
-        nivel: "B1",
-        comprovante: "comprovante de proeficiencia nivel B1"
-      },
+        login: "Victin",
+        idioma: "japones",
+        nivel: "N4",
+        comprovante: "comprovante de proeficiencia nivel N4"
+      }
     ]
 
     try {  
       await _proeficienciaalunoisf2.default.bulkCreate(proeficiencias, { individualHooks: true })
     } catch (error) {
+      console.log(error)
       throw error
     }
 

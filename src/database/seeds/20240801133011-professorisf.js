@@ -11,13 +11,13 @@ module.exports = {
         login: "Carlos",
         poca: "Certificado POCA do Carlos",
         inicio: "2024-01-20",
-        cursista: 1
+        cursista: 0
       },
       {
         login: "Pietro",
         poca: "Certificado POCA do Pietro",
         inicio: "2024-01-20",
-        cursista: 1
+        cursista: 0
       },
       {
         login: "Pedro",

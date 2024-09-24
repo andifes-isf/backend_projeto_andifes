@@ -15,15 +15,21 @@ module.exports = {
       },
       {
         login: "Pietro",
-        idioma: "japones",
-        nivel: "N2",
-        comprovante: "comprovante de proeficiencia nivel N2"
+        idioma: "Italiano",
+        nivel: "C2",
+        comprovante: "comprovante de proeficiencia nivel C2"
       },
       {
         login: "Pedro",
-        idioma: "ingles",
-        nivel: "C2",
+        idioma: "frances",
+        nivel: "B2",
         comprovante: "comprovante de proeficiencia nivel B2"
+      },
+      {
+        login: "Kactus",
+        idioma: "japones",
+        nivel: "N2",
+        comprovante: "comprovante de proeficiencia nivel N2"
       }
     ]
 
