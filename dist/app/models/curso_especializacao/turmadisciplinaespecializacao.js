@@ -9,15 +9,12 @@ class TurmaDisciplinaEspecializacao extends _sequelize.Model {
                     allowNull: false,
                     primaryKey: true
                 },
-                idTurma: {
-                    type: _sequelize2.default.BIGINT,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true
+                edital: {
+                    type: _sequelize2.default.CHAR(4)
                 },
                 nome: {
                     type: _sequelize2.default.STRING,
-                    unique: true
+                    primaryKey: true
                 },
                 mesOferta: {
                     type: _sequelize2.default.ENUM('janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')
@@ -75,11 +72,16 @@ class TurmaDisciplinaEspecializacao extends _sequelize.Model {
                     using: 'BTREE',
                     fields: [
                         { name: 'nome' },
-                        { name: 'idTurma' }
+                        { name: 'disciplina' }
                     ]
                 }]
             }
         )
+
+        // Hooks
+        this.addHook('beforeSave', async (turma) => {
+            turma.nome = `${turma.edital}_${turma.disciplina}_${turma.mesOferta}`
+        })
 
         return this
 

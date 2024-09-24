@@ -4,12 +4,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('turmadisciplinaespecializacao', {
-      idTurma: {
-        type: Sequelize.BIGINT,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-      },
       disciplina: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -17,7 +11,8 @@ module.exports = {
       },
       nome: {
         type: Sequelize.STRING,
-        unique: true
+        allowNull: false,
+        primaryKey: true
       },
       mesOferta: {
         type: Sequelize.ENUM('janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')
@@ -44,6 +39,10 @@ module.exports = {
       }
     })
 
+    await queryInterface.addIndex('turmadisciplinaespecializacao', ['nome'], {
+      name: 'idx_nome_turmadisciplinaespecializacao'
+    })
+
     await queryInterface.addConstraint('turmadisciplinaespecializacao', {
       fields: ['disciplina'],
       type: 'foreign key',
@@ -58,5 +57,11 @@ module.exports = {
 
   },
 
-  down: () => {}
+  down: async () => {
+    // Remover a chave estrangeira
+    await queryInterface.removeConstraint('turmadisciplinaespecializacao', 'fk_disciplina_turmadisciplinaespecializacao');
+
+    // Excluir a tabela 'turmadisciplinaespecializacao'
+    await queryInterface.dropTable('turmadisciplinaespecializacao');
+  }
 };

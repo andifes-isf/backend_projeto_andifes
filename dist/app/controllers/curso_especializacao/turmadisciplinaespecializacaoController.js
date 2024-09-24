@@ -6,9 +6,12 @@ class turmaDisciplinaEspecializacaoController {
     
     async post(req, res){
         try {
+
+            const nomeTurma = req.body.edital + "_" + req.body.disciplina + "_" + req.body.mesOferta
+
             const turmaExistente = await _turmadisciplinaespecializacao2.default.findOne({
                 where: {
-                    nome: req.body.nome,
+                    nome: nomeTurma,
                 }
             })
             
@@ -20,6 +23,7 @@ class turmaDisciplinaEspecializacaoController {
             
             const turma = await _turmadisciplinaespecializacao2.default.create({
                 disciplina: req.body.disciplina,
+                edital: req.body.edital,
                 nome: req.body.nome,
                 mesOferta: req.body.mesOferta,
                 numeroVagas: req.body.numeroVagas,
@@ -69,7 +73,6 @@ class turmaDisciplinaEspecializacaoController {
 
         const alteracao = await _alteracaoturmaespecializacao2.default.create({
             login: login,
-            idTurma: turma.idTurma,
             valorAnteriorNumeroVagas: turma.numeroVagas,
             valorPosteriorNumeroVagas: numeroVagas === undefined ? turma.numeroVagas : numeroVagas,
             valorAnteriorNumeroMinimoAlunos: turma.numeroMinimoAlunos,

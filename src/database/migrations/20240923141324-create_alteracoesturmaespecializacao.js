@@ -8,8 +8,8 @@ module.exports = {
         type: Sequelize.STRING,
         primaryKey: true
       },
-      idTurma: {
-        type: Sequelize.BIGINT,
+      nomeTurma: {
+        type: Sequelize.STRING,
         primaryKey: true
       },
       dataModificacao: {
@@ -49,12 +49,12 @@ module.exports = {
     })
 
     await queryInterface.addConstraint('alteracaoturmaespecializacao', {
-      fields: ['idTurma'],
+      fields: ['nomeTurma'],
       type: 'foreign key',
-      name: 'fk_idTurma_alteracaoturmaespecializacao',
+      name: 'fk_nomeTurma_alteracaoturmaespecializacao',
       references: {
         table: 'turmadisciplinaespecializacao',
-        field: 'idTurma'
+        field: 'nome'
       },
       onDelete: 'cascade',
       onUpdate: 'cascade'

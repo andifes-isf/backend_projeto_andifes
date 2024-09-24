@@ -9,15 +9,12 @@ class TurmaDisciplinaEspecializacao extends Model {
                     allowNull: false,
                     primaryKey: true
                 },
-                idTurma: {
-                    type: Sequelize.BIGINT,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true
+                edital: {
+                    type: Sequelize.CHAR(4)
                 },
                 nome: {
                     type: Sequelize.STRING,
-                    unique: true
+                    primaryKey: true
                 },
                 mesOferta: {
                     type: Sequelize.ENUM('janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')
@@ -75,11 +72,16 @@ class TurmaDisciplinaEspecializacao extends Model {
                     using: 'BTREE',
                     fields: [
                         { name: 'nome' },
-                        { name: 'idTurma' }
+                        { name: 'disciplina' }
                     ]
                 }]
             }
         )
+
+        // Hooks
+        this.addHook('beforeSave', async (turma) => {
+            turma.nome = `${turma.edital}_${turma.disciplina}_${turma.mesOferta}`
+        })
 
         return this
 

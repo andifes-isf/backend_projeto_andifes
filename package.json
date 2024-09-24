@@ -10,6 +10,8 @@
     "migrate": "yarn build && sequelize db:migrate --config dist/config/database.js --migrations-path dist/database/migrations",
     "migrate-undo": "sequelize db:migrate:undo",
 
+    "restart-db": "sequelize db:drop && sequelize db:create",
+
     "seed": "yarn build && sequelize db:seed:all --config dist/config/database.js --seeders-path dist/database/seeds",
     "seed-undo": "yarn build && sequelize db:seed:undo:all --config dist/config/database.js --seeders-path dist/database/seeds",
     
