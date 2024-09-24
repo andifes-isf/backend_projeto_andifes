@@ -78,6 +78,8 @@ class alunoDeinstituicaoController {
         }
     }
 
+
+    // Aqui tem que ser especificamente o alunoDeInstituicao, mas não sei a melhor forma de fazer isso
     async postInstituicao(req, res){
         try {
             if(!(req.tipoUsuario === 'alunoisf')){

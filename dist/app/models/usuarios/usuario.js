@@ -21,7 +21,7 @@ class Usuario extends _sequelize.Model {
                 dominio: _sequelize2.default.ENUM('gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'),
                 senha: _sequelize2.default.VIRTUAL,
                 senha_encriptada: _sequelize2.default.STRING,
-                tipo: _sequelize2.default.ENUM('alunoisf', 'professorisf')
+                tipo: _sequelize2.default.ENUM('alunoisf', 'professorisf', 'cursista', 'coordenadornacional', 'coordenadornacionalidioma', 'docenteorientador', 'docenteministrante'),
             },
             {
                 sequelize,

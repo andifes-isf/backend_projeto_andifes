@@ -21,7 +21,7 @@ class Usuario extends Model {
                 dominio: Sequelize.ENUM('gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'),
                 senha: Sequelize.VIRTUAL,
                 senha_encriptada: Sequelize.STRING,
-                tipo: Sequelize.ENUM('alunoisf', 'professorisf')
+                tipo: Sequelize.ENUM('alunoisf', 'professorisf', 'cursista', 'coordenadornacional', 'coordenadornacionalidioma', 'docenteorientador', 'docenteministrante'),
             },
             {
                 sequelize,

@@ -186,6 +186,20 @@ module.exports = {
         senha: 'senha',
         tipo: 'coordenadornacional'
       },
+      {
+        login: 'Roberto',
+        nome: 'Roberto',
+        sobrenome: 'Silva',
+        DDI: 55,
+        DDD: 16,
+        telefone: 153483180,
+        etnia: 'branco',
+        genero: 'masculino',
+        nomeEmail: 'rob',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'coordenadornacional'
+      },
 
       // Coordenador nacional idioma
 
@@ -203,22 +217,39 @@ module.exports = {
         senha: 'senha',
         tipo: 'coordenadornacionalidioma'
       },
-      // {
-      //   login: 'Enio',
-      //   nome: 'Enio',
-      //   sobrenome: 'Uyeta',
-      //   DDI: 55,
-      //   DDD: 16,
-      //   telefone: 153486110,
-      //   etnia: 'amarelo',
-      //   genero: 'masculino',
-      //   nomeEmail: 'enio',
-      //   dominio: 'gmail.com',
-      //   senha: 'senha',
-      //   tipo: 'professorisf'
-      // },
+      {
+        login: 'Juvenas',
+        nome: 'Juvenaldo',
+        sobrenome: 'Silva',
+        DDI: 55,
+        DDD: 16,
+        telefone: 153489185,
+        etnia: 'branco',
+        genero: 'masculino',
+        nomeEmail: 'juvenas',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'coordenadornacionalidioma'
+      },
 
-      // COORDENADOR NACIONAL IDIOMA
+      // DOCENTE MINISTRANTE
+
+      {
+        login: 'Enio',
+        nome: 'Enio',
+        sobrenome: 'Uyeta',
+        DDI: 55,
+        DDD: 16,
+        telefone: 153486110,
+        etnia: 'amarelo',
+        genero: 'masculino',
+        nomeEmail: 'enio',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'docenteministrante'
+      },
+
+      // DOCENTE ORIENTADOR
 
       {
         login: 'Manuel',
@@ -232,7 +263,21 @@ module.exports = {
         nomeEmail: 'manuel',
         dominio: 'gmail.com',
         senha: 'senha',
-        tipo: 'coordenadornacionalidioma'
+        tipo: 'docenteorientador'
+      },
+      {
+        login: 'Yugo',
+        nome: 'Yugo',
+        sobrenome: 'Teixeira',
+        DDI: 55,
+        DDD: 16,
+        telefone: 156186110,
+        etnia: 'branco',
+        genero: 'masculino',
+        nomeEmail: 'yugo',
+        dominio: 'gmail.com',
+        senha: 'senha',
+        tipo: 'docenteorientador'
       },
     ]
 
