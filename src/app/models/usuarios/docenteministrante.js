@@ -32,6 +32,14 @@ class DocenteMinistrante extends Model {
         this.belongsTo(models.Usuario, {
             foreignKey: 'login'
         })
+
+        this.belongsToMany(models.TurmaDisciplinaEspecializacao, {
+            through: 'ministranteministraturmaespecializacao',
+            foreignKey: 'login',
+            sourceKey: 'login',
+            targetKey: 'nome',
+            timestamps: false
+        })
     }
 }
 

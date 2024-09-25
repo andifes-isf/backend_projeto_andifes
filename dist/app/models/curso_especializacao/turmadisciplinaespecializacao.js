@@ -91,6 +91,14 @@ class TurmaDisciplinaEspecializacao extends _sequelize.Model {
         this.belongsTo(models.DisciplinaEspecializacao, {
             foreignKey: 'nome'
         })
+
+        this.belongsToMany(models.DocenteMinistrante, {
+            through: 'ministranteministraturmaespecializacao',
+            foreignKey: 'nomeTurma',
+            sourceKey: 'nome',
+            targetKey: 'login',
+            timestamps: false
+        })
     }
 
 }

@@ -7,8 +7,9 @@ var _database = require('../config/database'); var _database2 = _interopRequireD
 var _alteracaoturmaespecializacao = require('../app/models/curso_especializacao/alteracaoturmaespecializacao'); var _alteracaoturmaespecializacao2 = _interopRequireDefault(_alteracaoturmaespecializacao);
 var _disciplinaespecializacao = require('../app/models/curso_especializacao/disciplinaespecializacao'); var _disciplinaespecializacao2 = _interopRequireDefault(_disciplinaespecializacao);
 var _editalcursoespecializacao = require('../app/models/curso_especializacao/editalcursoespecializacao'); var _editalcursoespecializacao2 = _interopRequireDefault(_editalcursoespecializacao);
-var _turmadisciplinaespecializacao = require('../app/models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
 var _materialcursista = require('../app/models/curso_especializacao/materialcursista'); var _materialcursista2 = _interopRequireDefault(_materialcursista);
+var _ministranteMinistraTurmaEspecializacao = require('../app/models/curso_especializacao/ministranteMinistraTurmaEspecializacao'); var _ministranteMinistraTurmaEspecializacao2 = _interopRequireDefault(_ministranteMinistraTurmaEspecializacao);
+var _turmadisciplinaespecializacao = require('../app/models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
 
 // instituicao
 var _instituicaoensinobrasileira = require('../app/models/instituicao/instituicaoensinobrasileira'); var _instituicaoensinobrasileira2 = _interopRequireDefault(_instituicaoensinobrasileira);
@@ -48,8 +49,9 @@ const models = [
     _alteracaoturmaespecializacao2.default,
     _disciplinaespecializacao2.default,
     _editalcursoespecializacao2.default,
-    _materialcursista2.default,
     _turmadisciplinaespecializacao2.default,
+    _ministranteMinistraTurmaEspecializacao2.default,
+    _materialcursista2.default,
 
     // instituicao
     _instituicaoensino2.default, 

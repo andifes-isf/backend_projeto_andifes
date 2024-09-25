@@ -3,6 +3,7 @@ import * as Yup from 'yup'
 // Models
 import DocenteMinistrante from '../../models/usuarios/docenteministrante'
 import Usuario from '../../models/usuarios/usuario'
+import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
 
 // Controllers
 import UsuarioController from './usuarioController'
@@ -42,6 +43,17 @@ class coordenadorNacionalIdiomaController {
                         model: Usuario,
                         attributes: {
                             exclude: ['login', 'senha_encriptada', 'ativo', 'tipo']
+                        }
+                    },
+                    {
+                        model: TurmaDisciplinaEspecializacao,
+                        attributes: {
+                            include: ['nome']
+                        },
+                        through: {
+                            attributes: {
+                                include: ['login', 'nomeTurma']
+                            }
                         }
                     }
                 ]

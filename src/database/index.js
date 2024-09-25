@@ -7,8 +7,9 @@ import DatabaseConfig from '../config/database'
 import AlteracaoTurmaEspecializacao from '../app/models/curso_especializacao/alteracaoturmaespecializacao'
 import DisciplinaEspecializacao from '../app/models/curso_especializacao/disciplinaespecializacao'
 import EditalCursoEspecializacao from '../app/models/curso_especializacao/editalcursoespecializacao'
-import TurmaDisciplinaEspecializacao from '../app/models/curso_especializacao/turmadisciplinaespecializacao'
 import MaterialCursista from '../app/models/curso_especializacao/materialcursista'
+import MinistranteMinistraTurmaEspecializacao from '../app/models/curso_especializacao/ministranteMinistraTurmaEspecializacao'
+import TurmaDisciplinaEspecializacao from '../app/models/curso_especializacao/turmadisciplinaespecializacao'
 
 // instituicao
 import InstituicaoEnsinoBrasileira from '../app/models/instituicao/instituicaoensinobrasileira'
@@ -48,8 +49,9 @@ const models = [
     AlteracaoTurmaEspecializacao,
     DisciplinaEspecializacao,
     EditalCursoEspecializacao,
-    MaterialCursista,
     TurmaDisciplinaEspecializacao,
+    MinistranteMinistraTurmaEspecializacao,
+    MaterialCursista,
 
     // instituicao
     InstituicaoEnsino, 

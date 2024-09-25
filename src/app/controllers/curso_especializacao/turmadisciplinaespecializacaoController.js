@@ -1,6 +1,7 @@
 import * as Yup from 'yup'
 import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
 import AlteracaoTurmaEspecializacao from '../../models/curso_especializacao/alteracaoturmaespecializacao'
+import MinistranteMinistraTurmaEspecializacao from '../../models/curso_especializacao/ministranteMinistraTurmaEspecializacao'
 
 class turmaDisciplinaEspecializacaoController {
     
@@ -33,8 +34,16 @@ class turmaDisciplinaEspecializacaoController {
                 numeroDesistentes: req.body.numeroDesistentes,
                 numeroReprovados: req.body.numeroReprovados,
             })	
+
+            const relacaoComTurma = await MinistranteMinistraTurmaEspecializacao.create({
+                nomeTurma: turma.nome,
+                login: req.body.loginMinistrante
+            })
             
-            return res.status(201).json(turma)
+            return res.status(201).json({
+                turma: turma,
+                relacao: relacaoComTurma
+            })
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
