@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 
 // Models
-import DocenteOrientador from '../../models/usuarios/docenteorientador'
+import DocenteMinistrante from '../../models/usuarios/docenteministrante'
 import Usuario from '../../models/usuarios/usuario'
 
 // Controllers
@@ -10,9 +10,9 @@ import UsuarioController from './usuarioController'
 class coordenadorNacionalIdiomaController {
     async post(req, res) {
         try {            
-            await UsuarioController.post(req, res, 'docenteorientador')
+            await UsuarioController.post(req, res, 'docenteministrante')
 
-            const docenteExistente = await DocenteOrientador.findOne({
+            const docenteExistente = await DocenteMinistrante.findOne({
                 where: {
                     login: req.body.login
                 }
@@ -20,11 +20,11 @@ class coordenadorNacionalIdiomaController {
     
             if(docenteExistente) {
                 return res.status(409).json({
-                    msg: 'Docente Orientador ja cadastrado'
+                    msg: 'Docente Ministrante ja cadastrado'
                 })
             }
     
-            const docente = await DocenteOrientador.create({
+            const docente = await DocenteMinistrante.create({
                 login: req.body.login
             })
 
@@ -36,7 +36,7 @@ class coordenadorNacionalIdiomaController {
 
     async get(_, res){
         try {
-            const docentes = await DocenteOrientador.findAll({
+            const docentes = await DocenteMinistrante.findAll({
                 include: [
                     {
                         model: Usuario,

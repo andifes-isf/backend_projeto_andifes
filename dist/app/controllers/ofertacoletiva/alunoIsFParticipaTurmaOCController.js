@@ -8,6 +8,7 @@ var _curso = require('../../models/ofertacoletiva/curso'); var _curso2 = _intero
 
 // Classe auxiliar
 var _nivelFactory = require('../../utils/niveis/nivelFactory'); var _nivelFactory2 = _interopRequireDefault(_nivelFactory);
+var _nivel = require('../../utils/niveis/nivel'); var _nivel2 = _interopRequireDefault(_nivel);
 
 class AlunoIsFParticipaTurmaOCController {
 

@@ -37,6 +37,7 @@ import AlunoIsF from '../app/models/usuarios/alunoisf'
 import CoordenadorNacional from '../app/models/usuarios/coordenadornacional'
 import CoordenadorNacionalIdioma from '../app/models/usuarios/coordenadornacionalIdioma'
 import CursistaEspecializacao from '../app/models/usuarios/cursistaespecializacao'
+import DocenteMinistrante from '../app/models/usuarios/docenteministrante'
 import DocenteOrientador from '../app/models/usuarios/docenteorientador'
 import ProfessorIsF from '../app/models/usuarios/professorisf'
 import Usuario from '../app/models/usuarios/usuario'
@@ -77,6 +78,7 @@ const models = [
     CoordenadorNacionalIdioma,
     CoordenadorNacional,
     CursistaEspecializacao,
+    DocenteMinistrante,
     DocenteOrientador,
     ProfessorIsF,
     Usuario

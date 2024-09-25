@@ -8,6 +8,7 @@ import Curso from '../../models/ofertacoletiva/curso'
 
 // Classe auxiliar
 import nivelFactory from '../../utils/niveis/nivelFactory'
+import nivelProeficiencia from '../../utils/niveis/nivel'
 
 class AlunoIsFParticipaTurmaOCController {
 

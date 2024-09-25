@@ -22,6 +22,8 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('docenteorientador')
+    await queryInterface.removeConstraint('turmadisciplinaespecializacao', 'fk_edital_turmadisciplinaespecializacao', null)
+    
+    await queryInterface.removeColumn('turmadisciplinaespecializacao', 'edital', null)
   }
 };

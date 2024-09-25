@@ -20,7 +20,7 @@ class coordenadorNacionalIdiomaController {
     
             if(docenteExistente) {
                 return res.status(409).json({
-                    msg: 'Docente Nacional ja cadastrado'
+                    msg: 'Docente Orientador ja cadastrado'
                 })
             }
     
