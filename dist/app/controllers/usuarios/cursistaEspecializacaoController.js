@@ -1,10 +1,12 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize');
 
 // Models
+var _cursistacursaturmaespecializacao = require('../../models/curso_especializacao/cursistacursaturmaespecializacao'); var _cursistacursaturmaespecializacao2 = _interopRequireDefault(_cursistacursaturmaespecializacao);
 var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
 var _materialcursista = require('../../models/curso_especializacao/materialcursista'); var _materialcursista2 = _interopRequireDefault(_materialcursista);
 var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _turmadisciplinaespecializacao = require('../../models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
 
 // Controllers
 var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
@@ -112,15 +114,65 @@ class CursistaEspecializacaoController {
                 })
             }            
 
-            const materiais = await _materialcursista2.default.findAll({
+            const cursista = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+
+            const meusMateriais = await cursista.getMaterialCursista()
+
+            return res.status(200).json(meusMateriais)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async postCursaTurma(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const cursista = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+            const turma = await _turmadisciplinaespecializacao2.default.findOne({
                 where: {
-                    login: req.loginUsuario
+                    nome: req.params.nome_turma
                 }
             })
 
-            return res.status(200).json(materiais)
+            // Verifica se o cursista já está inserido na turma
+            if(await cursista.hasTurma(turma)){
+                return res.status(422).json('Cursista ja esta inscrito nessa turma')
+            }
+
+            await cursista.addTurma(turma)
+
+            return res.status(201).json(await cursista.getTurma())
+
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            if(error instanceof SequelizeUniqueConstraintError){
+                return res.status(422).json('Cursista ja esta inscrito nessa turma')
+            }
+
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getMinhasTurmas(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const cursista = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+
+            const minhasTurmas = await cursista.getTurma()
+
+            return res.status(200).json(minhasTurmas)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
     }
 }

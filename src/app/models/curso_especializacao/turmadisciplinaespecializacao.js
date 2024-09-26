@@ -99,6 +99,14 @@ class TurmaDisciplinaEspecializacao extends Model {
             targetKey: 'login',
             timestamps: false
         })
+
+        this.belongsToMany(models.CursistaEspecializacao, {
+            through: 'cursistacursaturmaespecializacao',
+            foreignKey: 'nomeTurma', 
+            sourceKey: 'nome',
+            targetKey: 'login',
+            timestamps: false
+        })
     }
 
 }

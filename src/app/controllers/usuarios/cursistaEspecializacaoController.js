@@ -1,10 +1,12 @@
 import { Sequelize } from "sequelize";
 
 // Models
+import CursistaCursaTurmaEspecializacao from "../../models/curso_especializacao/cursistacursaturmaespecializacao";
 import CursistaEspecializacao from "../../models/usuarios/cursistaespecializacao";
 import MaterialCursista from "../../models/curso_especializacao/materialcursista";
 import ProfessorIsF from "../../models/usuarios/professorisf";
 import Usuario from "../../models/usuarios/usuario";
+import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
 
 // Controllers
 import ProfessorIsFController from './professorIsFController'
@@ -112,15 +114,65 @@ class CursistaEspecializacaoController {
                 })
             }            
 
-            const materiais = await MaterialCursista.findAll({
+            const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
+
+            const meusMateriais = await cursista.getMaterialCursista()
+
+            return res.status(200).json(meusMateriais)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async postCursaTurma(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
+            const turma = await TurmaDisciplinaEspecializacao.findOne({
                 where: {
-                    login: req.loginUsuario
+                    nome: req.params.nome_turma
                 }
             })
 
-            return res.status(200).json(materiais)
+            // Verifica se o cursista já está inserido na turma
+            if(await cursista.hasTurma(turma)){
+                return res.status(422).json('Cursista ja esta inscrito nessa turma')
+            }
+
+            await cursista.addTurma(turma)
+
+            return res.status(201).json(await cursista.getTurma())
+
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            if(error instanceof SequelizeUniqueConstraintError){
+                return res.status(422).json('Cursista ja esta inscrito nessa turma')
+            }
+
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getMinhasTurmas(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
+
+            const minhasTurmas = await cursista.getTurma()
+
+            return res.status(200).json(minhasTurmas)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
     }
 }

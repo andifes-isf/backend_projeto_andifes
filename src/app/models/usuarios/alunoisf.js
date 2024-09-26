@@ -46,7 +46,7 @@ class AlunoIsF extends Model {
         })
 
         this.belongsTo(models.Usuario, {
-            foreignKey: 'login'
+            foreignKey: 'login',
         })
 
         this.belongsToMany(models.TurmaOC, {

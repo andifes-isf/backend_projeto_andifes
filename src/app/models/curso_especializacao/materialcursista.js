@@ -52,7 +52,6 @@ class MaterialCursista extends Model {
 
     static associate(models){
         this.belongsTo(models.CursistaEspecializacao, {
-            through: 'cursistacriamaterial',
             foreignKey: 'login'
         })
     }

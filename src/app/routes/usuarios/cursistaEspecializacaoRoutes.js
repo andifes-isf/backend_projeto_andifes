@@ -12,4 +12,8 @@ router.post('/inserir_material', AuthMiddleware, cursistaEspecializacaoControlle
 
 router.get('/meus_materiais', AuthMiddleware, cursistaEspecializacaoController.getMeusMateriais)
 
+router.post('/participar_turma/:nome_turma', AuthMiddleware, cursistaEspecializacaoController.postCursaTurma)
+
+router.get('/minhas_turmas', AuthMiddleware, cursistaEspecializacaoController.getMinhasTurmas)
+
 export default router

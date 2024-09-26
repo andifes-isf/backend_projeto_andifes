@@ -58,10 +58,28 @@ class coordenadorNacionalIdiomaController {
                     }
                 ]
             })
-    
+
             return res.status(200).json(docentes)
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async getMinhasTurmas(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteministrante')){
+                return res.status(403).json({
+                    error: "Acesso negado"
+                })
+            }
+
+            const docente = await DocenteMinistrante.findByPk(req.loginUsuario)
+
+            const turmas = await docente.getTurmaDisciplinaEspecializacaos()
+
+            return res.status(200).json(turmas)
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
     }
 }

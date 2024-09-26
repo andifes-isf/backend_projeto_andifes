@@ -12,4 +12,8 @@ router.post('/inserir_material', _auth2.default, _cursistaEspecializacaoControll
 
 router.get('/meus_materiais', _auth2.default, _cursistaEspecializacaoController2.default.getMeusMateriais)
 
+router.post('/participar_turma/:nome_turma', _auth2.default, _cursistaEspecializacaoController2.default.postCursaTurma)
+
+router.get('/minhas_turmas', _auth2.default, _cursistaEspecializacaoController2.default.getMinhasTurmas)
+
 exports. default = router

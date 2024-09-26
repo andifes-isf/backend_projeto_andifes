@@ -43,6 +43,25 @@ class CursistaEspecializacao extends _sequelize.Model {
         this.belongsTo(models.ProfessorIsF, {
             foreignKey: 'login'
         })
+
+        this.belongsToMany(models.TurmaDisciplinaEspecializacao, {
+            through: 'cursistacursaturmaespecializacao',
+            foreignKey: 'login',
+            sourceKey: 'login',
+            targetKey: 'nome',
+            timestamps: false,
+            as: 'turma'
+        })
+    }
+
+    static async getMinhasTurmas(login){
+        return await this.findAll({
+            where: { login },
+            include: {
+                model: this.sequelize.models.TurmaDisciplinaEspecializacao,
+                as: 'MinhaTurma',
+            }
+        })
     }
 
 }
