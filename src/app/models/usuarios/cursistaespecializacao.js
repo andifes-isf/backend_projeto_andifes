@@ -52,6 +52,15 @@ class CursistaEspecializacao extends Model {
             timestamps: false,
             as: 'turma'
         })
+
+        this.belongsToMany(models.DocenteOrientador, {
+            through: 'orientadororientacursista',
+            foreignKey: 'loginCursista',
+            sourceKey: 'login',
+            targetKey: 'login',
+            timestamps: false,
+            as: 'orientador'
+        })
     }
 
     static async getMinhasTurmas(login){

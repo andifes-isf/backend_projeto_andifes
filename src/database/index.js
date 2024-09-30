@@ -10,6 +10,7 @@ import DisciplinaEspecializacao from '../app/models/curso_especializacao/discipl
 import EditalCursoEspecializacao from '../app/models/curso_especializacao/editalcursoespecializacao'
 import MaterialCursista from '../app/models/curso_especializacao/materialcursista'
 import MinistranteMinistraTurmaEspecializacao from '../app/models/curso_especializacao/ministranteMinistraTurmaEspecializacao'
+import OrientadorOrientaCursista from '../app/models/curso_especializacao/OrientadorOrientaCursista'
 import TurmaDisciplinaEspecializacao from '../app/models/curso_especializacao/turmadisciplinaespecializacao'
 
 // instituicao
@@ -51,9 +52,10 @@ const models = [
     CursistaCursaTurmaEspecializacao,
     DisciplinaEspecializacao,
     EditalCursoEspecializacao,
-    TurmaDisciplinaEspecializacao,
     MinistranteMinistraTurmaEspecializacao,
     MaterialCursista,
+    OrientadorOrientaCursista,
+    TurmaDisciplinaEspecializacao,
 
     // instituicao
     InstituicaoEnsino, 

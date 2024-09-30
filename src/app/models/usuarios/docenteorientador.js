@@ -32,6 +32,14 @@ class DocenteOrientador extends Model {
         this.belongsTo(models.Usuario, {
             foreignKey: 'login'
         })
+
+        this.belongsToMany(models.CursistaEspecializacao, {
+            through: 'orientadororientacursista',
+            foreignKey: 'loginOrientador',
+            sourceKey: 'login',
+            targetKey: 'login',
+            as: 'orientado'
+        })
     }
 }
 
