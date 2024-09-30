@@ -65,6 +65,11 @@ class coordenadorNacionalIdiomaController {
             // Pegando as instâncias
             const orientador = await DocenteOrientador.findByPk(req.loginUsuario)
             const cursista = await CursistaEspecializacao.findByPk(req.body.loginCursista)
+            if(existente){
+                return res.status(422).json({
+                    error: "Esse orientador ja orienta esse cursista"
+                })
+            }
 
             // Verificando se esse orientado já orienta esse cursista
             const existente = await orientador.hasOrientado(cursista)
