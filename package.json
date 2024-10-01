@@ -9,6 +9,7 @@
     
     "migrate": "yarn build && sequelize db:migrate --config dist/config/database.js --migrations-path dist/database/migrations",
     "migrate-undo": "sequelize db:migrate:undo",
+    "migrate-create": "sequelize migration:create --name",
 
     "restart-db": "sequelize db:drop && sequelize db:create",
 
