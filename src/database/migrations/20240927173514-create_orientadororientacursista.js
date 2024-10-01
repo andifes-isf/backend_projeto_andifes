@@ -1,6 +1,6 @@
 'use strict'
 
-import { Sequelize } from "sequelize"
+// import { Sequelize } from "sequelize"
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -20,9 +20,7 @@ module.exports = {
         defaultValue: 'ativo'
       },
       inicio: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        type: Sequelize.DATEONLY
       },
       termino: {
         type: Sequelize.DATEONLY,

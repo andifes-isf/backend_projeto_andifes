@@ -7,6 +7,7 @@ var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _intero
 
 // Controllers
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
+var _OrientadorOrientaCursista = require('../../models/curso_especializacao/OrientadorOrientaCursista'); var _OrientadorOrientaCursista2 = _interopRequireDefault(_OrientadorOrientaCursista);
 
 class coordenadorNacionalIdiomaController {
     async post(req, res) {
@@ -65,9 +66,9 @@ class coordenadorNacionalIdiomaController {
             // Pegando as instâncias
             const orientador = await _docenteorientador2.default.findByPk(req.loginUsuario)
             const cursista = await _cursistaespecializacao2.default.findByPk(req.body.loginCursista)
-            if(existente){
+            if(!cursista){
                 return res.status(422).json({
-                    error: "Esse orientador ja orienta esse cursista"
+                    error: "Cursista nao existente"
                 })
             }
 
@@ -81,6 +82,16 @@ class coordenadorNacionalIdiomaController {
 
             // Relacionando os dois
             await orientador.addOrientado(cursista)
+
+            const relacao = await _OrientadorOrientaCursista2.default.findOne({
+                where: {
+                    loginCursista: cursista.login,
+                    loginOrientador: orientador.login
+                }
+            })
+
+            relacao.inicio = new Date().toISOString().split("T")[0]
+            await relacao.save()
 
             return res.status(200).json(await orientador.getOrientado())
 

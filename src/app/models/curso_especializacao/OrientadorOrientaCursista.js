@@ -19,9 +19,7 @@ class OrientadorOrientaCursista extends Model {
                     defaultValue: 'ativo'
                 },
                 inicio: {
-                    type: Sequelize.DATE,
-                    allowNull: false,
-                    defaultValue: Sequelize.fn('CURRENT_TIMESTAMP')
+                    type: Sequelize.DATEONLY
                 },
                 termino: {
                     type: Sequelize.DATEONLY,
@@ -29,7 +27,7 @@ class OrientadorOrientaCursista extends Model {
             },
             {
                 sequelize,
-                timestamps: true,
+                timestamps: false,
                 tableName: 'orientadororientacursista',
                 indexes: [{
                     name: 'primary_key',

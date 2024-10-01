@@ -7,6 +7,7 @@ import Usuario from '../../models/usuarios/usuario'
 
 // Controllers
 import UsuarioController from './usuarioController'
+import OrientadorOrientaCursista from '../../models/curso_especializacao/OrientadorOrientaCursista'
 
 class coordenadorNacionalIdiomaController {
     async post(req, res) {
@@ -65,9 +66,9 @@ class coordenadorNacionalIdiomaController {
             // Pegando as instâncias
             const orientador = await DocenteOrientador.findByPk(req.loginUsuario)
             const cursista = await CursistaEspecializacao.findByPk(req.body.loginCursista)
-            if(existente){
+            if(!cursista){
                 return res.status(422).json({
-                    error: "Esse orientador ja orienta esse cursista"
+                    error: "Cursista nao existente"
                 })
             }
 
@@ -81,6 +82,16 @@ class coordenadorNacionalIdiomaController {
 
             // Relacionando os dois
             await orientador.addOrientado(cursista)
+
+            const relacao = await OrientadorOrientaCursista.findOne({
+                where: {
+                    loginCursista: cursista.login,
+                    loginOrientador: orientador.login
+                }
+            })
+
+            relacao.inicio = new Date().toISOString().split("T")[0]
+            await relacao.save()
 
             return res.status(200).json(await orientador.getOrientado())
 
