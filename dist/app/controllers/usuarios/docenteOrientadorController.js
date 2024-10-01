@@ -93,7 +93,7 @@ class coordenadorNacionalIdiomaController {
             relacao.inicio = new Date().toISOString().split("T")[0]
             await relacao.save()
 
-            return res.status(200).json(await orientador.getOrientado())
+            return res.status(200).json(relacao)
 
         } catch (error) {
             console.log(error)
