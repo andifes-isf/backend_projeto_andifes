@@ -37,7 +37,8 @@ class CursistaEspecializacao extends Model {
 
     static associate(models) {
         this.hasMany(models.MaterialCursista, {
-            foreignKey: 'login'
+            foreignKey: 'login',
+            as: 'material'
         })
 
         this.belongsTo(models.ProfessorIsF, {
@@ -59,7 +60,16 @@ class CursistaEspecializacao extends Model {
             sourceKey: 'login',
             targetKey: 'login',
             timestamps: false,
-            as: 'orientador'
+            as: "orientador"
+        })
+
+        this.belongsToMany(models.MaterialCursista, {
+            through: 'ValidacaoMaterial',
+            foreignKey: 'loginCursista',
+            sourceKey: 'login',
+            targetKey: 'nome',
+            timestamps: false,
+            as: 'validacaoMaterial'
         })
     }
 

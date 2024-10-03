@@ -54,6 +54,15 @@ class MaterialCursista extends Model {
         this.belongsTo(models.CursistaEspecializacao, {
             foreignKey: 'login'
         })
+
+        this.belongsToMany(models.CursistaEspecializacao, {
+            through: 'ValidacaoMaterial',
+            foreignKey: 'nomeMaterial',
+            sourceKey: 'nome',
+            targetKey: 'login',
+            timestamps: false,
+            as: 'criador'
+        })
     }
 
 }

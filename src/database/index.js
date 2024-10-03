@@ -12,6 +12,7 @@ import MaterialCursista from '../app/models/curso_especializacao/materialcursist
 import MinistranteMinistraTurmaEspecializacao from '../app/models/curso_especializacao/ministranteMinistraTurmaEspecializacao'
 import OrientadorOrientaCursista from '../app/models/curso_especializacao/OrientadorOrientaCursista'
 import TurmaDisciplinaEspecializacao from '../app/models/curso_especializacao/turmadisciplinaespecializacao'
+import ValidacaoMaterial from '../app/models/curso_especializacao/ValidacaoMaterial'
 
 // instituicao
 import InstituicaoEnsinoBrasileira from '../app/models/instituicao/instituicaoensinobrasileira'
@@ -56,6 +57,7 @@ const models = [
     MaterialCursista,
     OrientadorOrientaCursista,
     TurmaDisciplinaEspecializacao,
+    ValidacaoMaterial,
 
     // instituicao
     InstituicaoEnsino, 

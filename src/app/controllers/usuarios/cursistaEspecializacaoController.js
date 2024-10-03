@@ -7,9 +7,11 @@ import MaterialCursista from "../../models/curso_especializacao/materialcursista
 import ProfessorIsF from "../../models/usuarios/professorisf";
 import Usuario from "../../models/usuarios/usuario";
 import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
+import ValidacaoMaterial from '../../models/curso_especializacao/ValidacaoMaterial'
 
 // Controllers
 import ProfessorIsFController from './professorIsFController'
+import DocenteOrientador from "../../models/usuarios/docenteorientador";
 
 class CursistaEspecializacaoController {
     async post(req, res) {
@@ -67,6 +69,34 @@ class CursistaEspecializacaoController {
 
     }
 
+    static async pegarEntidades(login){
+        const cursista = await CursistaEspecializacao.findByPk(login)
+        const orientador = await cursista.getOrientador({
+            through: {
+                where: {
+                    status: "ativo"
+                }
+            }
+        })
+
+        return [ cursista, orientador[0] ]
+
+        // como cursista.getOrientador() retorna um array, e nesse caso um array de um único elemento, estou retornando somente esse elemento
+
+    }
+
+    static async criarMaterial(cursista, material){
+        const { idioma, nome, nivel, ementa, cargaHoraria } = material
+
+        await cursista.createMaterial({
+            idioma: idioma,
+            nome: nome,
+            nivel: nivel,
+            ementa: ementa,
+            cargaHoraria: cargaHoraria,
+        })
+    }
+    
     async postMaterial(req, res){
         try {
             if(!(req.tipoUsuario === 'cursista')){
@@ -74,6 +104,8 @@ class CursistaEspecializacaoController {
                     error: 'Acesso negado'
                 })
             }
+
+            const [cursista, orientador] = await CursistaEspecializacaoController.pegarEntidades(req.loginUsuario)
 
             // Verifica se o material já existe
             const materialExistente = await MaterialCursista.findOne({
@@ -89,18 +121,22 @@ class CursistaEspecializacaoController {
                 })
             }
 
-            const material = await MaterialCursista.create({
-                login: req.loginUsuario,
-                idioma: req.body.idioma,
-                nome: req.body.nome,
-                nivel: req.body.nivel,
-                ementa: req.body.ementa,
-                cargaHoraria: req.body.cargaHoraria,
+            // Cria o material
+
+            const material = await CursistaEspecializacaoController.criarMaterial(cursista, req.body)
+            
+            // Faz o histórico de validação
+
+            const validacao = await ValidacaoMaterial.create({
+                nomeMaterial: req.body.nome,
+                loginOrientador: orientador.login,
+                loginCursista: cursista.login
             })
 
-            return res.status(201).json(material)
+            return res.status(201).json(await cursista.getMaterial())
 
         } catch (error) {
+            console.log(error)
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
 

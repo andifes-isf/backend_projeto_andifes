@@ -12,6 +12,7 @@ var _materialcursista = require('../app/models/curso_especializacao/materialcurs
 var _ministranteMinistraTurmaEspecializacao = require('../app/models/curso_especializacao/ministranteMinistraTurmaEspecializacao'); var _ministranteMinistraTurmaEspecializacao2 = _interopRequireDefault(_ministranteMinistraTurmaEspecializacao);
 var _OrientadorOrientaCursista = require('../app/models/curso_especializacao/OrientadorOrientaCursista'); var _OrientadorOrientaCursista2 = _interopRequireDefault(_OrientadorOrientaCursista);
 var _turmadisciplinaespecializacao = require('../app/models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
+var _ValidacaoMaterial = require('../app/models/curso_especializacao/ValidacaoMaterial'); var _ValidacaoMaterial2 = _interopRequireDefault(_ValidacaoMaterial);
 
 // instituicao
 var _instituicaoensinobrasileira = require('../app/models/instituicao/instituicaoensinobrasileira'); var _instituicaoensinobrasileira2 = _interopRequireDefault(_instituicaoensinobrasileira);
@@ -56,6 +57,7 @@ const models = [
     _materialcursista2.default,
     _OrientadorOrientaCursista2.default,
     _turmadisciplinaespecializacao2.default,
+    _ValidacaoMaterial2.default,
 
     // instituicao
     _instituicaoensino2.default, 
