@@ -12,6 +12,10 @@ router.post('/inserir_material', AuthMiddleware, cursistaEspecializacaoControlle
 
 router.get('/meus_materiais', AuthMiddleware, cursistaEspecializacaoController.getMeusMateriais)
 
+router.get('/material/:nome', AuthMiddleware, cursistaEspecializacaoController.getMaterial)
+
+router.get('/materiais_nao_visualizados', AuthMiddleware, cursistaEspecializacaoController.getMaterialNaoVisualizado)
+
 router.post('/participar_turma/:nome_turma', AuthMiddleware, cursistaEspecializacaoController.postCursaTurma)
 
 router.get('/minhas_turmas', AuthMiddleware, cursistaEspecializacaoController.getMinhasTurmas)

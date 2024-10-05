@@ -16,7 +16,11 @@ class ValidacaoMaterial extends Model {
                     type: Sequelize.STRING,
                     primaryKey: true
                 },
-                analisado: {
+                analisadoPeloOrientador: {
+                    type: Sequelize.TINYINT,
+                    defaultValue: false
+                },
+                visualizadoPeloCursistaAposAnalise: {
                     type: Sequelize.TINYINT,
                     defaultValue: false
                 },

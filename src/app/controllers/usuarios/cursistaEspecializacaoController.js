@@ -152,11 +152,73 @@ class CursistaEspecializacaoController {
 
             const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
 
-            const meusMateriais = await cursista.getMaterialCursista()
+            const meusMateriais = await cursista.getValidacaoMaterial()
 
             return res.status(200).json(meusMateriais)
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
+
+    async getMaterialNaoVisualizado(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância do cursista
+            const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
+
+            const materiais = await cursista.getValidacaoMaterial({
+                through: {
+                    where: {
+                        visualizadoPeloCursistaAposAnalise: false
+                    }
+                }
+            })
+
+            return res.status(200).json(materiais)
+
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getMaterial(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância do cursista
+            const [cursista, orientador] = await CursistaEspecializacaoController.pegarEntidades(req.loginUsuario)
+
+            // Pegando instância do material
+            const material = await cursista.getMaterial({
+                where: {
+                    nome: req.params.nome
+                }
+            })
+
+            // Pegando instância do relacionamento
+            const validacao = await ValidacaoMaterial.findOne({
+                where: {
+                    loginCursista: req.loginUsuario,
+                    nomeMaterial: req.params.nome,
+                    loginOrientador: orientador.login
+                }
+            })
+            validacao.visualizadoPeloCursistaAposAnalise = true
+            await validacao.save()
+
+            return res.status(200).json(material)
+
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
     }
 

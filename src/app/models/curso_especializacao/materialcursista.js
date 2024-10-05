@@ -60,8 +60,15 @@ class MaterialCursista extends Model {
             foreignKey: 'nomeMaterial',
             sourceKey: 'nome',
             targetKey: 'login',
-            timestamps: false,
             as: 'criador'
+        })
+
+        this.belongsToMany(models.DocenteOrientador, {
+            through: 'ValidacaoMaterial',
+            foreignKey: 'nomeMaterial',
+            sourceKey: 'nome',
+            targetKey: 'login',
+            as: 'validador'
         })
     }
 

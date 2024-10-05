@@ -4,6 +4,7 @@
 var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
 var _docenteorientador = require('../../models/usuarios/docenteorientador'); var _docenteorientador2 = _interopRequireDefault(_docenteorientador);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _ValidacaoMaterial = require('../../models/curso_especializacao/ValidacaoMaterial'); var _ValidacaoMaterial2 = _interopRequireDefault(_ValidacaoMaterial);
 
 // Controllers
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
@@ -97,6 +98,117 @@ class coordenadorNacionalIdiomaController {
 
         } catch (error) {
             console.log(error)
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getMaterialDoOrientado(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância do orientador
+            const docente = await _docenteorientador2.default.findByPk(req.loginUsuario)
+
+            const materiais = await docente.getMaterialAnalise()
+
+            return res.status(200).json(materiais)
+
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getMaterialNaoAnalisado(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância do orientador
+            const docente = await _docenteorientador2.default.findByPk(req.loginUsuario)
+
+            const materiais = await docente.getMaterialAnalise({
+                through: {
+                    where: {
+                        analisadoPeloOrientador: false
+                    }
+                }
+            })
+
+            return res.status(200).json(materiais)
+
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getMaterialNaoValidado(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância do orientador
+            const docente = await _docenteorientador2.default.findByPk(req.loginUsuario)
+
+            const materiais = await docente.getMaterialAnalise({
+                through: {
+                    where: {
+                        analisadoPeloOrientador: true,
+                        validado: false
+                    }
+                }
+            })
+
+            return res.status(200).json(materiais)
+
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async putAnalisarMaterial(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância da validacao
+            const analise = await _ValidacaoMaterial2.default.findOne({
+                where: {
+                    nomeMaterial: req.params.nomeMaterial,
+                    loginOrientador: req.loginUsuario
+                }
+            })
+
+            if(req.body.validado){
+                analise.validado = true
+            } else {
+                if(!req.body.feedback){
+                    return res.status(400).json({
+                        error: "É necessário um feedback para atividades não aprovadas"
+                    })
+                }
+                analise.feedback = req.body.feedback
+            }
+            analise.analisadoPeloOrientador = true
+            analise.visualizadoPeloCursistaAposAnalise = false
+            analise.dataVerificacao = new Date()
+            await analise.save()
+
+            return res.status(200).json(analise)
+
+        } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
     }

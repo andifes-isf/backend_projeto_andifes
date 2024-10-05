@@ -40,6 +40,14 @@ class DocenteOrientador extends _sequelize.Model {
             targetKey: 'login',
             as: 'orientado'
         })
+
+        this.belongsToMany(models.MaterialCursista, {
+            through: 'ValidacaoMaterial',
+            foreignKey: 'loginOrientador',
+            sourceKey: 'login',
+            targetKey: 'nome',
+            as: 'materialAnalise'
+        })
     }
 }
 
