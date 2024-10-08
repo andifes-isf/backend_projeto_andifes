@@ -18,4 +18,6 @@ router.get('/materiais_nao_validados', _auth2.default, _docenteOrientadorControl
 
 router.put('/analisar_material/:nomeMaterial', _auth2.default, _docenteOrientadorController2.default.putAnalisarMaterial)
 
+router.get('/notificacoes', _auth2.default, _docenteOrientadorController2.default.getNotificacoes)
+
 exports. default = router

@@ -5,6 +5,7 @@ var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializa
 var _docenteorientador = require('../../models/usuarios/docenteorientador'); var _docenteorientador2 = _interopRequireDefault(_docenteorientador);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 var _ValidacaoMaterial = require('../../models/curso_especializacao/ValidacaoMaterial'); var _ValidacaoMaterial2 = _interopRequireDefault(_ValidacaoMaterial);
+var _notificacao = require('../../models/utils/notificacao'); var _notificacao2 = _interopRequireDefault(_notificacao);
 
 // Controllers
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
@@ -206,7 +207,35 @@ class coordenadorNacionalIdiomaController {
             analise.dataVerificacao = new Date()
             await analise.save()
 
-            return res.status(200).json(analise)
+            const notificacao = await _notificacao2.default.create({
+                login: analise.loginCursista,
+                mensagem: `Material "${analise.nomeMaterial}" foi ${analise.validado ? "aprovado" : "recusado"} pelo seu orientador`,
+                tipo: 'feedback',
+                chaveReferenciado: analise.nomeMaterial,
+                modeloReferenciado: 'materialcursista',
+            })
+
+            return res.status(200).json([analise, notificacao])
+
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getNotificacoes(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância do orientador
+            const docente = await _usuario2.default.findByPk(req.loginUsuario)
+
+            const notificacoes = await docente.getNotificacaos() 
+
+            return res.status(200).json(notificacoes)
 
         } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)

@@ -46,6 +46,9 @@ var _docenteorientador = require('../app/models/usuarios/docenteorientador'); va
 var _professorisf = require('../app/models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 var _usuario = require('../app/models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
+// Utils
+var _notificacao = require('../app/models/utils/notificacao'); var _notificacao2 = _interopRequireDefault(_notificacao);
+
 // buffer
 const models = [
     // curso_especializacao
@@ -89,7 +92,10 @@ const models = [
     _docenteministrante2.default,
     _docenteorientador2.default,
     _professorisf2.default,
-    _usuario2.default
+    _usuario2.default,
+
+    // Utils
+    _notificacao2.default
 
 ]
 

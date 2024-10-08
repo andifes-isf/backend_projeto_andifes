@@ -46,6 +46,9 @@ import DocenteOrientador from '../app/models/usuarios/docenteorientador'
 import ProfessorIsF from '../app/models/usuarios/professorisf'
 import Usuario from '../app/models/usuarios/usuario'
 
+// Utils
+import Notificacao from '../app/models/utils/notificacao'
+
 // buffer
 const models = [
     // curso_especializacao
@@ -89,7 +92,10 @@ const models = [
     DocenteMinistrante,
     DocenteOrientador,
     ProfessorIsF,
-    Usuario
+    Usuario,
+
+    // Utils
+    Notificacao
 
 ]
 

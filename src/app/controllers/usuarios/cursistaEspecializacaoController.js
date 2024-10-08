@@ -4,6 +4,7 @@ import { Sequelize } from "sequelize";
 import CursistaCursaTurmaEspecializacao from "../../models/curso_especializacao/cursistacursaturmaespecializacao";
 import CursistaEspecializacao from "../../models/usuarios/cursistaespecializacao";
 import MaterialCursista from "../../models/curso_especializacao/materialcursista";
+import Notificacoes from '../../models/utils/notificacao'
 import ProfessorIsF from "../../models/usuarios/professorisf";
 import Usuario from "../../models/usuarios/usuario";
 import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
@@ -12,6 +13,7 @@ import ValidacaoMaterial from '../../models/curso_especializacao/ValidacaoMateri
 // Controllers
 import ProfessorIsFController from './professorIsFController'
 import DocenteOrientador from "../../models/usuarios/docenteorientador";
+import Notificacao from "../../models/utils/notificacao";
 
 class CursistaEspecializacaoController {
     async post(req, res) {
@@ -131,6 +133,14 @@ class CursistaEspecializacaoController {
                 nomeMaterial: req.body.nome,
                 loginOrientador: orientador.login,
                 loginCursista: cursista.login
+            })
+
+            const notificacao = await Notificacao.create({
+                login: orientador.login,
+                mensagem: `${req.loginUsuario} postou um material novo`,
+                tipo: 'pendencia',
+                chaveReferenciado: req.body.nome,
+                modeloReferenciado: 'materialcursista'
             })
 
             return res.status(201).json(await cursista.getMaterial())
@@ -270,6 +280,26 @@ class CursistaEspecializacaoController {
             return res.status(200).json(minhasTurmas)
         } catch (error) {
             console.log(error)
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getNotificacoes(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância do orientador
+            const usuario = await Usuario.findByPk(req.loginUsuario)
+
+            const notificacoes = await usuario.getNotificacaos() 
+
+            return res.status(200).json(notificacoes)
+
+        } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
     }

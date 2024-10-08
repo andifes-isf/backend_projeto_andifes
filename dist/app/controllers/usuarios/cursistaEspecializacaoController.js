@@ -4,6 +4,7 @@
 var _cursistacursaturmaespecializacao = require('../../models/curso_especializacao/cursistacursaturmaespecializacao'); var _cursistacursaturmaespecializacao2 = _interopRequireDefault(_cursistacursaturmaespecializacao);
 var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
 var _materialcursista = require('../../models/curso_especializacao/materialcursista'); var _materialcursista2 = _interopRequireDefault(_materialcursista);
+var _notificacao = require('../../models/utils/notificacao'); var _notificacao2 = _interopRequireDefault(_notificacao);
 var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 var _turmadisciplinaespecializacao = require('../../models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
@@ -12,6 +13,7 @@ var _ValidacaoMaterial = require('../../models/curso_especializacao/ValidacaoMat
 // Controllers
 var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
 var _docenteorientador = require('../../models/usuarios/docenteorientador'); var _docenteorientador2 = _interopRequireDefault(_docenteorientador);
+
 
 class CursistaEspecializacaoController {
     async post(req, res) {
@@ -131,6 +133,14 @@ class CursistaEspecializacaoController {
                 nomeMaterial: req.body.nome,
                 loginOrientador: orientador.login,
                 loginCursista: cursista.login
+            })
+
+            const notificacao = await _notificacao2.default.create({
+                login: orientador.login,
+                mensagem: `${req.loginUsuario} postou um material novo`,
+                tipo: 'pendencia',
+                chaveReferenciado: req.body.nome,
+                modeloReferenciado: 'materialcursista'
             })
 
             return res.status(201).json(await cursista.getMaterial())
@@ -270,6 +280,26 @@ class CursistaEspecializacaoController {
             return res.status(200).json(minhasTurmas)
         } catch (error) {
             console.log(error)
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getNotificacoes(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância do orientador
+            const usuario = await _usuario2.default.findByPk(req.loginUsuario)
+
+            const notificacoes = await usuario.getNotificacaos() 
+
+            return res.status(200).json(notificacoes)
+
+        } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
     }

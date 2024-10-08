@@ -62,6 +62,10 @@ class Usuario extends _sequelize.Model {
         this.hasOne(models.ProfessorIsF, {
             foreignKey: 'login'
         })
+
+        this.hasMany(models.Notificacao, {
+            foreignKey: 'login'
+        })
     }
 }
 
