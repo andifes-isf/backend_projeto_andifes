@@ -71,18 +71,11 @@ class CursistaEspecializacao extends _sequelize.Model {
             timestamps: false,
             as: 'validacaoMaterial'
         })
-    }
 
-    static async getMinhasTurmas(login){
-        return await this.findAll({
-            where: { login },
-            include: {
-                model: this.sequelize.models.TurmaDisciplinaEspecializacao,
-                as: 'MinhaTurma',
-            }
+        this.hasMany(models.InteresseNaDisciplina, {
+            foreignKey: 'login'
         })
     }
-
 }
 
 exports. default = CursistaEspecializacao
