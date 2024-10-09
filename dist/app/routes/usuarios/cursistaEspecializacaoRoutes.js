@@ -20,6 +20,4 @@ router.post('/participar_turma/:nome_turma', _auth2.default, _cursistaEspecializ
 
 router.get('/minhas_turmas', _auth2.default, _cursistaEspecializacaoController2.default.getMinhasTurmas)
 
-router.get('/notificacoes', _auth2.default, _cursistaEspecializacaoController2.default.getNotificacoes)
-
 exports. default = router

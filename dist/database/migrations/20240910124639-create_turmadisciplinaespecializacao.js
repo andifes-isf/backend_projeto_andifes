@@ -9,6 +9,11 @@ module.exports = {
         allowNull: false,
         primaryKey: true
       },
+      edital: {
+        type: Sequelize.CHAR(4),
+        allowNull: false,
+        primaryKey: true
+      },
       nome: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -50,6 +55,18 @@ module.exports = {
       references: {
         table: 'disciplinaespecializacao',
         field: 'nome'
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
+    })
+
+    await queryInterface.addConstraint('turmadisciplinaespecializacao', {
+      fields: ['edital'],
+      type: 'foreign key',
+      name: 'fk_edital_turmadisciplinaespecializacao',
+      references: {
+        table: 'editalcursoespecializacao',
+        field: 'ano'
       },
       onDelete: 'cascade',
       onUpdate: 'cascade'

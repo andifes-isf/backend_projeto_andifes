@@ -8,8 +8,9 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const turmas = [
       {
-        disciplina: "Ingles1",
+        disciplina: "RECURSOS E TECNOLOGIAS DIGITAIS PARA O ENSINO DE LÍNGUA INGLESA",
         nome: "Ingles1_marco",
+        edital: 2024,
         mesOferta: "marco",
         numeroVagas: 50,
         numeroMinimoAlunos: 5,
@@ -19,7 +20,8 @@ module.exports = {
         numeroReprovados: 1
       },
       {
-        disciplina: "Nucleo1",
+        disciplina: "INTERNACIONALIZAÇÃO, POLÍTICA LINGUÍSTICA E REDE ISF",
+        edital: 2024,
         nome: "Nucleo1_agosto",
         mesOferta: "agosto",
         numeroVagas: 50,
@@ -30,7 +32,20 @@ module.exports = {
         numeroReprovados: 1
       },
       {
-        disciplina: "PTOidiomas2",
+        disciplina: "INTERNACIONALIZAÇÃO, POLÍTICA LINGUÍSTICA E REDE ISF",
+        edital: 2023,
+        nome: "Nucleo1_agosto",
+        mesOferta: "agosto",
+        numeroVagas: 50,
+        numeroMinimoAlunos: 5,
+        numeroInscritos: 30,
+        numeroAprovados: 20,
+        numeroDesistentes: 0,
+        numeroReprovados: 1
+      },
+      {
+        disciplina: "MÉTODOS E INSTRUMENTOS DE AVALIAÇÃO",
+        edital: 2024,
         nome: "PTOidiomas2_setembro",
         mesOferta: "setembro",
         numeroVagas: 50,
@@ -41,7 +56,20 @@ module.exports = {
         numeroReprovados: 1
       },
       {
-        disciplina: "japones2",
+        disciplina: "CERTIFICAÇÕES INTERNACIONAIS EM LÍNGUA JAPONESA",
+        edital: 2024,
+        nome: "japones2_junho",
+        mesOferta: "junho",
+        numeroVagas: 50,
+        numeroMinimoAlunos: 5,
+        numeroInscritos: 30,
+        numeroAprovados: 20,
+        numeroDesistentes: 0,
+        numeroReprovados: 1
+      },
+      {
+        disciplina: "CERTIFICAÇÕES INTERNACIONAIS EM LÍNGUA JAPONESA",
+        edital: 2023,
         nome: "japones2_junho",
         mesOferta: "junho",
         numeroVagas: 50,

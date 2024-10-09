@@ -10,4 +10,10 @@ router.get('/', _usuarioController2.default.get)
 
 router.get('/meus_dados', _auth2.default, _usuarioController2.default.getMyData)
 
+router.get('/notificacoes', _auth2.default, _usuarioController2.default.getNotificacoes)
+
+router.get('/notificacoes_nao_lidas', _auth2.default, _usuarioController2.default.getNotificacoesNaoLidas)
+
+router.get('/notificacao/:id', _auth2.default, _usuarioController2.default.getNotificacao)
+
 exports. default = router

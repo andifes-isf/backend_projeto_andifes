@@ -1,6 +1,6 @@
 'use strict';
 
-import '../../database'
+import '..'
 import EditalCursoEspecializacao from '../../app/models/curso_especializacao/editalcursoespecializacao';
 
 /** @type {import('sequelize-cli').Migration} */

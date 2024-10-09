@@ -12,6 +12,15 @@ module.exports = {
       descricao: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      eixoTematico: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      categoria: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        primaryKey: true
       }
     })
   },

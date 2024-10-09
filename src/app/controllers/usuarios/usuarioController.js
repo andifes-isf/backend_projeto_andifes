@@ -71,6 +71,74 @@ class usuarioController {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
     }
+
+    async getNotificacoes(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância do orientador
+            const docente = await Usuario.findByPk(req.loginUsuario)
+
+            const notificacoes = await docente.getNotificacaos() 
+
+            return res.status(200).json(notificacoes)
+
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getNotificacoesNaoLidas(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            // Pegando instância do orientador
+            const docente = await Usuario.findByPk(req.loginUsuario)
+
+            const notificacoes = await docente.getNotificacoesNaoLidas() 
+
+            return res.status(200).json(notificacoes)
+
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async getNotificacao(req, res){
+        try {
+            // Pegando instância do orientador
+            const docente = await Usuario.findByPk(req.loginUsuario)
+
+            const notificacao = await docente.getNotificacaos({
+                where: {
+                    idNotificacao: req.params.id,
+                    login: req.loginUsuario
+                }
+            }) 
+            
+            if(notificacao.length === 0){
+                return res.status(404).json({
+                    error: "Pagina não encontrada"
+                })
+            }
+            console.log(notificacao)
+            notificacao[0].lida = 1
+            await notificacao[0].save()
+
+            return res.status(200).json(notificacao)
+
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
 }
 
 export default new usuarioController()

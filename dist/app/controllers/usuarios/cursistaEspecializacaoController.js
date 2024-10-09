@@ -283,26 +283,6 @@ class CursistaEspecializacaoController {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
         }
     }
-
-    async getNotificacoes(req, res){
-        try {
-            if(!(req.tipoUsuario === 'cursista')){
-                return res.status(403).json({
-                    error: 'Acesso negado'
-                })
-            }
-
-            // Pegando instância do orientador
-            const usuario = await _usuario2.default.findByPk(req.loginUsuario)
-
-            const notificacoes = await usuario.getNotificacaos() 
-
-            return res.status(200).json(notificacoes)
-
-        } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
-        }
-    }
 }
 
 exports. default = new CursistaEspecializacaoController()

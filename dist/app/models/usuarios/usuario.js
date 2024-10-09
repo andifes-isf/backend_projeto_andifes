@@ -66,6 +66,14 @@ class Usuario extends _sequelize.Model {
         this.hasMany(models.Notificacao, {
             foreignKey: 'login'
         })
+
+        this.hasMany(models.Notificacao, {
+            foreignKey: 'login',
+            scope: {
+                lida: false
+            },
+            as: 'notificacoesNaoLidas'
+        })
     }
 }
 
