@@ -46,7 +46,7 @@ class DisciplinaEspecializacao extends Model {
         })
 
         this.hasMany(models.InteresseNaDisciplina, {
-            foreignKey: 'nome'
+            foreignKey: 'nomeDisciplina'
         })
     }
 

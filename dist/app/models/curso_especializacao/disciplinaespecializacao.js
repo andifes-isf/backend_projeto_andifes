@@ -46,7 +46,7 @@ class DisciplinaEspecializacao extends _sequelize.Model {
         })
 
         this.hasMany(models.InteresseNaDisciplina, {
-            foreignKey: 'nome'
+            foreignKey: 'nomeDisciplina'
         })
     }
 

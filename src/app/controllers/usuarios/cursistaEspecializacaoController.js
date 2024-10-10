@@ -3,6 +3,7 @@ import { Sequelize } from "sequelize";
 // Models
 import CursistaCursaTurmaEspecializacao from "../../models/curso_especializacao/cursistacursaturmaespecializacao";
 import CursistaEspecializacao from "../../models/usuarios/cursistaespecializacao";
+import InteresseNaDisciplina from '../../models/curso_especializacao/InteresseNaDisciplina'
 import MaterialCursista from "../../models/curso_especializacao/materialcursista";
 import Notificacoes from '../../models/utils/notificacao'
 import ProfessorIsF from "../../models/usuarios/professorisf";
@@ -281,6 +282,74 @@ class CursistaEspecializacaoController {
         } catch (error) {
             console.log(error)
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    static async inserirInteresse(disciplina, ano, cursista){
+        try {
+            await cursista.createInteresse({
+                ano: ano,
+                nomeDisciplina: disciplina.nomeDisciplina,
+                preferencia: disciplina.preferencia
+            })    
+
+            return true
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    static async inserirDisciplinas(dados, cursista){
+        const disciplinas = dados.interesse
+        const ano = dados.ano
+
+        const promessas = disciplinas.map(async (disciplina) => {
+            try {
+                await CursistaEspecializacaoController.inserirInteresse(disciplina, ano, cursista)
+                
+                return { status: 'sucesso', disciplina: disciplina.nomeDisciplina}
+            } catch (error) {
+                return { status: 'falho', disciplina: disciplina.nomeDisciplina, message: error.message}
+            }
+        })
+        
+        const resultados = await Promise.allSettled(promessas)
+        let sucesso = []
+        let falha = []
+        let erroInesperado = []
+
+        resultados.forEach((resultado) => {
+            if (resultado.status === 'fulfilled' && resultado.value.status === 'sucesso') {
+                sucesso.push(`Disciplina ${resultado.value.disciplina} inserida com sucesso.`);
+            } else if (resultado.status === 'fulfilled' && resultado.value.status === 'falho') {
+                falha.push(`Erro ao inserir disciplina ${resultado.value.disciplina}: ${resultado.value.message}`);
+            } else {
+                erroInesperado.push(`Erro inesperado:`, resultado.reason);
+            }
+        })
+
+        return { sucesso: sucesso, falha: falha, erroInesperado: erroInesperado}
+    }
+
+    async postInteresseNaDisciplina(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
+            const dados = req.body
+
+            const status = await CursistaEspecializacaoController.inserirDisciplinas(dados, cursista)
+            
+            if(status.falha.length === 0 && status.erroInesperado.length === 0) {
+                return res.status(201).json(status.sucesso)
+            }
+            return res.status(207).json(status)
+        } catch (error) {
+            return res.status(500)
         }
     }
 }

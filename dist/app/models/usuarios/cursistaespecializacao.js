@@ -73,7 +73,8 @@ class CursistaEspecializacao extends _sequelize.Model {
         })
 
         this.hasMany(models.InteresseNaDisciplina, {
-            foreignKey: 'login'
+            foreignKey: 'login',
+            as: 'interesse'
         })
     }
 }
