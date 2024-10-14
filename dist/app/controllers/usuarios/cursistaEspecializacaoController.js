@@ -81,6 +81,8 @@ class CursistaEspecializacaoController {
             }
         })
 
+        console.log(orientador)
+
         return [ cursista, orientador[0] ]
 
         // como cursista.getOrientador() retorna um array, e nesse caso um array de um único elemento, estou retornando somente esse elemento
@@ -108,8 +110,8 @@ class CursistaEspecializacaoController {
             }
 
             const [cursista, orientador] = await CursistaEspecializacaoController.pegarEntidades(req.loginUsuario)
+            console.log(orientador)
 
-            // Verifica se o material já existe
             const materialExistente = await _materialcursista2.default.findOne({
                 where: {
                     nome: req.body.nome,
@@ -123,18 +125,15 @@ class CursistaEspecializacaoController {
                 })
             }
 
-            // Cria o material
-
             const material = await CursistaEspecializacaoController.criarMaterial(cursista, req.body)
             
-            // Faz o histórico de validação
-
+            // Faz o histórico de validação            
             const validacao = await _ValidacaoMaterial2.default.create({
                 nomeMaterial: req.body.nome,
                 loginOrientador: orientador.login,
                 loginCursista: cursista.login
             })
-
+            
             const notificacao = await _notificacao2.default.create({
                 login: orientador.login,
                 mensagem: `${req.loginUsuario} postou um material novo`,

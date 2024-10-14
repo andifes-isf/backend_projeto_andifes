@@ -14,6 +14,7 @@
     "restart-db": "sequelize db:drop && sequelize db:create",
 
     "seed": "yarn build && sequelize db:seed:all --config dist/config/database.js --seeders-path dist/database/seeds",
+    "seed-create": "sequelize seed:create --name",
     "seed-undo": "yarn build && sequelize db:seed:undo:all --config dist/config/database.js --seeders-path dist/database/seeds",
     
     "dev:debug": "nodemon --inspect src/server"

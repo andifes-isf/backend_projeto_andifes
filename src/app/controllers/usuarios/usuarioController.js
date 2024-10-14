@@ -74,16 +74,10 @@ class usuarioController {
 
     async getNotificacoes(req, res){
         try {
-            if(!(req.tipoUsuario === 'docenteorientador')){
-                return res.status(403).json({
-                    error: 'Acesso negado'
-                })
-            }
+            // Pegando instância do usuario
+            const usuario = await Usuario.findByPk(req.loginUsuario)
 
-            // Pegando instância do orientador
-            const docente = await Usuario.findByPk(req.loginUsuario)
-
-            const notificacoes = await docente.getNotificacaos() 
+            const notificacoes = await usuario.getNotificacaos() 
 
             return res.status(200).json(notificacoes)
 
@@ -94,16 +88,10 @@ class usuarioController {
 
     async getNotificacoesNaoLidas(req, res){
         try {
-            if(!(req.tipoUsuario === 'docenteorientador')){
-                return res.status(403).json({
-                    error: 'Acesso negado'
-                })
-            }
+            // Pegando instância do usuario
+            const usuario = await Usuario.findByPk(req.loginUsuario)
 
-            // Pegando instância do orientador
-            const docente = await Usuario.findByPk(req.loginUsuario)
-
-            const notificacoes = await docente.getNotificacoesNaoLidas() 
+            const notificacoes = await usuario.getNotificacoesNaoLidas() 
 
             return res.status(200).json(notificacoes)
 
@@ -114,10 +102,10 @@ class usuarioController {
 
     async getNotificacao(req, res){
         try {
-            // Pegando instância do orientador
-            const docente = await Usuario.findByPk(req.loginUsuario)
+            // Pegando instância do usuario
+            const usuario = await Usuario.findByPk(req.loginUsuario)
 
-            const notificacao = await docente.getNotificacaos({
+            const notificacao = await usuario.getNotificacaos({
                 where: {
                     idNotificacao: req.params.id,
                     login: req.loginUsuario
@@ -129,7 +117,6 @@ class usuarioController {
                     error: "Pagina não encontrada"
                 })
             }
-            console.log(notificacao)
             notificacao[0].lida = 1
             await notificacao[0].save()
 
