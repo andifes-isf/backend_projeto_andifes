@@ -15,6 +15,9 @@ import ProfessorIsFController from './professorIsFController'
 import DocenteOrientador from "../../models/usuarios/docenteorientador";
 import Notificacao from "../../models/utils/notificacao";
 
+// Utils
+import UserTypes from '../../utils/userType/userTypes'
+
 class CursistaEspecializacaoController {
     async post(req, res) {
         try {    
@@ -101,16 +104,15 @@ class CursistaEspecializacaoController {
         })
     }
     
-    async postMaterial(req, res){
+    async postMaterial(req, res) {
         try {
-            if(!(req.tipoUsuario === 'cursista')){
+            if (!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
                     error: 'Acesso negado'
                 })
             }
 
-            const [cursista, orientador] = await CursistaEspecializacaoController.pegarEntidades(req.loginUsuario)
-            console.log(orientador)
+            const [cursista, orientador] = await        CursistaEspecializacaoController.pegarEntidades(req.loginUsuario)
 
             const materialExistente = await MaterialCursista.findOne({
                 where: {
@@ -128,13 +130,13 @@ class CursistaEspecializacaoController {
             const material = await CursistaEspecializacaoController.criarMaterial(cursista, req.body)
             
             // Faz o histórico de validação            
-            const validacao = await ValidacaoMaterial.create({
+            await ValidacaoMaterial.create({
                 nomeMaterial: req.body.nome,
                 loginOrientador: orientador.login,
                 loginCursista: cursista.login
             })
             
-            const notificacao = await Notificacao.create({
+            await Notificacao.create({
                 login: orientador.login,
                 mensagem: `${req.loginUsuario} postou um material novo`,
                 tipo: 'pendencia',
@@ -153,7 +155,7 @@ class CursistaEspecializacaoController {
 
     async getMeusMateriais(req, res){
         try {
-            if(!(req.tipoUsuario === 'cursista')){
+            if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
                     error: 'Acesso negado'
                 })
@@ -171,7 +173,7 @@ class CursistaEspecializacaoController {
 
     async getMaterialNaoVisualizado(req, res){
         try {
-            if(!(req.tipoUsuario === 'cursista')){
+            if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
                     error: 'Acesso negado'
                 })
@@ -197,7 +199,7 @@ class CursistaEspecializacaoController {
 
     async getMaterial(req, res){
         try {
-            if(!(req.tipoUsuario === 'cursista')){
+            if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
                     error: 'Acesso negado'
                 })
@@ -233,7 +235,7 @@ class CursistaEspecializacaoController {
 
     async postCursaTurma(req, res){
         try {
-            if(!(req.tipoUsuario === 'cursista')){
+            if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
                     error: 'Acesso negado'
                 })
@@ -266,7 +268,7 @@ class CursistaEspecializacaoController {
 
     async getMinhasTurmas(req, res){
         try {
-            if(!(req.tipoUsuario === 'cursista')){
+            if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
                     error: 'Acesso negado'
                 })
@@ -280,6 +282,14 @@ class CursistaEspecializacaoController {
         } catch (error) {
             console.log(error)
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
+
+    async postReportNotification(req, res) {
+        try {
+            
+        } catch (error) {
+            
         }
     }
 }

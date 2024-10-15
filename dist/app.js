@@ -10,9 +10,6 @@ class App {
     }
 
     middleware() {
-
-        // utilizado para entender quando o corpo de requisição for json
-
         this.server.use(_express2.default.json())
     }
 
@@ -20,5 +17,6 @@ class App {
         this.server.use(_routes2.default)
     }
 }
+
 
 exports. default = new App().server

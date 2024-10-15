@@ -6,17 +6,13 @@
     "dev": "nodemon dist/server && cls",
     "build": "sucrase ./src -d ./dist --transforms imports",
     "start": "yarn build && node ./dist/server.js",
-    
     "migrate": "yarn build && sequelize db:migrate --config dist/config/database.js --migrations-path dist/database/migrations",
     "migrate-undo": "sequelize db:migrate:undo",
     "migrate-create": "sequelize migration:create --name",
-
     "restart-db": "sequelize db:drop && sequelize db:create",
-
     "seed": "yarn build && sequelize db:seed:all --config dist/config/database.js --seeders-path dist/database/seeds",
     "seed-create": "sequelize seed:create --name",
     "seed-undo": "yarn build && sequelize db:seed:undo:all --config dist/config/database.js --seeders-path dist/database/seeds",
-    
     "dev:debug": "nodemon --inspect src/server"
   },
   "keywords": [],
@@ -36,6 +32,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.10.3",
+    "node-cron": "^3.0.3",
     "sequelize": "^6.37.3",
     "sequelize-cli": "^6.6.2",
     "yup": "^1.4.0"
