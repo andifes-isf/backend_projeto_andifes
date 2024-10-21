@@ -3,6 +3,7 @@
 // Models
 var _cursistacursaturmaespecializacao = require('../../models/curso_especializacao/cursistacursaturmaespecializacao'); var _cursistacursaturmaespecializacao2 = _interopRequireDefault(_cursistacursaturmaespecializacao);
 var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
+var _InteresseNaDisciplina = require('../../models/curso_especializacao/InteresseNaDisciplina'); var _InteresseNaDisciplina2 = _interopRequireDefault(_InteresseNaDisciplina);
 var _materialcursista = require('../../models/curso_especializacao/materialcursista'); var _materialcursista2 = _interopRequireDefault(_materialcursista);
 var _notificacao = require('../../models/utils/notificacao'); var _notificacao2 = _interopRequireDefault(_notificacao);
 var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
@@ -285,11 +286,71 @@ class CursistaEspecializacaoController {
         }
     }
 
-    async postReportNotification(req, res) {
+    static async inserirInteresse(disciplina, ano, cursista){
         try {
-            
+            await cursista.createInteresse({
+                ano: ano,
+                nomeDisciplina: disciplina.nomeDisciplina,
+                preferencia: disciplina.preferencia
+            })    
+
+            return true
         } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+    static async inserirDisciplinas(dados, cursista){
+        const disciplinas = dados.interesse
+        const ano = dados.ano
+
+        const promessas = disciplinas.map(async (disciplina) => {
+            try {
+                await CursistaEspecializacaoController.inserirInteresse(disciplina, ano, cursista)
+                
+                return { status: 'sucesso', disciplina: disciplina.nomeDisciplina}
+            } catch (error) {
+                return { status: 'falho', disciplina: disciplina.nomeDisciplina, message: error.message}
+            }
+        })
+        
+        const resultados = await Promise.allSettled(promessas)
+        let sucesso = []
+        let falha = []
+        let erroInesperado = []
+
+        resultados.forEach((resultado) => {
+            if (resultado.status === 'fulfilled' && resultado.value.status === 'sucesso') {
+                sucesso.push(`Disciplina ${resultado.value.disciplina} inserida com sucesso.`);
+            } else if (resultado.status === 'fulfilled' && resultado.value.status === 'falho') {
+                falha.push(`Erro ao inserir disciplina ${resultado.value.disciplina}: ${resultado.value.message}`);
+            } else {
+                erroInesperado.push(`Erro inesperado:`, resultado.reason);
+            }
+        })
+
+        return { sucesso: sucesso, falha: falha, erroInesperado: erroInesperado}
+    }
+
+    async postInteresseNaDisciplina(req, res){
+        try {
+            if(!(req.tipoUsuario === 'cursista')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
+
+            const cursista = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+            const dados = req.body
+
+            const status = await CursistaEspecializacaoController.inserirDisciplinas(dados, cursista)
             
+            if(status.falha.length === 0 && status.erroInesperado.length === 0) {
+                return res.status(201).json(status.sucesso)
+            }
+            return res.status(207).json(status)
+        } catch (error) {
+            return res.status(500)
         }
     }
 }

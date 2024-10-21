@@ -44,6 +44,10 @@ class DisciplinaEspecializacao extends _sequelize.Model {
         this.belongsTo(models.TurmaDisciplinaEspecializacao, {
             foreignKey: 'nome'
         })
+
+        this.hasMany(models.InteresseNaDisciplina, {
+            foreignKey: 'nomeDisciplina'
+        })
     }
 
 }

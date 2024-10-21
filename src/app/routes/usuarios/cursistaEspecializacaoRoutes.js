@@ -20,4 +20,6 @@ router.post('/participar_turma/:nome_turma', AuthMiddleware, cursistaEspecializa
 
 router.get('/minhas_turmas', AuthMiddleware, cursistaEspecializacaoController.getMinhasTurmas)
 
+router.post('/interesse_nas_disciplinas', AuthMiddleware, cursistaEspecializacaoController.postInteresseNaDisciplina)
+
 export default router

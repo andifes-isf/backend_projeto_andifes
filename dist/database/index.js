@@ -8,6 +8,7 @@ var _alteracaoturmaespecializacao = require('../app/models/curso_especializacao/
 var _cursistacursaturmaespecializacao = require('../app/models/curso_especializacao/cursistacursaturmaespecializacao'); var _cursistacursaturmaespecializacao2 = _interopRequireDefault(_cursistacursaturmaespecializacao);
 var _disciplinaespecializacao = require('../app/models/curso_especializacao/disciplinaespecializacao'); var _disciplinaespecializacao2 = _interopRequireDefault(_disciplinaespecializacao);
 var _editalcursoespecializacao = require('../app/models/curso_especializacao/editalcursoespecializacao'); var _editalcursoespecializacao2 = _interopRequireDefault(_editalcursoespecializacao);
+var _InteresseNaDisciplina = require('../app/models/curso_especializacao/InteresseNaDisciplina'); var _InteresseNaDisciplina2 = _interopRequireDefault(_InteresseNaDisciplina);
 var _materialcursista = require('../app/models/curso_especializacao/materialcursista'); var _materialcursista2 = _interopRequireDefault(_materialcursista);
 var _ministranteMinistraTurmaEspecializacao = require('../app/models/curso_especializacao/ministranteMinistraTurmaEspecializacao'); var _ministranteMinistraTurmaEspecializacao2 = _interopRequireDefault(_ministranteMinistraTurmaEspecializacao);
 var _OrientadorOrientaCursista = require('../app/models/curso_especializacao/OrientadorOrientaCursista'); var _OrientadorOrientaCursista2 = _interopRequireDefault(_OrientadorOrientaCursista);
@@ -56,6 +57,7 @@ const models = [
     _cursistacursaturmaespecializacao2.default,
     _disciplinaespecializacao2.default,
     _editalcursoespecializacao2.default,
+    _InteresseNaDisciplina2.default,
     _ministranteMinistraTurmaEspecializacao2.default,
     _materialcursista2.default,
     _OrientadorOrientaCursista2.default,

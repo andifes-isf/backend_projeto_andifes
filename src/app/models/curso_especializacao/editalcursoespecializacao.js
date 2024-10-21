@@ -43,6 +43,13 @@ class EditalCursoEspecializacao extends Model {
         return this
         
     }
+
+    static associate(models){
+        this.hasMany(models.InteresseNaDisciplina, {
+            foreignKey: 'ano'
+        })
+    }
+
 }
 
 export default EditalCursoEspecializacao

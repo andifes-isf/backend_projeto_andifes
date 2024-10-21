@@ -43,6 +43,13 @@ class EditalCursoEspecializacao extends _sequelize.Model {
         return this
         
     }
+
+    static associate(models){
+        this.hasMany(models.InteresseNaDisciplina, {
+            foreignKey: 'ano'
+        })
+    }
+
 }
 
 exports. default = EditalCursoEspecializacao
