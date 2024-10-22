@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize'
 
-class MaterialCursista extends Model {
+class RelatorioPratico extends Model {
     static init(sequelize) {
         super.init(
             {
@@ -21,19 +21,41 @@ class MaterialCursista extends Model {
                     type: Sequelize.CHAR(2),
                     allowNull: false
                 },
-                ementa: {
+                descricao: {
                     type: Sequelize.TEXT,
                     allowNull: false,
                 },
                 cargaHoraria: {
                     type: Sequelize.INTEGER,
                     allowNull: false,
+                },
+                orientador: {
+                    type: Sequelize.STRING,
+                    allowNull: false
+                },
+                link_portfolio: {
+                    type: Sequelize.TEXT,
+                    allowNull: false
+                },
+                categoria: {
+                    type: Sequelize.ENUM('preparacao do curso', 'preparacao material didatico', 'preparacao de atividades', 'preparacao de aulas', 'preparacao de oficinas', 'preparacao de testes de nivelamento'),
+                    allowNull: false
+                },
+                data_avaliacao: {
+                    type: Sequelize.DATEONLY
+                },
+                feedback: {
+                    type: Sequelize.TEXT
+                },
+                visualizado_pelo_cursista: {
+                    type: Sequelize.BOOLEAN,
+                    defaultValue: false
                 }
             },
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'materialcursista',
+                tableName: 'relatorio_pratico',
                 indexes: [{
                     name: 'primary_key',
                     unique: true,
