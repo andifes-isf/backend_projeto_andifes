@@ -76,24 +76,8 @@ class RelatorioPratico extends Model {
         this.belongsTo(models.CursistaEspecializacao, {
             foreignKey: 'login'
         })
-
-        this.belongsToMany(models.CursistaEspecializacao, {
-            through: 'ValidacaoMaterial',
-            foreignKey: 'nomeMaterial',
-            sourceKey: 'nome',
-            targetKey: 'login',
-            as: 'criador'
-        })
-
-        this.belongsToMany(models.DocenteOrientador, {
-            through: 'ValidacaoMaterial',
-            foreignKey: 'nomeMaterial',
-            sourceKey: 'nome',
-            targetKey: 'login',
-            as: 'validador'
-        })
     }
 
 }
 
-export default MaterialCursista
+export default RelatorioPratico

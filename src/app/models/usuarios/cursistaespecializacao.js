@@ -63,15 +63,6 @@ class CursistaEspecializacao extends Model {
             as: "orientador"
         })
 
-        this.belongsToMany(models.MaterialCursista, {
-            through: 'ValidacaoMaterial',
-            foreignKey: 'loginCursista',
-            sourceKey: 'login',
-            targetKey: 'nome',
-            timestamps: false,
-            as: 'validacaoMaterial'
-        })
-
         this.hasMany(models.InteresseNaDisciplina, {
             foreignKey: 'login',
             as: 'interesse'
