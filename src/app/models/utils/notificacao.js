@@ -18,7 +18,7 @@ class Notificacao extends Model {
                     allowNull: false
                 },
                 tipo: {
-                    type: Sequelize.ENUM('pendencia', 'feedback'),
+                    type: Sequelize.ENUM('pendencia', 'feedback', 'aviso'),
                     allowNull: false
                 },
                 chaveReferenciado: {
