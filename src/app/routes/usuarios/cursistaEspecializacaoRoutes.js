@@ -8,13 +8,13 @@ router.post('/', cursistaEspecializacaoController.post)
 
 router.get('/', cursistaEspecializacaoController.get)
 
-router.post('/inserir_material', AuthMiddleware, cursistaEspecializacaoController.postMaterial)
+router.post('/inserir_material', AuthMiddleware, cursistaEspecializacaoController.postPracticalReport)
 
-router.get('/meus_materiais', AuthMiddleware, cursistaEspecializacaoController.getMeusMateriais)
+// router.get('/meus_materiais', AuthMiddleware, cursistaEspecializacaoController.getMeusMateriais)
 
-router.get('/material/:nome', AuthMiddleware, cursistaEspecializacaoController.getMaterial)
+// router.get('/material/:nome', AuthMiddleware, cursistaEspecializacaoController.getMaterial)
 
-router.get('/materiais_nao_visualizados', AuthMiddleware, cursistaEspecializacaoController.getMaterialNaoVisualizado)
+// router.get('/materiais_nao_visualizados', AuthMiddleware, cursistaEspecializacaoController.getMaterialNaoVisualizado)
 
 router.post('/participar_turma/:nome_turma', AuthMiddleware, cursistaEspecializacaoController.postCursaTurma)
 

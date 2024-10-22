@@ -36,7 +36,7 @@ class CursistaEspecializacao extends Model {
     }
 
     static associate(models) {
-        this.hasMany(models.MaterialCursista, {
+        this.hasMany(models.RelatorioPratico, {
             foreignKey: 'login',
             as: 'material'
         })

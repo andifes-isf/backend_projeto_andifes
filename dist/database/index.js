@@ -9,11 +9,10 @@ var _cursistacursaturmaespecializacao = require('../app/models/curso_especializa
 var _disciplinaespecializacao = require('../app/models/curso_especializacao/disciplinaespecializacao'); var _disciplinaespecializacao2 = _interopRequireDefault(_disciplinaespecializacao);
 var _editalcursoespecializacao = require('../app/models/curso_especializacao/editalcursoespecializacao'); var _editalcursoespecializacao2 = _interopRequireDefault(_editalcursoespecializacao);
 var _InteresseNaDisciplina = require('../app/models/curso_especializacao/InteresseNaDisciplina'); var _InteresseNaDisciplina2 = _interopRequireDefault(_InteresseNaDisciplina);
-var _materialcursista = require('../app/models/curso_especializacao/materialcursista'); var _materialcursista2 = _interopRequireDefault(_materialcursista);
+var _relatorio_pratico = require('../app/models/curso_especializacao/relatorio_pratico'); var _relatorio_pratico2 = _interopRequireDefault(_relatorio_pratico);
 var _ministranteMinistraTurmaEspecializacao = require('../app/models/curso_especializacao/ministranteMinistraTurmaEspecializacao'); var _ministranteMinistraTurmaEspecializacao2 = _interopRequireDefault(_ministranteMinistraTurmaEspecializacao);
 var _OrientadorOrientaCursista = require('../app/models/curso_especializacao/OrientadorOrientaCursista'); var _OrientadorOrientaCursista2 = _interopRequireDefault(_OrientadorOrientaCursista);
 var _turmadisciplinaespecializacao = require('../app/models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
-var _ValidacaoMaterial = require('../app/models/curso_especializacao/ValidacaoMaterial'); var _ValidacaoMaterial2 = _interopRequireDefault(_ValidacaoMaterial);
 
 // instituicao
 var _instituicaoensinobrasileira = require('../app/models/instituicao/instituicaoensinobrasileira'); var _instituicaoensinobrasileira2 = _interopRequireDefault(_instituicaoensinobrasileira);
@@ -59,10 +58,9 @@ const models = [
     _editalcursoespecializacao2.default,
     _InteresseNaDisciplina2.default,
     _ministranteMinistraTurmaEspecializacao2.default,
-    _materialcursista2.default,
     _OrientadorOrientaCursista2.default,
+    _relatorio_pratico2.default,
     _turmadisciplinaespecializacao2.default,
-    _ValidacaoMaterial2.default,
 
     // instituicao
     _instituicaoensino2.default, 

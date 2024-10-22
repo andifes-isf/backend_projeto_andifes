@@ -74,6 +74,11 @@ class RelatorioPratico extends Model {
 
     static associate(models){
         this.belongsTo(models.CursistaEspecializacao, {
+            foreignKey: 'login',
+            as: 'criador'
+        })
+
+        this.belongsTo(models.DocenteOrientador, {
             foreignKey: 'login'
         })
     }
