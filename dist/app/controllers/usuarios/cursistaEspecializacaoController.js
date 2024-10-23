@@ -75,8 +75,8 @@ class CursistaEspecializacaoController {
     }
 
     static async getEntities(login){
-        const cursista = await _cursistaespecializacao2.default.findByPk(login)
-        const orientador = await cursista.getOrientador({
+        const specializationStudent = await _cursistaespecializacao2.default.findByPk(login)
+        const advisor = await specializationStudent.getOrientador({
             through: {
                 where: {
                     status: "ativo"
@@ -84,24 +84,24 @@ class CursistaEspecializacaoController {
             }
         })
 
-        return [ cursista, orientador[0] ]
+        return [ specializationStudent, advisor[0] ]
 
         // como cursista.getOrientador() retorna um array, e nesse caso um array de um único elemento, estou retornando somente esse elemento
 
     }
 
-    static async createReport(cursista, orientador, material){
-        const { idioma, nome, nivel, descricao, cargaHoraria, link_portfolio, categoria } = material
+    static async createReport(specializationStudent, advisor, material){
+        const { idioma, name, level, description, workload, portfolio_link, category } = material
 
-        return await cursista.createMaterial({
+        return await specializationStudent.createMaterial({
             idioma: idioma,
-            nome: nome,
-            nivel: nivel,
-            descricao: descricao,
-            cargaHoraria: cargaHoraria,
-            orientador: orientador.login,
-            link_portfolio: link_portfolio,
-            categoria: categoria,
+            nome: name,
+            nivel: level,
+            descricao: description,
+            cargaHoraria: workload,
+            orientador: advisor.login,
+            link_portfolio: portfolio_link,
+            categoria: category,
         })
     }
     
@@ -113,28 +113,28 @@ class CursistaEspecializacaoController {
                 })
             }
 
-            const [cursista, orientador] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
+            const [specializationStudent, advisor] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
 
-            const relatorioExistente = await _relatorio_pratico2.default.findOne({
+            const existinReport = await _relatorio_pratico2.default.findOne({
                 where: {
-                    nome: req.body.nome,
+                    nome: req.body.name,
                     login: req.loginUsuario
                 }
             })
 
-            if(relatorioExistente){
+            if(existinReport){
                 return res.status(409).json({
                     msg: "Relatorio ja existente"
                 })
             }
 
-            const report = await CursistaEspecializacaoController.createReport(cursista, orientador, req.body)
+            const report = await CursistaEspecializacaoController.createReport(specializationStudent, advisor, req.body)
             
             await _notificacao2.default.create({
-                login: orientador.login,
+                login: advisor.login,
                 mensagem: `${req.loginUsuario} postou um material novo`,
                 tipo: 'pendencia',
-                chaveReferenciado: req.body.nome,
+                chaveReferenciado: req.body.name,
                 modeloReferenciado: 'materialcursista'
             })
 
