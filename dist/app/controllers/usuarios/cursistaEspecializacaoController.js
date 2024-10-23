@@ -74,7 +74,7 @@ class CursistaEspecializacaoController {
 
     }
 
-    static async pegarEntidades(login){
+    static async getEntities(login){
         const cursista = await _cursistaespecializacao2.default.findByPk(login)
         const orientador = await cursista.getOrientador({
             through: {
@@ -83,8 +83,6 @@ class CursistaEspecializacaoController {
                 }
             }
         })
-
-        console.log(orientador)
 
         return [ cursista, orientador[0] ]
 
@@ -95,13 +93,13 @@ class CursistaEspecializacaoController {
     static async createReport(cursista, orientador, material){
         const { idioma, nome, nivel, descricao, cargaHoraria, link_portfolio, categoria } = material
 
-        await cursista.createMaterial({
+        return await cursista.createMaterial({
             idioma: idioma,
             nome: nome,
             nivel: nivel,
             descricao: descricao,
             cargaHoraria: cargaHoraria,
-            orientador: orientadorlogin,
+            orientador: orientador.login,
             link_portfolio: link_portfolio,
             categoria: categoria,
         })
@@ -115,7 +113,7 @@ class CursistaEspecializacaoController {
                 })
             }
 
-            const [cursista, orientador] = await        CursistaEspecializacaoController.pegarEntidades(req.loginUsuario)
+            const [cursista, orientador] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
 
             const relatorioExistente = await _relatorio_pratico2.default.findOne({
                 where: {
@@ -130,7 +128,7 @@ class CursistaEspecializacaoController {
                 })
             }
 
-            const relatorio = await CursistaEspecializacaoController.createReport(cursista, orientador, req.body)
+            const report = await CursistaEspecializacaoController.createReport(cursista, orientador, req.body)
             
             await _notificacao2.default.create({
                 login: orientador.login,
@@ -140,7 +138,7 @@ class CursistaEspecializacaoController {
                 modeloReferenciado: 'materialcursista'
             })
 
-            return res.status(201).json(await cursista.getMaterial())
+            return res.status(201).json(report)
 
         } catch (error) {
             console.log(error)
@@ -149,77 +147,75 @@ class CursistaEspecializacaoController {
 
     }
 
-    // async getMeusMateriais(req, res){
-    //     try {
-    //         if(!(req.tipoUsuario === UserTypes.CURSISTA)){
-    //             return res.status(403).json({
-    //                 error: 'Acesso negado'
-    //             })
-    //         }            
+    async getMyMaterials(req, res){
+        try {
+            if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }            
 
-    //         const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
+            const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
 
-    //         const meusMateriais = await cursista.getValidacaoMaterial()
+            const myMaterials = await specializationStudent.getMaterial()
 
-    //         return res.status(200).json(meusMateriais)
-    //     } catch (error) {
-    //         return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
-    //     }
-    // }
+            return res.status(200).json(myMaterials)
+        } catch (error) {
+            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        }
+    }
 
-    // async getMaterialNaoVisualizado(req, res){
-    //     try {
-    //         if(!(req.tipoUsuario === UserTypes.CURSISTA)){
-    //             return res.status(403).json({
-    //                 error: 'Acesso negado'
-    //             })
-    //         }
+    async getNotViewedMaterials(req, res){
+        try {
+            if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
 
-    //         // Pegando instância do cursista
-    //         const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
+            const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
 
-    //         const materiais = await cursista.getMaterial({
-    //             through: {
-    //                 where: {
-    //                     visualizado_pelo_cursista: false
-    //                 }
-    //             }
-    //         })
+            const materials = await specializationStudent.getMaterial({
+                where: {
+                    visualizado_pelo_cursista: false
+                }
+            })
 
-    //         return res.status(200).json(materiais)
+            return res.status(200).json(materials)
 
-    //     } catch (error) {
-    //         return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
-    //     }
-    // }
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
 
-    // async getMaterial(req, res){
-    //     try {
-    //         if(!(req.tipoUsuario === UserTypes.CURSISTA)){
-    //             return res.status(403).json({
-    //                 error: 'Acesso negado'
-    //             })
-    //         }
+    async getMaterial(req, res){
+        try {
+            if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
 
-    //         // Pegando instância do cursista
-    //         const [cursista, orientador] = await CursistaEspecializacaoController.pegarEntidades(req.loginUsuario)
+            const [specializationStudent, advisor] = await CursistaEspecializacaoController.getEntities(req.loginUsuario)
 
-    //         // Pegando instância do material
-    //         const material = await cursista.getMaterial({
-    //             where: {
-    //                 nome: req.params.nome
-    //             }
-    //         })
+            const report = await specializationStudent.getMaterial({
+                where: {
+                    nome: req.params.nome
+                }
+            })
 
-    //         validacao.visualizadoPeloCursistaAposAnalise = true
-    //         await validacao.save()
+            if(!(report[0].dataAvaliacao == null)) {
+                report[0].visualizado_pelo_cursista = true
+                await report[0].save()
+                console.log('entrou aqui')
+            }
 
-    //         return res.status(200).json(material)
+            return res.status(200).json(report)
 
-    //     } catch (error) {
-    //         return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
-    //     }
-    // }
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
 
     async postCursaTurma(req, res){
         try {
