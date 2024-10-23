@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import Op from 'sequelize'
 
 // Models
 import CursistaEspecializacao from '../../models/usuarios/cursistaespecializacao'
@@ -9,6 +10,7 @@ import Notificacao from '../../models/utils/notificacao'
 // Controllers
 import UsuarioController from './usuarioController'
 import OrientadorOrientaCursista from '../../models/curso_especializacao/OrientadorOrientaCursista'
+import RelatorioPratico from '../../models/curso_especializacao/relatorio_pratico'
 
 class coordenadorNacionalIdiomaController {
     async post(req, res) {
@@ -102,124 +104,118 @@ class coordenadorNacionalIdiomaController {
         }
     }
 
-    // async getMaterialDoOrientado(req, res){
-    //     try {
-    //         if(!(req.tipoUsuario === 'docenteorientador')){
-    //             return res.status(403).json({
-    //                 error: 'Acesso negado'
-    //             })
-    //         }
+    async getMenteesMaterials(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
 
-    //         // Pegando instância do orientador
-    //         const docente = await DocenteOrientador.findByPk(req.loginUsuario)
+            const advisor = await DocenteOrientador.findByPk(req.loginUsuario)
 
-    //         const materiais = await docente.getMaterialAnalise()
+            const materials = await advisor.getMaterialsToAnalysis()
 
-    //         return res.status(200).json(materiais)
+            return res.status(200).json(materials)
 
-    //     } catch (error) {
-    //         return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
-    //     }
-    // }
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
 
-    // async getMaterialNaoAnalisado(req, res){
-    //     try {
-    //         if(!(req.tipoUsuario === 'docenteorientador')){
-    //             return res.status(403).json({
-    //                 error: 'Acesso negado'
-    //             })
-    //         }
+    async getNotEvaluatedMaterials(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
 
-    //         // Pegando instância do orientador
-    //         const docente = await DocenteOrientador.findByPk(req.loginUsuario)
+            const advisor = await DocenteOrientador.findByPk(req.loginUsuario)
 
-    //         const materiais = await docente.getMaterialAnalise({
-    //             through: {
-    //                 where: {
-    //                     analisadoPeloOrientador: false
-    //                 }
-    //             }
-    //         })
+            const materials = await advisor.getMaterialsToAnalysis({
+                where: {
+                    data_avaliacao: null
+                }
+            })
 
-    //         return res.status(200).json(materiais)
+            return res.status(200).json(materials)
 
-    //     } catch (error) {
-    //         return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
-    //     }
-    // }
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
 
-    // async getMaterialNaoValidado(req, res){
-    //     try {
-    //         if(!(req.tipoUsuario === 'docenteorientador')){
-    //             return res.status(403).json({
-    //                 error: 'Acesso negado'
-    //             })
-    //         }
+    async getNotValidatedMaterials(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
 
-    //         // Pegando instância do orientador
-    //         const docente = await DocenteOrientador.findByPk(req.loginUsuario)
+            const advisor = await DocenteOrientador.findByPk(req.loginUsuario)
 
-    //         const materiais = await docente.getMaterialAnalise({
-    //             through: {
-    //                 where: {
-    //                     analisadoPeloOrientador: true,
-    //                     validado: false
-    //                 }
-    //             }
-    //         })
+            const materials = await advisor.getMaterialsToAnalysis({
+                where: {
+                    data_avaliacao: {
+                        [Op.ne]: null
+                    },
+                    validado: false
+                }
+            })
 
-    //         return res.status(200).json(materiais)
+            return res.status(200).json(materials)
 
-    //     } catch (error) {
-    //         return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
-    //     }
-    // }
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
 
-    // async putAnalisarMaterial(req, res){
-    //     try {
-    //         if(!(req.tipoUsuario === 'docenteorientador')){
-    //             return res.status(403).json({
-    //                 error: 'Acesso negado'
-    //             })
-    //         }
+    async putEvaluateMaterial(req, res){
+        try {
+            if(!(req.tipoUsuario === 'docenteorientador')){
+                return res.status(403).json({
+                    error: 'Acesso negado'
+                })
+            }
 
-    //         // Pegando instância da validacao
-    //         const analise = await ValidacaoMaterial.findOne({
-    //             where: {
-    //                 nomeMaterial: req.params.nomeMaterial,
-    //                 loginOrientador: req.loginUsuario
-    //             }
-    //         })
+            const report = await RelatorioPratico.findOne({
+                where: {
+                    nome: req.params.material_name,
+                    orientador: req.loginUsuario
+                }
+            })
 
-    //         if(req.body.validado){
-    //             analise.validado = true
-    //         } else {
-    //             if(!req.body.feedback){
-    //                 return res.status(400).json({
-    //                     error: "É necessário um feedback para atividades não aprovadas"
-    //                 })
-    //             }
-    //             analise.feedback = req.body.feedback
-    //         }
-    //         analise.analisadoPeloOrientador = true
-    //         analise.visualizadoPeloCursistaAposAnalise = false
-    //         analise.dataVerificacao = new Date()
-    //         await analise.save()
+            if(req.body.validated){
+                report.validado = true
+            } else {
+                if(!req.body.feedback){
+                    return res.status(400).json({
+                        error: "É necessário um feedback para atividades não aprovadas"
+                    })
+                }
+                report.feedback = req.body.feedback
+            }
 
-    //         const notificacao = await Notificacao.create({
-    //             login: analise.loginCursista,
-    //             mensagem: `Material "${analise.nomeMaterial}" foi ${analise.validado ? "aprovado" : "recusado"} pelo seu orientador`,
-    //             tipo: 'feedback',
-    //             chaveReferenciado: analise.nomeMaterial,
-    //             modeloReferenciado: 'materialcursista',
-    //         })
+            report.visualizado_pelo_cursista = false
+            report.data_avaliacao = new Date()
+            await report.save()
 
-    //         return res.status(200).json([analise, notificacao])
+            const notification = await Notificacao.create({
+                login: report.login,
+                mensagem: `Material "${report.nome}" foi ${report.validado ? "aprovado" : "recusado"} pelo seu orientador`,
+                tipo: 'feedback',
+                chaveReferenciado: report.nome,
+                modeloReferenciado: 'materialcursista',
+            })
 
-    //     } catch (error) {
-    //         return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
-    //     }
-    // }
+            return res.status(200).json([report, notification])
+
+        } catch (error) {
+            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+        }
+    }
 }
 
 export default new coordenadorNacionalIdiomaController()

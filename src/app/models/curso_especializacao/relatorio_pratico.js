@@ -50,6 +50,10 @@ class RelatorioPratico extends Model {
                 visualizado_pelo_cursista: {
                     type: Sequelize.BOOLEAN,
                     defaultValue: false
+                },
+                validado: {
+                    type: Sequelize.BOOLEAN,
+                    defaultValue: false
                 }
             },
             {
@@ -79,7 +83,8 @@ class RelatorioPratico extends Model {
         })
 
         this.belongsTo(models.DocenteOrientador, {
-            foreignKey: 'login'
+            foreignKey: 'login',
+            as: 'appraiser'
         })
     }
 

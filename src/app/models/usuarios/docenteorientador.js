@@ -40,6 +40,11 @@ class DocenteOrientador extends Model {
             targetKey: 'login',
             as: 'orientado'
         })
+
+        this.hasMany(models.RelatorioPratico, {
+            foreignKey: 'orientador',
+            as: 'materialsToAnalysis'
+        })
     }
 }
 
