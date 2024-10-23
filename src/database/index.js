@@ -9,11 +9,10 @@ import CursistaCursaTurmaEspecializacao from '../app/models/curso_especializacao
 import DisciplinaEspecializacao from '../app/models/curso_especializacao/disciplinaespecializacao'
 import EditalCursoEspecializacao from '../app/models/curso_especializacao/editalcursoespecializacao'
 import InteresseNaDisciplina from '../app/models/curso_especializacao/InteresseNaDisciplina'
-import MaterialCursista from '../app/models/curso_especializacao/materialcursista'
+import RelatorioPratico from '../app/models/curso_especializacao/relatorio_pratico'
 import MinistranteMinistraTurmaEspecializacao from '../app/models/curso_especializacao/ministranteMinistraTurmaEspecializacao'
 import OrientadorOrientaCursista from '../app/models/curso_especializacao/OrientadorOrientaCursista'
 import TurmaDisciplinaEspecializacao from '../app/models/curso_especializacao/turmadisciplinaespecializacao'
-import ValidacaoMaterial from '../app/models/curso_especializacao/ValidacaoMaterial'
 
 // instituicao
 import InstituicaoEnsinoBrasileira from '../app/models/instituicao/instituicaoensinobrasileira'
@@ -59,10 +58,9 @@ const models = [
     EditalCursoEspecializacao,
     InteresseNaDisciplina,
     MinistranteMinistraTurmaEspecializacao,
-    MaterialCursista,
     OrientadorOrientaCursista,
+    RelatorioPratico,
     TurmaDisciplinaEspecializacao,
-    ValidacaoMaterial,
 
     // instituicao
     InstituicaoEnsino, 

@@ -10,12 +10,12 @@ router.get('/', docenteOrientadorController.get)
 
 router.post('/adicionar_orientado', AuthMiddleware, docenteOrientadorController.postOrientado)
 
-router.get('/materiais_dos_orientandos', AuthMiddleware, docenteOrientadorController.getMaterialDoOrientado)
+router.get('/materiais_dos_orientandos', AuthMiddleware, docenteOrientadorController.getMenteesMaterials)
 
-router.get('/materiais_nao_analisados', AuthMiddleware, docenteOrientadorController.getMaterialNaoAnalisado)
+router.get('/materiais_nao_analisados', AuthMiddleware, docenteOrientadorController.getNotEvaluatedMaterials)
 
-router.get('/materiais_nao_validados', AuthMiddleware, docenteOrientadorController.getMaterialNaoValidado)
+router.get('/materiais_nao_validados', AuthMiddleware, docenteOrientadorController.getNotValidatedMaterials)
 
-router.put('/analisar_material/:nomeMaterial', AuthMiddleware, docenteOrientadorController.putAnalisarMaterial)
+router.put('/analisar_material/:material_name', AuthMiddleware, docenteOrientadorController.putEvaluateMaterial)
 
 export default router

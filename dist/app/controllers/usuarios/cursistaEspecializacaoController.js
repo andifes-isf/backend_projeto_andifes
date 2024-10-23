@@ -4,12 +4,11 @@
 var _cursistacursaturmaespecializacao = require('../../models/curso_especializacao/cursistacursaturmaespecializacao'); var _cursistacursaturmaespecializacao2 = _interopRequireDefault(_cursistacursaturmaespecializacao);
 var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
 var _InteresseNaDisciplina = require('../../models/curso_especializacao/InteresseNaDisciplina'); var _InteresseNaDisciplina2 = _interopRequireDefault(_InteresseNaDisciplina);
-var _materialcursista = require('../../models/curso_especializacao/materialcursista'); var _materialcursista2 = _interopRequireDefault(_materialcursista);
+var _relatorio_pratico = require('../../models/curso_especializacao/relatorio_pratico'); var _relatorio_pratico2 = _interopRequireDefault(_relatorio_pratico);
 var _notificacao = require('../../models/utils/notificacao'); var _notificacao2 = _interopRequireDefault(_notificacao);
 var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 var _turmadisciplinaespecializacao = require('../../models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
-var _ValidacaoMaterial = require('../../models/curso_especializacao/ValidacaoMaterial'); var _ValidacaoMaterial2 = _interopRequireDefault(_ValidacaoMaterial);
 
 // Controllers
 var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
@@ -75,9 +74,9 @@ class CursistaEspecializacaoController {
 
     }
 
-    static async pegarEntidades(login){
-        const cursista = await _cursistaespecializacao2.default.findByPk(login)
-        const orientador = await cursista.getOrientador({
+    static async getEntities(login){
+        const specializationStudent = await _cursistaespecializacao2.default.findByPk(login)
+        const advisor = await specializationStudent.getOrientador({
             through: {
                 where: {
                     status: "ativo"
@@ -85,27 +84,28 @@ class CursistaEspecializacaoController {
             }
         })
 
-        console.log(orientador)
-
-        return [ cursista, orientador[0] ]
+        return [ specializationStudent, advisor[0] ]
 
         // como cursista.getOrientador() retorna um array, e nesse caso um array de um único elemento, estou retornando somente esse elemento
 
     }
 
-    static async criarMaterial(cursista, material){
-        const { idioma, nome, nivel, ementa, cargaHoraria } = material
+    static async createReport(specializationStudent, advisor, material){
+        const { idioma, name, level, description, workload, portfolio_link, category } = material
 
-        await cursista.createMaterial({
+        return await specializationStudent.createMaterial({
             idioma: idioma,
-            nome: nome,
-            nivel: nivel,
-            ementa: ementa,
-            cargaHoraria: cargaHoraria,
+            nome: name,
+            nivel: level,
+            descricao: description,
+            cargaHoraria: workload,
+            orientador: advisor.login,
+            link_portfolio: portfolio_link,
+            categoria: category,
         })
     }
     
-    async postMaterial(req, res) {
+    async postPracticalReport(req, res) {
         try {
             if (!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
                 return res.status(403).json({
@@ -113,39 +113,32 @@ class CursistaEspecializacaoController {
                 })
             }
 
-            const [cursista, orientador] = await        CursistaEspecializacaoController.pegarEntidades(req.loginUsuario)
+            const [specializationStudent, advisor] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
 
-            const materialExistente = await _materialcursista2.default.findOne({
+            const existinReport = await _relatorio_pratico2.default.findOne({
                 where: {
-                    nome: req.body.nome,
+                    nome: req.body.name,
                     login: req.loginUsuario
                 }
             })
 
-            if(materialExistente){
+            if(existinReport){
                 return res.status(409).json({
-                    msg: "Material ja existente"
+                    msg: "Relatorio ja existente"
                 })
             }
 
-            const material = await CursistaEspecializacaoController.criarMaterial(cursista, req.body)
-            
-            // Faz o histórico de validação            
-            await _ValidacaoMaterial2.default.create({
-                nomeMaterial: req.body.nome,
-                loginOrientador: orientador.login,
-                loginCursista: cursista.login
-            })
+            const report = await CursistaEspecializacaoController.createReport(specializationStudent, advisor, req.body)
             
             await _notificacao2.default.create({
-                login: orientador.login,
+                login: advisor.login,
                 mensagem: `${req.loginUsuario} postou um material novo`,
                 tipo: 'pendencia',
-                chaveReferenciado: req.body.nome,
+                chaveReferenciado: req.body.name,
                 modeloReferenciado: 'materialcursista'
             })
 
-            return res.status(201).json(await cursista.getMaterial())
+            return res.status(201).json(report)
 
         } catch (error) {
             console.log(error)
@@ -154,7 +147,7 @@ class CursistaEspecializacaoController {
 
     }
 
-    async getMeusMateriais(req, res){
+    async getMyMaterials(req, res){
         try {
             if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
                 return res.status(403).json({
@@ -162,17 +155,17 @@ class CursistaEspecializacaoController {
                 })
             }            
 
-            const cursista = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+            const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
 
-            const meusMateriais = await cursista.getValidacaoMaterial()
+            const myMaterials = await specializationStudent.getMaterial()
 
-            return res.status(200).json(meusMateriais)
+            return res.status(200).json(myMaterials)
         } catch (error) {
             return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
         }
     }
 
-    async getMaterialNaoVisualizado(req, res){
+    async getNotViewedMaterials(req, res){
         try {
             if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
                 return res.status(403).json({
@@ -180,18 +173,15 @@ class CursistaEspecializacaoController {
                 })
             }
 
-            // Pegando instância do cursista
-            const cursista = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+            const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
 
-            const materiais = await cursista.getValidacaoMaterial({
-                through: {
-                    where: {
-                        visualizadoPeloCursistaAposAnalise: false
-                    }
+            const materials = await specializationStudent.getMaterial({
+                where: {
+                    visualizado_pelo_cursista: false
                 }
             })
 
-            return res.status(200).json(materiais)
+            return res.status(200).json(materials)
 
         } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
@@ -206,28 +196,21 @@ class CursistaEspecializacaoController {
                 })
             }
 
-            // Pegando instância do cursista
-            const [cursista, orientador] = await CursistaEspecializacaoController.pegarEntidades(req.loginUsuario)
+            const [specializationStudent, advisor] = await CursistaEspecializacaoController.getEntities(req.loginUsuario)
 
-            // Pegando instância do material
-            const material = await cursista.getMaterial({
+            const report = await specializationStudent.getMaterial({
                 where: {
                     nome: req.params.nome
                 }
             })
 
-            // Pegando instância do relacionamento
-            const validacao = await _ValidacaoMaterial2.default.findOne({
-                where: {
-                    loginCursista: req.loginUsuario,
-                    nomeMaterial: req.params.nome,
-                    loginOrientador: orientador.login
-                }
-            })
-            validacao.visualizadoPeloCursistaAposAnalise = true
-            await validacao.save()
+            if(!(report[0].dataAvaliacao == null)) {
+                report[0].visualizado_pelo_cursista = true
+                await report[0].save()
+                console.log('entrou aqui')
+            }
 
-            return res.status(200).json(material)
+            return res.status(200).json(report)
 
         } catch (error) {
             return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)

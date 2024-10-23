@@ -1,10 +1,10 @@
-import { Router } from "express"
-import materialCursistaController from "../../controllers/curso_especializacao/materialCursistaController"
+// import { Router } from "express"
+// import materialCursistaController from "../../controllers/curso_especializacao/materialCursistaController"
 
-const router = new Router()
+// const router = new Router()
 
-router.get('/:login', materialCursistaController.getMateriaisDoCursista)
+// router.get('/:login', materialCursistaController.getMateriaisDoCursista)
 
-router.get('/', materialCursistaController.getMateriais)
+// router.get('/', materialCursistaController.getMateriais)
 
-export default router
+// export default router
