@@ -1,5 +1,8 @@
 import { Sequelize } from "sequelize";
 
+// Utils
+import notificationType from '../../utils/notificationType/notificationType'
+
 // Models
 import CursistaCursaTurmaEspecializacao from "../../models/curso_especializacao/cursistacursaturmaespecializacao";
 import CursistaEspecializacao from "../../models/usuarios/cursistaespecializacao";
@@ -133,7 +136,7 @@ class CursistaEspecializacaoController {
             await Notificacao.create({
                 login: advisor.login,
                 mensagem: `${req.loginUsuario} postou um material novo`,
-                tipo: 'pendencia',
+                tipo: notificationType.PENDENCIA,
                 chaveReferenciado: req.body.name,
                 modeloReferenciado: 'materialcursista'
             })

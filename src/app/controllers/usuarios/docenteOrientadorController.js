@@ -1,5 +1,8 @@
 import * as Yup from 'yup'
+
+// Utils
 import Op from 'sequelize'
+import notificationType from '../../utils/notificationType'
 
 // Models
 import CursistaEspecializacao from '../../models/usuarios/cursistaespecializacao'
@@ -205,7 +208,7 @@ class coordenadorNacionalIdiomaController {
             const notification = await Notificacao.create({
                 login: report.login,
                 mensagem: `Material "${report.nome}" foi ${report.validado ? "aprovado" : "recusado"} pelo seu orientador`,
-                tipo: 'feedback',
+                tipo: notificationType.FEEDBACK,
                 chaveReferenciado: report.nome,
                 modeloReferenciado: 'materialcursista',
             })
