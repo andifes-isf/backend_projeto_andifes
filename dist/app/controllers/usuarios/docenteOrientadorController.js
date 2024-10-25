@@ -1,5 +1,8 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
+
+// Utils
 var _sequelize = require('sequelize'); var _sequelize2 = _interopRequireDefault(_sequelize);
+var _notificationType = require('../../utils/notificationType/notificationType'); var _notificationType2 = _interopRequireDefault(_notificationType);
 
 // Models
 var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
@@ -205,7 +208,7 @@ class coordenadorNacionalIdiomaController {
             const notification = await _notificacao2.default.create({
                 login: report.login,
                 mensagem: `Material "${report.nome}" foi ${report.validado ? "aprovado" : "recusado"} pelo seu orientador`,
-                tipo: 'feedback',
+                tipo: _notificationType2.default.FEEDBACK,
                 chaveReferenciado: report.nome,
                 modeloReferenciado: 'materialcursista',
             })

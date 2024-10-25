@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 
 // Utils
 import Op from 'sequelize'
-import notificationType from '../../utils/notificationType'
+import notificationType from '../../utils/notificationType/notificationType'
 
 // Models
 import CursistaEspecializacao from '../../models/usuarios/cursistaespecializacao'
