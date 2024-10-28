@@ -9,33 +9,33 @@ import Curso from '../../models/ofertacoletiva/curso'
 // Classe auxiliar
 import nivelFactory from '../../utils/niveis/nivelFactory'
 import nivelProeficiencia from '../../utils/niveis/nivel'
+import UserTypes from '../../utils/userType/userTypes'
+import MESSAGES from '../../utils/messages/messages_pt'
 
 class AlunoIsFParticipaTurmaOCController {
 
     async post(req, res) {
 
         try {
-            if(!(req.tipoUsuario === 'alunoisf')){
+            if(!(req.tipoUsuario === UserTypes.ISF_STUDENT)){
                 return res.status(404).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
     
-            // Verifica se o aluno já está inserido na turma
-            const alunoNaTurma = await AlunoIsFParticipaTurmaOC.findOne({
+            const studentInClass = await AlunoIsFParticipaTurmaOC.findOne({
                 where: {
                     login: req.loginUsuario,
                     idTurma: req.body.idTurma
                 }
             })
 
-            if(alunoNaTurma){
+            if(studentInClass){
                 return res.status(409).json({
-                    msg: "Aluno ja cadastrado na turma"
+                    error: `${studentInClass.login} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
 
-            // Verificando se o aluno pode se inscrever na turma
             const turma = await TurmaOC.findOne({
                 where: {
                     idTurma: req.body.idTurma
@@ -44,7 +44,7 @@ class AlunoIsFParticipaTurmaOCController {
 
             if(!turma){
                 return res.status(422).json({
-                    msg: "Turma nao encontrada"
+                    error: `Turma ${req.body.idTurma} ` + MESSAGES.NOT_FOUND
                 })
             }   
             
@@ -69,11 +69,10 @@ class AlunoIsFParticipaTurmaOCController {
             const diferencaEntreNivel = nivelProeficiencia.distanciaEntreNiveis(proeficienciaAluno ? proeficienciaAluno.nivel : 'nenhum', curso.nivel)
             if(diferencaEntreNivel < -1) {
                 return res.status(422).json({
-                    msg: `${req.loginUsuario} possui proeficiencia muito abaixo da proeficiencia do curso (${curso.nivel})`
+                    error: MESSAGES.STUDENT_WITHOUT_PROEFICIENCY_LEVEL
                 })
             }
 
-            // Inserindo o aluno na turma
             const relacao = await AlunoIsFParticipaTurmaOC.create({
                 login: req.loginUsuario,
                 idTurma: req.body.idTurma,
@@ -84,7 +83,7 @@ class AlunoIsFParticipaTurmaOCController {
             return res.status(201).json(relacao)
 
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }    
     }
 }

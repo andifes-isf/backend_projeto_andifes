@@ -4,6 +4,7 @@ const MESSAGES = {
     INVALID_PASSWORD: 'Senha inválida',
     ALREADY_IN_SYSTEM: 'já está no sistema',
     NOT_FOUND: 'não encontrado',
+    STUDENT_WITHOUT_PROEFICIENCY_LEVEL: 'Nível de proeficiência não é o suficiente para este curso',
     
     // Tratamento de erros
     INTERNAL_SERVER_ERROR: 'Ocorreu um erro interno no servidor: ',

@@ -3,21 +3,22 @@ var _alunoestrangeiro = require('../../models/usuarios/alunoestrangeiro'); var _
 var _alunoIsFController = require('./alunoIsFController'); var _alunoIsFController2 = _interopRequireDefault(_alunoIsFController);
 var _alunoisf = require('../../models/usuarios/alunoisf'); var _alunoisf2 = _interopRequireDefault(_alunoisf);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 
 class alunoEstrangeiroController {
     async post(req, res) {
         try {
             await _alunoIsFController2.default.post(req, res, 0)
             
-            const alunoExistente = await _alunoestrangeiro2.default.findOne({
+            const existingStudent = await _alunoestrangeiro2.default.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(alunoExistente) {
+            if(existingStudent) {
                 return res.status(409).json({
-                    msg: "Aluno de Instituicao ja cadastrado"
+                    error: `${existingStudent.login} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
                 })
             }
     
@@ -32,7 +33,7 @@ class alunoEstrangeiroController {
             return res.status(201).json(aluno)
         } catch (error) {
             console.log(error)
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
 
     }
@@ -58,7 +59,7 @@ class alunoEstrangeiroController {
 
             return res.status(200).json(alunos)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 }

@@ -9,33 +9,33 @@ var _curso = require('../../models/ofertacoletiva/curso'); var _curso2 = _intero
 // Classe auxiliar
 var _nivelFactory = require('../../utils/niveis/nivelFactory'); var _nivelFactory2 = _interopRequireDefault(_nivelFactory);
 var _nivel = require('../../utils/niveis/nivel'); var _nivel2 = _interopRequireDefault(_nivel);
+var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
+var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 
 class AlunoIsFParticipaTurmaOCController {
 
     async post(req, res) {
 
         try {
-            if(!(req.tipoUsuario === 'alunoisf')){
+            if(!(req.tipoUsuario === _userTypes2.default.ISF_STUDENT)){
                 return res.status(404).json({
-                    error: 'Acesso negado'
+                    error: _messages_pt2.default.ACCESS_DENIED
                 })
             }
     
-            // Verifica se o aluno já está inserido na turma
-            const alunoNaTurma = await _alunoisfparticipaturmaoc2.default.findOne({
+            const studentInClass = await _alunoisfparticipaturmaoc2.default.findOne({
                 where: {
                     login: req.loginUsuario,
                     idTurma: req.body.idTurma
                 }
             })
 
-            if(alunoNaTurma){
+            if(studentInClass){
                 return res.status(409).json({
-                    msg: "Aluno ja cadastrado na turma"
+                    error: `${studentInClass.login} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
                 })
             }
 
-            // Verificando se o aluno pode se inscrever na turma
             const turma = await _turmaoc2.default.findOne({
                 where: {
                     idTurma: req.body.idTurma
@@ -44,7 +44,7 @@ class AlunoIsFParticipaTurmaOCController {
 
             if(!turma){
                 return res.status(422).json({
-                    msg: "Turma nao encontrada"
+                    error: `Turma ${req.body.idTurma} ` + _messages_pt2.default.NOT_FOUND
                 })
             }   
             
@@ -69,11 +69,10 @@ class AlunoIsFParticipaTurmaOCController {
             const diferencaEntreNivel = nivelProeficiencia.distanciaEntreNiveis(proeficienciaAluno ? proeficienciaAluno.nivel : 'nenhum', curso.nivel)
             if(diferencaEntreNivel < -1) {
                 return res.status(422).json({
-                    msg: `${req.loginUsuario} possui proeficiencia muito abaixo da proeficiencia do curso (${curso.nivel})`
+                    error: _messages_pt2.default.STUDENT_WITHOUT_PROEFICIENCY_LEVEL
                 })
             }
 
-            // Inserindo o aluno na turma
             const relacao = await _alunoisfparticipaturmaoc2.default.create({
                 login: req.loginUsuario,
                 idTurma: req.body.idTurma,
@@ -84,7 +83,7 @@ class AlunoIsFParticipaTurmaOCController {
             return res.status(201).json(relacao)
 
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }    
     }
 }

@@ -9,19 +9,23 @@ var _turmaoc = require('../../models/ofertacoletiva/turmaoc'); var _turmaoc2 = _
 // Controller
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
+// Utils
+var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
+
 
 class alunoIsFController {
     async post(req, res, deInstituicao) {
         try {
             await _usuarioController2.default.post(req, res, 'alunoisf')
             
-            const alunoExistente = await _alunoisf2.default.findOne({
+            const existingStudent = await _alunoisf2.default.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(alunoExistente) {
+            if(existingStudent) {
                 return 0
             }
     
@@ -30,13 +34,13 @@ class alunoIsFController {
                 deInstituicao: deInstituicao
             })
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)            
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)          
         }
     }
 
     async get(_, res){
         try {
-            const alunos = await _alunoisf2.default.findAll({
+            const students = await _alunoisf2.default.findAll({
                 include: [
                     {
                         model: _turmaoc2.default,
@@ -54,21 +58,21 @@ class alunoIsFController {
                 ]
             })
     
-            return res.status(200).json(alunos)
+            return res.status(200).json(students)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async postProeficiencia(req, res) {
         try {
-            if(!(req.tipoUsuario === 'alunoisf')){
+            if(!(req.tipoUsuario === _userTypes2.default.ISF_STUDENT)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: _messages_pt2.default.ACCESS_DENIED
                 })
             }
     
-            const proeficiaenciaExistente = await _proeficienciaalunoisf2.default.findOne({
+            const existingProeficiency = await _proeficienciaalunoisf2.default.findOne({
                 where: {
                     login: req.loginUsuario,
                     idioma: req.body.idioma,
@@ -76,30 +80,30 @@ class alunoIsFController {
                 }
             })
     
-            if(proeficiaenciaExistente) {
+            if(existingProeficiency) {
                 return res.status(422).json({
-                    msg: "Proeficiencia do aluno ja cadastrada"
+                    error: "Proeficiência " + _messages_pt2.default.ALREADY_IN_SYSTEM
                 })
             }
             
-            const proeficiaencia = await _proeficienciaalunoisf2.default.create({
+            const proeficiency = await _proeficienciaalunoisf2.default.create({
                 login: req.loginUsuario,
                 nivel: req.body.nivel,
                 idioma: req.body.idioma,
                 comprovante: req.body.comprovante
             })
     
-            return res.status(201).json(proeficiaencia)    
+            return res.status(201).json(proeficiency)    
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getMinhaProeficiencia(req, res) {
         try {
-            if(!(req.tipoUsuario === "alunoisf")){
+            if(!(req.tipoUsuario === _userTypes2.default.ISF_STUDENT)){
                 return res.status(403).json({
-                    error: "Acesso negado"
+                    error: _messages_pt2.default.ACCESS_DENIED
                 })
             }
 
@@ -111,7 +115,7 @@ class alunoIsFController {
 
             return res.status(200).json(proeficiaencias)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 }
