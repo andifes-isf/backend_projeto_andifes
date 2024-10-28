@@ -8,20 +8,24 @@ import Usuario from '../../models/usuarios/usuario'
 // Controllers
 import usuarioController from './usuarioController'
 
+// Utils
+import UserTypes from '../../utils/userType/userTypes'
+import MESSAGES from '../../utils/messages/messages_pt'
+
 class coordenadorNacionalController {
     async post(req, res) {
         try {            
-            await usuarioController.post(req, res, 'coordenadornacional')
+            await usuarioController.post(req, res, UserTypes.NATIONAL_COORDINATOR)
 
-            const coordenadorExistente = await CoordenadorNacional.findOne({
+            const existingCoordinator = await CoordenadorNacional.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(coordenadorExistente) {
+            if(existingCoordinator) {
                 return res.status(409).json({
-                    msg: 'Coordenador Nacional ja cadastrado'
+                    error: `${existingCoordinator.login} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
     
@@ -31,13 +35,13 @@ class coordenadorNacionalController {
 
             return res.status(201).json(coordenador)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)            
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)           
         }
     }
 
     async get(_, res){
         try {
-            const coordenadores = await CoordenadorNacional.findAll({
+            const coordinators = await CoordenadorNacional.findAll({
                 include: [
                     {
                         model: Usuario,
@@ -48,35 +52,32 @@ class coordenadorNacionalController {
                 ]
             })
     
-            return res.status(200).json(coordenadores)
+            return res.status(200).json(coordinators)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async postEdital(req, res){
         try {
-            // Verifica se o usuario logado é um coordenador nacional
-            if(!(req.tipoUsuario === 'coordenadornacional')){
+            if(!(req.tipoUsuario === UserTypes.NATIONAL_COORDINATOR)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            // Verifica se já existe
-            const editalExistente = await EditalCursoEspecializacao.findOne({
+            const existingEdital = await EditalCursoEspecializacao.findOne({
                 where: {
                     ano: req.body.ano
                 }
             })
 
-            if(editalExistente) {
+            if(existingEdital) {
                 return res.status(409).json({
-                    error: `Edital de ${req.body.ano} ja cadastrado`
+                    error: `Edital de ${req.body.ano} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
 
-            // Cria edital
             const edital = await EditalCursoEspecializacao.create({
                 ano: req.body.ano,
                 documento: req.body.documento,
@@ -87,7 +88,7 @@ class coordenadorNacionalController {
             return res.status(201).json(edital)
 
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 }

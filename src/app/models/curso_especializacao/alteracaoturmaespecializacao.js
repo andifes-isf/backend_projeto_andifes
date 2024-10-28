@@ -8,8 +8,8 @@ class AlteracaoTurmaEspecializacao extends Model {
                     type: Sequelize.STRING,
                     primaryKey: true
                   },
-                idTurma: {
-                    type: Sequelize.BIGINT,
+                nomeTurma: {
+                    type: Sequelize.STRING,
                     primaryKey: true
                 },
                 dataModificacao: {
