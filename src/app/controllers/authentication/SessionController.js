@@ -3,6 +3,7 @@ import * as Yup from 'yup'
 import bcrypt from 'bcrypt'
 import Usuario from '../../models/usuarios/usuario'
 import authConfig from '../../../config/auth'
+import MESSAGES from '../../utils/messages/messages_pt'
 
 class SessionController {
     async store(req, res) {
@@ -20,14 +21,14 @@ class SessionController {
 
         if(!usuario) {
             return res.status(401).json({
-                error: 'Usuario nao encontrado'
+                error: MESSAGES.USER_NOT_FOUNDED
             })
         }
 
         // Consistencia se a senha confere no Model
         if(!(await bcrypt.compare(senha, usuario.senha_encriptada))) {
             return res.status(401).json({
-                msg: 'Senha invalida'
+                msg: MESSAGES.INVALID_PASSWORD
             })
         }
 

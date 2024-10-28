@@ -3,6 +3,7 @@ var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
 var _bcrypt = require('bcrypt'); var _bcrypt2 = _interopRequireDefault(_bcrypt);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 var _auth = require('../../../config/auth'); var _auth2 = _interopRequireDefault(_auth);
+var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 
 class SessionController {
     async store(req, res) {
@@ -20,14 +21,14 @@ class SessionController {
 
         if(!usuario) {
             return res.status(401).json({
-                error: 'Usuario nao encontrado'
+                error: _messages_pt2.default.USER_NOT_FOUNDED
             })
         }
 
         // Consistencia se a senha confere no Model
         if(!(await _bcrypt2.default.compare(senha, usuario.senha_encriptada))) {
             return res.status(401).json({
-                msg: 'Senha invalida'
+                msg: _messages_pt2.default.INVALID_PASSWORD
             })
         }
 
