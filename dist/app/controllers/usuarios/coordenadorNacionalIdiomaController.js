@@ -3,41 +3,47 @@
 // Models
 var _coordenadornacionalIdioma = require('../../models/usuarios/coordenadornacionalIdioma'); var _coordenadornacionalIdioma2 = _interopRequireDefault(_coordenadornacionalIdioma);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
+var _turmadisciplinaespecializacao = require('../../models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
+var _alteracaoturmaespecializacao = require('../../models/curso_especializacao/alteracaoturmaespecializacao'); var _alteracaoturmaespecializacao2 = _interopRequireDefault(_alteracaoturmaespecializacao);
 
 // Controllers
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
+// Utils
+var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
+var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+
 class coordenadorNacionalIdiomaController {
     async post(req, res) {
         try {            
-            await _usuarioController2.default.post(req, res, 'coordenadornacionalidioma')
+            await _usuarioController2.default.post(req, res, _userTypes2.default.LANGUAGE_NATIONAL_COORDINATOR)
 
-            const coordenadorExistente = await _coordenadornacionalIdioma2.default.findOne({
+            const existingCoordinator = await _coordenadornacionalIdioma2.default.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(coordenadorExistente) {
+            if(existingCoordinator) {
                 return res.status(409).json({
-                    msg: 'Coordenador Nacional ja cadastrado'
+                    error: `${existingCoordinator.login} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
                 })
             }
     
-            const coordenador = await _coordenadornacionalIdioma2.default.create({
+            const coordinator = await _coordenadornacionalIdioma2.default.create({
                 login: req.body.login,
                 idioma: req.body.idioma
             })
 
-            return res.status(201).json(coordenador)
+            return res.status(201).json(coordinator)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)            
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)      
         }
     }
 
     async get(_, res){
         try {
-            const coordenadores = await _coordenadornacionalIdioma2.default.findAll({
+            const coordinators = await _coordenadornacionalIdioma2.default.findAll({
                 include: [
                     {
                         model: _usuario2.default,
@@ -48,21 +54,22 @@ class coordenadorNacionalIdiomaController {
                 ]
             })
     
-            return res.status(200).json(coordenadores)
+            return res.status(200).json(coordinators)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)  
         }
     }
 
-    // Método para verificar se a turma existe
-    static async verificaTurmaExistente(nome) {
-        return await TurmaDisciplinaEspecializacao.findOne({ where: { nome } });
+    static async verifyExistingClass(nome) {
+        return await _turmadisciplinaespecializacao2.default.findOne({ 
+            where: { nome } 
+        })
     }
 
-    static async verificaModificacaoRealizada(login, turma, novosDados){
+    static async isChanged(login, turma, novosDados){
         const { numeroVagas, numeroMinimoAlunos } = novosDados
 
-        const alteracao = await AlteracaoTurmaEspecializacao.findOne({
+        const alteracao = await _alteracaoturmaespecializacao2.default.findOne({
             order: [
                 ['dataModificacao', 'DESC']
             ]
@@ -72,11 +79,12 @@ class coordenadorNacionalIdiomaController {
         return 0
     }
     
-    static async criaAlteracao(login, turma, novosDados){
+    static async change(login, turma, novosDados){
         const { numeroVagas, numeroMinimoAlunos } = novosDados
 
-        const alteracao = await AlteracaoTurmaEspecializacao.create({
+        const alteracao = await _alteracaoturmaespecializacao2.default.create({
             login: login,
+            nomeTurma: turma.nome,
             valorAnteriorNumeroVagas: turma.numeroVagas,
             valorPosteriorNumeroVagas: numeroVagas === undefined ? turma.numeroVagas : numeroVagas,
             valorAnteriorNumeroMinimoAlunos: turma.numeroMinimoAlunos,
@@ -84,7 +92,7 @@ class coordenadorNacionalIdiomaController {
         })
     }
 
-    static async atualizaRegistroTurma(turma, novosDados){
+    static async updateClassRegister(turma, novosDados){
         const { numeroVagas, numeroMinimoAlunos } = novosDados
 
         turma.numeroVagas = numeroVagas === undefined ? turma.numeroVagas : numeroVagas
@@ -96,39 +104,37 @@ class coordenadorNacionalIdiomaController {
     async updateData(req, res){
         try {
             
-            // variáveis
             const { nome } = req.params
             const { loginUsuario, tipoUsuario } = req
             
-            if(!(req.tipoUsuario) === 'coordenadornacionalidioma'){
+            if(!(req.tipoUsuario) === _userTypes2.default.LANGUAGE_NATIONAL_COORDINATOR){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: _messages_pt2.default.ACCESS_DENIED
                 })
             }
             
-            // Buscando registro no banco de dados
-            const turma = await turmaDisciplinaEspecializacaoController.verificaTurmaExistente(nome);
-            if (!turma) {
-                return res.status(404).json({ error: 'Turma não encontrada' });
+            const existingClass = await coordenadorNacionalIdiomaController.verifyExistingClass(nome);
+            
+            if (!existingClass) {
+                return res.status(404).json({
+                    error: `${nome} ` + _messages_pt2.default.NOT_FOUND 
+                })
             }
             
-            // console.log(turma)
-            // Verificando se a alteração ja foi realizada
-            if(!(await turmaDisciplinaEspecializacaoController.verificaModificacaoRealizada(loginUsuario, turma, req.body))){
+            if(!(await coordenadorNacionalIdiomaController.isChanged(loginUsuario, existingClass, req.body))) {
                 return res.status(409).json({
-                    error: "Nenhuma alteracao foi realizada"
+                    error: _messages_pt2.default.ANY_CHANGE
                 })
             }
             
-            // Salvando o histórico da atualização            
-            await turmaDisciplinaEspecializacaoController.criaAlteracao(loginUsuario, turma, req.body)
+            console.log("TESTE")
+            await coordenadorNacionalIdiomaController.change(loginUsuario, existingClass, req.body)
             
-            // Atualizando o registro
-            await turmaDisciplinaEspecializacaoController.atualizaRegistroTurma(turma, req.body)
+            await coordenadorNacionalIdiomaController.updateClassRegister(existingClass, req.body)
             
-            return res.status(201).json(turma)
+            return res.status(201).json(existingClass)
         } catch (error) {
-            console.log(error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)  
         }
     }
 }

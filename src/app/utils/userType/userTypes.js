@@ -1,11 +1,11 @@
 const UserTypes = {
-    ISFSTUDENT: "alunoisf",
-    ISFTEACHER: "professorisf",
+    ISF_STUDENT: "alunoisf",
+    ISF_TEACHER: "professorisf",
     CURSISTA: "cursista",
-    NATIONALCOORDINATOR: "coordenadornacional",
-    LANGUAGENATIONALCOORDINATOR: "coordenadornacionalidioma",
-    ADVISORTEACHER: "docenteorientador",
-    MINISTERTEACHER: "docenteministrante"
+    NATIONAL_COORDINATOR: "coordenadornacional",
+    LANGUAGE_NATIONAL_COORDINATOR: "coordenadornacionalidioma",
+    ADVISOR_TEACHER: "docenteorientador",
+    MINISTER_TEACHER: "docenteministrante"
 }
 
 export default UserTypes

@@ -10,20 +10,23 @@ import Usuario from '../../models/usuarios/usuario'
 // Controller
 import alunoIsFController from './alunoIsFController'
 
+import MESSAGES from '../../utils/messages/messages_pt'
+import UserTypes from '../../utils/userType/userTypes'
+
 class alunoDeinstituicaoController {
     async post(req, res) {
         try {
             await alunoIsFController.post(req, res, 1)
             
-            const alunoExistente = await AlunoDeInstituicao.findOne({
+            const existingStudent = await AlunoDeInstituicao.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(alunoExistente) {
+            if(existingStudent) {
                 return res.status(409).json({
-                    msg: "Aluno de Instituicao ja cadastrado"
+                    error: `${existingStudent.login} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
     
@@ -36,14 +39,14 @@ class alunoDeinstituicaoController {
         
             return res.status(201).json(aluno)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
 
     }
 
     async get(_, res) {
         try {
-            const alunos = await AlunoDeInstituicao.findAll({
+            const students = await AlunoDeInstituicao.findAll({
                 include: [
                     {
                         model: AlunoIsF,
@@ -72,23 +75,21 @@ class alunoDeinstituicaoController {
                 ]
             })
 
-            return res.status(200).json(alunos)
+            return res.status(200).json(students)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
-
-    // Aqui tem que ser especificamente o alunoDeInstituicao, mas não sei a melhor forma de fazer isso
     async postInstituicao(req, res){
         try {
-            if(!(req.tipoUsuario === 'alunoisf')){
+            if(!(req.tipoUsuario === UserTypes.ISF_STUDENT)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            const comprovanteExistente = await ComprovanteAlunoInstituicao.findOne({
+            const existingRegistrantion = await ComprovanteAlunoInstituicao.findOne({
                 where: {
                     login: req.loginUsuario,
                     idInstituicao: req.body.idInstituicao,
@@ -96,9 +97,9 @@ class alunoDeinstituicaoController {
                 }
             })
     
-            if(comprovanteExistente) {
+            if(existingRegistrantion) {
                 return res.status(409).json({
-                    msg: "Comprovante de Aluno ja cadastrado"
+                    error: `${existingRegistrantion.comprovante} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
             
@@ -112,47 +113,47 @@ class alunoDeinstituicaoController {
     
             return res.status(201).json(comprovante)    
         } catch (error) {
-            return res.status(500).json(error.message)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getMinhasInstituicoes(req, res){
         try {
-            if(!(AlunoDeInstituicao.findOne({where: {login: req.loginUsuario}}))){
+            if(!(req.tipoUsuario === UserTypes.ISF_STUDENT)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            const comprovantes = await ComprovanteAlunoInstituicao.findAll({
+            const registrations = await ComprovanteAlunoInstituicao.findAll({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(comprovantes)
+            return res.status(200).json(registrations)
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getInstituicaoAtual(req, res){
         try {
-            if(!(AlunoDeInstituicao.findOne({where: {login: req.loginUsuario}}))){
+            if(!(req.tipoUsuario === UserTypes.ISF_STUDENT)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            const comprovante = await ComprovanteAlunoInstituicao.findOne({
+            const registration = await ComprovanteAlunoInstituicao.findOne({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(comprovante)
+            return res.status(200).json(registration)
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 }
