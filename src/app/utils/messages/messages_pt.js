@@ -8,7 +8,9 @@ const MESSAGES = {
     STUDENT_WITHOUT_PROEFICIENCY_LEVEL: 'Nível de proeficiência não é o suficiente para este curso',
     ANY_CHANGE: 'Nenhuma alteração realizada',
     NEW_MATERIAL: 'postou um material novo',
-    
+    ADVISOR_ADVISES_STUDENT: 'Esse orientador já orienta esse cursista',
+    FEEDBACK_IS_NEEDED: 'Feedback necessário para essa atividade',
+
     // Tratamento de erros
     INTERNAL_SERVER_ERROR: 'Ocorreu um erro interno no servidor: ',
 }

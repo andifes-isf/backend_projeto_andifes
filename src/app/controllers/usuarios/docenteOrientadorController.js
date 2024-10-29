@@ -15,36 +15,41 @@ import UsuarioController from './usuarioController'
 import OrientadorOrientaCursista from '../../models/curso_especializacao/OrientadorOrientaCursista'
 import RelatorioPratico from '../../models/curso_especializacao/relatorio_pratico'
 
+// Utils
+import UserTypes from '../../utils/userType/userTypes'
+import MESSAGES from '../../utils/messages/messages_pt'
+import ReferencedModel from '../../utils/referencedModel/referencedModel'
+
 class coordenadorNacionalIdiomaController {
     async post(req, res) {
         try {            
-            await UsuarioController.post(req, res, 'docenteorientador')
+            await UsuarioController.post(req, res, UserTypes.ADVISOR_TEACHER)
 
-            const docenteExistente = await DocenteOrientador.findOne({
+            const existingTeacher = await DocenteOrientador.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(docenteExistente) {
+            if(existingTeacher) {
                 return res.status(409).json({
-                    msg: 'Docente Orientador ja cadastrado'
+                    error: `${existingTeacher.login} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
     
-            const docente = await DocenteOrientador.create({
+            const teacher = await DocenteOrientador.create({
                 login: req.body.login
             })
 
-            return res.status(201).json(docente)
+            return res.status(201).json(teacher)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)            
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)            
         }
     }
 
     async get(_, res){
         try {
-            const docentes = await DocenteOrientador.findAll({
+            const teachers = await DocenteOrientador.findAll({
                 include: [
                     {
                         model: Usuario,
@@ -55,63 +60,61 @@ class coordenadorNacionalIdiomaController {
                 ]
             })
     
-            return res.status(200).json(docentes)
+            return res.status(200).json(teachers)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async postOrientado(req, res){
         try {
-            if(!(req.tipoUsuario === 'docenteorientador')){
+            if(!(req.tipoUsuario === UserTypes.ADVISOR_TEACHER)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            // Pegando as instâncias
-            const orientador = await DocenteOrientador.findByPk(req.loginUsuario)
-            const cursista = await CursistaEspecializacao.findByPk(req.body.loginCursista)
-            if(!cursista){
+            const advisor = await DocenteOrientador.findByPk(req.loginUsuario)
+            const specializationStudent = await CursistaEspecializacao.findByPk(req.body.loginCursista)
+            
+            if(!specializationStudent){
                 return res.status(422).json({
-                    error: "Cursista nao existente"
+                    error: `${req.body.loginCursista} ` + MESSAGES.NOT_FOUND
                 })
             }
 
-            // Verificando se esse orientado já orienta esse cursista
-            const existente = await orientador.hasOrientado(cursista)
-            if(existente){
+            const existing = await advisor.hasOrientado(specializationStudent)
+            if(existing){
                 return res.status(422).json({
-                    error: "Esse orientador ja orienta esse cursista"
+                    error: MESSAGES.ADVISOR_ADVISES_STUDENT
                 })
             }
 
-            // Relacionando os dois
-            await orientador.addOrientado(cursista)
+            await advisor.addOrientado(specializationStudent)
 
-            const relacao = await OrientadorOrientaCursista.findOne({
+            const relation = await OrientadorOrientaCursista.findOne({
                 where: {
                     loginCursista: cursista.login,
                     loginOrientador: orientador.login
                 }
             })
 
-            relacao.inicio = new Date().toISOString().split("T")[0]
-            await relacao.save()
+            relation.inicio = new Date().toISOString().split("T")[0]
+            await relation.save()
 
-            return res.status(200).json(relacao)
+            return res.status(200).json(relation)
 
         } catch (error) {
             console.log(error)
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getMenteesMaterials(req, res){
         try {
-            if(!(req.tipoUsuario === 'docenteorientador')){
+            if(!(req.tipoUsuario === UserTypes.ADVISOR_TEACHER)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
@@ -122,15 +125,15 @@ class coordenadorNacionalIdiomaController {
             return res.status(200).json(materials)
 
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getNotEvaluatedMaterials(req, res){
         try {
-            if(!(req.tipoUsuario === 'docenteorientador')){
+            if(!(req.tipoUsuario === UserTypes.ADVISOR_TEACHER)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
@@ -145,15 +148,15 @@ class coordenadorNacionalIdiomaController {
             return res.status(200).json(materials)
 
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getNotValidatedMaterials(req, res){
         try {
-            if(!(req.tipoUsuario === 'docenteorientador')){
+            if(!(req.tipoUsuario === UserTypes.ADVISOR_TEACHER)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
@@ -171,15 +174,15 @@ class coordenadorNacionalIdiomaController {
             return res.status(200).json(materials)
 
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async putEvaluateMaterial(req, res){
         try {
-            if(!(req.tipoUsuario === 'docenteorientador')){
+            if(!(req.tipoUsuario === UserTypes.ADVISOR_TEACHER)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
@@ -190,12 +193,16 @@ class coordenadorNacionalIdiomaController {
                 }
             })
 
+            if(report == null) {
+                throw new Error(`Relatório prático ` + MESSAGES.NOT_FOUND)
+            }
+
             if(req.body.validated){
                 report.validado = true
             } else {
                 if(!req.body.feedback){
                     return res.status(400).json({
-                        error: "É necessário um feedback para atividades não aprovadas"
+                        error: MESSAGES.FEEDBACK_IS_NEEDED
                     })
                 }
                 report.feedback = req.body.feedback
@@ -210,13 +217,13 @@ class coordenadorNacionalIdiomaController {
                 mensagem: `Material "${report.nome}" foi ${report.validado ? "aprovado" : "recusado"} pelo seu orientador`,
                 tipo: notificationType.FEEDBACK,
                 chaveReferenciado: report.nome,
-                modeloReferenciado: 'materialcursista',
+                modeloReferenciado: ReferencedModel.PRACTICAL_REPORT,
             })
 
             return res.status(200).json([report, notification])
 
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 }
