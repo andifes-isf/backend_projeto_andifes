@@ -30,7 +30,7 @@ class ProfessorIsFController {
                 cursista: cursista
             })
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            throw new Error(error)
         }
 
     }

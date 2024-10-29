@@ -1,6 +1,9 @@
 import * as Yup from 'yup'
 import Usuario from '../../models/usuarios/usuario'
 
+// Utils
+import EmailDomainFactory from '../../utils/emailDomain/emailDomainFactory'
+
 class usuarioController {
     async post(req, res, tipo) {
         // const schema = Yup.object().shape({
@@ -29,6 +32,10 @@ class usuarioController {
 
         if(usuarioExistente) {
             return 0
+        }
+
+        if(EmailDomainFactory.getDomain(req.body.dominio) == null) {
+            throw new Error("Domínio inserido não suportado. Por favor insira um email com um dos seguintes domínios: gmail.com, yahoo.com, outlook.com ou hotmail.com")
         }
 
         return await Usuario.create({

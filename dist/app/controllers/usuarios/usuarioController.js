@@ -1,6 +1,9 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
+// Utils
+var _emailDomainFactory = require('../../utils/emailDomain/emailDomainFactory'); var _emailDomainFactory2 = _interopRequireDefault(_emailDomainFactory);
+
 class usuarioController {
     async post(req, res, tipo) {
         // const schema = Yup.object().shape({
@@ -29,6 +32,10 @@ class usuarioController {
 
         if(usuarioExistente) {
             return 0
+        }
+
+        if(_emailDomainFactory2.default.getDomain(req.body.dominio) == null) {
+            throw new Error("Domínio inserido não suportado. Por favor insira um email com um dos seguintes domínios: gmail.com, yahoo.com, outlook.com ou hotmail.com")
         }
 
         return await _usuario2.default.create({
