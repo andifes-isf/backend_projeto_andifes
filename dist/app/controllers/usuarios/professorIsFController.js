@@ -6,19 +6,23 @@ var _instituicaoensino = require('../../models/instituicao/instituicaoensino'); 
 var _proeficienciaprofessorisf = require('../../models/proeficiencia/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
+// Utils
+var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
+var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+
 class ProfessorIsFController {
     async post(req, res, cursista) {
         try {
-            await _usuarioController2.default.post(req, res, cursista ? 'cursista' : 'professorisf')
+            await _usuarioController2.default.post(req, res, cursista ? _userTypes2.default.CURSISTA : _userTypes2.default.ISF_TEACHER)
     
-            const professorExistente = await _professorisf2.default.findOne({
+            const existingTeacher = await _professorisf2.default.findOne({
                 where: {
                     login: req.body.login,
                     inicio: req.body.inicio
                 }
             })
     
-            if(professorExistente) {
+            if(existingTeacher) {
                 return 0
             }
 
@@ -37,7 +41,7 @@ class ProfessorIsFController {
 
     async get(_, res){
         try {
-            const professores = await _professorisf2.default.findAll({
+            const teachers = await _professorisf2.default.findAll({
                 include: [
                     {
                         model: _usuario2.default,
@@ -50,10 +54,6 @@ class ProfessorIsFController {
                         }
                     },
                     {
-
-                        // Precisaria testar, mas acredito que se quisermos pegar todas as relações que um professor tem com alguma instituição de ensino, a gente teria que 
-                        // incluir primeiro o comprovanteprofessorinstituicao e através dele incluir as instituicoesensino
-
                         model: _instituicaoensino2.default,
                         attributes: {
                             exclude: ['idInstituicao']
@@ -66,23 +66,23 @@ class ProfessorIsFController {
                 logging: console.log
             })
             
-            return res.status(200).json(professores)
+            return res.status(200).json(teachers)
             
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
 
     }
 
     async postProeficiencia(req, res) {
         try {
-            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: _messages_pt2.default.ACCESS_DENIED
                 })
             }
     
-            const proeficiaenciaExistente = await _proeficienciaprofessorisf2.default.findOne({
+            const existingProeficiency = await _proeficienciaprofessorisf2.default.findOne({
                 where: {
                     login: req.loginUsuario,
                     idioma: req.body.idioma,
@@ -90,55 +90,54 @@ class ProfessorIsFController {
                 }
             })
     
-            if(proeficiaenciaExistente) {
+            if(existingProeficiency) {
                 return res.status(422).json({
-                    msg: "Proeficiencia do professor ja cadastrada"
+                    error: `${existingProeficiency.nivel} em ${existingProeficiency.idioma} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
                 })
             }
     
-            const proeficiencia = await _proeficienciaprofessorisf2.default.create({
+            const proeficiency = await _proeficienciaprofessorisf2.default.create({
                 login: req.loginUsuario,
                 nivel: req.body.nivel,
                 idioma: req.body.idioma,
                 comprovante: req.body.comprovante
             })
     
-            return res.status(201).json(proeficiencia)   
+            return res.status(201).json(proeficiency)   
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getMinhaProeficiencia(req, res) {
         try {
-            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
                 return res.status(403).json({
-                    error: "Acesso negado"
+                    error: _messages_pt2.default.ACCESS_DENIED
                 })
             }
 
-            const proeficiencias = await _proeficienciaprofessorisf2.default.findAll({
+            const proeficiencies = await _proeficienciaprofessorisf2.default.findAll({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(proeficiencias)
+            return res.status(200).json(proeficiencies)
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async postInstituicao(req, res) {  
         try {
-            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
-                console.log(req.tipoUsuario)
+            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: _messages_pt2.default.ACCESS_DENIED
                 })
             }
     
-            const comprovanteExistente = await _comprovanteprofessorinstituicao2.default.findOne({
+            const existingDocument = await _comprovanteprofessorinstituicao2.default.findOne({
                 where: {
                     login: req.loginUsuario,
                     idInstituicao: req.body.idInstituicao,
@@ -146,13 +145,13 @@ class ProfessorIsFController {
                 }
             })
     
-            if(comprovanteExistente) {
+            if(existingDocument) {
                 return res.status(409).json({
-                    msg: "Comprovante de Professor ja cadastrado"
+                    error: `${existingDocument.comprovante} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
                 })
             }
             
-            const comprovante = await _comprovanteprofessorinstituicao2.default.create({
+            const document = await _comprovanteprofessorinstituicao2.default.create({
                 idInstituicao: req.body.idInstituicao,
                 login: req.loginUsuario,
                 inicio: req.body.inicio,
@@ -160,49 +159,49 @@ class ProfessorIsFController {
                 comprovante: req.body.comprovante
             })
     
-            return res.status(201).json(comprovante)    
+            return res.status(201).json(document)    
         } catch (error) {
-            return res.status(500).json(error.message)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getMinhasInstituicoes(req, res){
         try {
-            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: _messages_pt2.default.ACCESS_DENIED
                 })
             }
 
-            const comprovantes = await _comprovanteprofessorinstituicao2.default.findAll({
+            const documents = await _comprovanteprofessorinstituicao2.default.findAll({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(comprovantes)
+            return res.status(200).json(documents)
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getInstituicaoAtual(req, res){
         try {
-            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: _messages_pt2.default.ACCESS_DENIED
                 })
             }
 
-            const comprovante = await _comprovanteprofessorinstituicao2.default.findOne({
+            const document = await _comprovanteprofessorinstituicao2.default.findOne({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(comprovante)
+            return res.status(200).json(document)
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 }

@@ -4,13 +4,15 @@ var _proeficienciaprofessorisf = require('../../models/proeficiencia/proeficienc
 var _turmaoc = require('../../models/ofertacoletiva/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
 var _curso = require('../../models/ofertacoletiva/curso'); var _curso2 = _interopRequireDefault(_curso);
 
-// Classe auxiliar
+// Utils
 var _nivelFactory = require('../../utils/niveis/nivelFactory'); var _nivelFactory2 = _interopRequireDefault(_nivelFactory);
+var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
         try {
-            if(!(req.tipoUsuario === 'professorisf')){
+            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
                 return res.status(403).json({
                     error: 'Acesso negado'
                 })

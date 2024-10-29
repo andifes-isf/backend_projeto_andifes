@@ -3,6 +3,7 @@ var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _intero
 
 // Utils
 var _emailDomainFactory = require('../../utils/emailDomain/emailDomainFactory'); var _emailDomainFactory2 = _interopRequireDefault(_emailDomainFactory);
+var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 
 class usuarioController {
     async post(req, res, tipo) {
@@ -35,7 +36,7 @@ class usuarioController {
         }
 
         if(_emailDomainFactory2.default.getDomain(req.body.dominio) == null) {
-            throw new Error("Domínio inserido não suportado. Por favor insira um email com um dos seguintes domínios: gmail.com, yahoo.com, outlook.com ou hotmail.com")
+            throw new Error(_messages_pt2.default.DOMAIN_NOT_SUPPORTED)
         }
 
         return await _usuario2.default.create({
@@ -57,80 +58,77 @@ class usuarioController {
 
     async get(_, res) {
         try {
-            const usuarios = await _usuario2.default.findAll()
+            const users = await _usuario2.default.findAll()
             
-            return res.status(200).json(usuarios)
+            return res.status(200).json(users)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getMyData(req, res) {
         try {
-            const usuario = await _usuario2.default.findOne({
+            const user = await _usuario2.default.findOne({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(usuario)
+            return res.status(200).json(user)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getNotificacoes(req, res){
         try {
-            // Pegando instância do usuario
-            const usuario = await _usuario2.default.findByPk(req.loginUsuario)
+            const user = await _usuario2.default.findByPk(req.loginUsuario)
 
-            const notificacoes = await usuario.getNotificacaos() 
+            const notifications = await user.getNotificacaos() 
 
-            return res.status(200).json(notificacoes)
+            return res.status(200).json(notifications)
 
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getNotificacoesNaoLidas(req, res){
         try {
-            // Pegando instância do usuario
-            const usuario = await _usuario2.default.findByPk(req.loginUsuario)
+            const user = await _usuario2.default.findByPk(req.loginUsuario)
 
-            const notificacoes = await usuario.getNotificacoesNaoLidas() 
+            const notifications = await user.getNotificacoesNaoLidas() 
 
-            return res.status(200).json(notificacoes)
+            return res.status(200).json(notifications)
 
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getNotificacao(req, res){
         try {
-            // Pegando instância do usuario
-            const usuario = await _usuario2.default.findByPk(req.loginUsuario)
+            const user = await _usuario2.default.findByPk(req.loginUsuario)
 
-            const notificacao = await usuario.getNotificacaos({
+            const notification = await user.getNotificacaos({
                 where: {
                     idNotificacao: req.params.id,
                     login: req.loginUsuario
                 }
             }) 
             
-            if(notificacao.length === 0){
+            if(notification.length === 0){
                 return res.status(404).json({
-                    error: "Pagina não encontrada"
+                    error: 'Notificação ' + _messages_pt2.default.NOT_FOUND
                 })
             }
-            notificacao[0].lida = 1
-            await notificacao[0].save()
+            notification[0].lida = 1
+            await notification[0].save()
 
-            return res.status(200).json(notificacao)
+            return res.status(200).json(notification)
 
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 }
