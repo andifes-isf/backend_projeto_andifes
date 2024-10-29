@@ -1,5 +1,8 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize');
 
+// Utils
+var _notificationType = require('../../utils/notificationType/notificationType'); var _notificationType2 = _interopRequireDefault(_notificationType);
+
 // Models
 var _cursistacursaturmaespecializacao = require('../../models/curso_especializacao/cursistacursaturmaespecializacao'); var _cursistacursaturmaespecializacao2 = _interopRequireDefault(_cursistacursaturmaespecializacao);
 var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
@@ -133,7 +136,7 @@ class CursistaEspecializacaoController {
             await _notificacao2.default.create({
                 login: advisor.login,
                 mensagem: `${req.loginUsuario} postou um material novo`,
-                tipo: 'pendencia',
+                tipo: _notificationType2.default.PENDENCIA,
                 chaveReferenciado: req.body.name,
                 modeloReferenciado: 'materialcursista'
             })
