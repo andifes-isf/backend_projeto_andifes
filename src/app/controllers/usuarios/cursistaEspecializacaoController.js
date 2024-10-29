@@ -1,8 +1,5 @@
 import { Sequelize } from "sequelize";
 
-// Utils
-import notificationType from '../../utils/notificationType/notificationType'
-
 // Models
 import CursistaCursaTurmaEspecializacao from "../../models/curso_especializacao/cursistacursaturmaespecializacao";
 import CursistaEspecializacao from "../../models/usuarios/cursistaespecializacao";
@@ -19,40 +16,44 @@ import DocenteOrientador from "../../models/usuarios/docenteorientador";
 import Notificacao from "../../models/utils/notificacao";
 
 // Utils
+import notificationType from '../../utils/notificationType/notificationType'
+import LanguageFactory from "../../utils/languages/languageFactory";
 import UserTypes from '../../utils/userType/userTypes'
+import MESSAGES from '../../utils/messages/messages_pt'
+import ReferencedModel from "../../utils/referencedModel/referencedModel";
 
 class CursistaEspecializacaoController {
     async post(req, res) {
         try {    
             await ProfessorIsFController.post(req, res, 1)
             
-            const cursistaExistente = await CursistaEspecializacao.findOne({
+            const existingSpecializationStudent = await CursistaEspecializacao.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(cursistaExistente) {
+            if(existingSpecializationStudent) {
                 return res.status(409).json({
-                    msg: "Cursista de especializacao ja cadastrado"
+                    error: `${existingSpecializationStudent.login} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
             
-            const cursista = await CursistaEspecializacao.create({
+            const specializationStudent = await CursistaEspecializacao.create({
                 login: req.body.login
             })
     
-            return res.status(201).json(cursista)
+            return res.status(201).json(specializationStudent)
         } catch (error) {
             console.log(error)
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
 
     }
 
     async get(_, res){
         try {
-            const cursistas = await CursistaEspecializacao.findAll({
+            const specializationStudents = await CursistaEspecializacao.findAll({
                 include: [
                     {
                         model: ProfessorIsF,
@@ -69,10 +70,10 @@ class CursistaEspecializacaoController {
                 ]
             })
 
-            return res.status(200).json(cursistas)
+            return res.status(200).json(specializationStudents)
         } catch (error) {
             console.log(error)
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
 
     }
@@ -93,8 +94,16 @@ class CursistaEspecializacaoController {
 
     }
 
+    static verifyLanguage(language) {
+        return LanguageFactory.getLanguage(language)
+    }
+
     static async createReport(specializationStudent, advisor, material){
         const { idioma, name, level, description, workload, portfolio_link, category } = material
+
+        if(CursistaEspecializacaoController.verifyLanguage(idioma) == null) {
+            throw new Error('Idioma selecionado não suportado pelo sistema')
+        }
 
         return await specializationStudent.createMaterial({
             idioma: idioma,
@@ -127,7 +136,7 @@ class CursistaEspecializacaoController {
 
             if(existinReport){
                 return res.status(409).json({
-                    msg: "Relatorio ja existente"
+                    error: `${existinReport.nome} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
 
@@ -135,17 +144,17 @@ class CursistaEspecializacaoController {
             
             await Notificacao.create({
                 login: advisor.login,
-                mensagem: `${req.loginUsuario} postou um material novo`,
+                mensagem: `${req.loginUsuario} ` + MESSAGES.NEW_MATERIAL,
                 tipo: notificationType.PENDENCIA,
                 chaveReferenciado: req.body.name,
-                modeloReferenciado: 'materialcursista'
+                modeloReferenciado: ReferencedModel.PRACTICAL_REPORT
             })
 
             return res.status(201).json(report)
 
         } catch (error) {
             console.log(error)
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
 
     }
@@ -154,7 +163,7 @@ class CursistaEspecializacaoController {
         try {
             if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }            
 
@@ -164,7 +173,7 @@ class CursistaEspecializacaoController {
 
             return res.status(200).json(myMaterials)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
@@ -172,7 +181,7 @@ class CursistaEspecializacaoController {
         try {
             if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
@@ -187,7 +196,7 @@ class CursistaEspecializacaoController {
             return res.status(200).json(materials)
 
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
@@ -195,7 +204,7 @@ class CursistaEspecializacaoController {
         try {
             if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
@@ -210,13 +219,12 @@ class CursistaEspecializacaoController {
             if(!(report[0].dataAvaliacao == null)) {
                 report[0].visualizado_pelo_cursista = true
                 await report[0].save()
-                console.log('entrou aqui')
             }
 
             return res.status(200).json(report)
 
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
@@ -224,32 +232,35 @@ class CursistaEspecializacaoController {
         try {
             if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
-            const turma = await TurmaDisciplinaEspecializacao.findOne({
+            const specializationStudent = await CursistaEspecializacao.findByPk(req.loginUsuario)
+            const classObject = await TurmaDisciplinaEspecializacao.findOne({
                 where: {
                     nome: req.params.nome_turma
                 }
             })
 
-            // Verifica se o cursista já está inserido na turma
-            if(await cursista.hasTurma(turma)){
-                return res.status(422).json('Cursista ja esta inscrito nessa turma')
+            if(classObject == null) {
+                return res.status(422).json({
+                    error: `${req.params.nome_turma} ` + MESSAGES.NOT_FOUND
+                })
             }
 
-            await cursista.addTurma(turma)
+            if(await specializationStudent.hasTurma(turma)){
+                return res.status(422).json({
+                    error: `${specializationStudent.login} ` + MESSAGES.ALREADY_IN_CLASS
+                })
+            }
 
-            return res.status(201).json(await cursista.getTurma())
+            await specializationStudent.addTurma(classObject)
+
+            return res.status(201).json(await specializationStudent.getTurma())
 
         } catch (error) {
-            if(error instanceof SequelizeUniqueConstraintError){
-                return res.status(422).json('Cursista ja esta inscrito nessa turma')
-            }
-
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
@@ -257,27 +268,26 @@ class CursistaEspecializacaoController {
         try {
             if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
+            const specializationStudent = await CursistaEspecializacao.findByPk(req.loginUsuario)
 
-            const minhasTurmas = await cursista.getTurma()
+            const myClasses = await specializationStudent.getTurma()
 
-            return res.status(200).json(minhasTurmas)
+            return res.status(200).json(myClasses)
         } catch (error) {
-            console.log(error)
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
-    static async inserirInteresse(disciplina, ano, cursista){
+    static async inserirInteresse(discipline, year, specializationStudent){
         try {
-            await cursista.createInteresse({
-                ano: ano,
-                nomeDisciplina: disciplina.nomeDisciplina,
-                preferencia: disciplina.preferencia
+            await specializationStudent.createInteresse({
+                ano: year,
+                nomeDisciplina: discipline.nomeDisciplina,
+                preferencia: discipline.preferencia
             })    
 
             return true
@@ -286,57 +296,63 @@ class CursistaEspecializacaoController {
         }
     }
 
-    static async inserirDisciplinas(dados, cursista){
-        const disciplinas = dados.interesse
-        const ano = dados.ano
+    static async inserirDisciplinas(data, specializationStudent){
+        const disciplines = data.interesse
+        const year = data.ano
 
-        const promessas = disciplinas.map(async (disciplina) => {
+        const promises = disciplines.map(async (discipline) => {
             try {
-                await CursistaEspecializacaoController.inserirInteresse(disciplina, ano, cursista)
+                await CursistaEspecializacaoController.inserirInteresse(discipline, year, specializationStudent)
                 
-                return { status: 'sucesso', disciplina: disciplina.nomeDisciplina}
+                return { status: 'sucesso', disciplina: discipline.nomeDisciplina}
             } catch (error) {
-                return { status: 'falho', disciplina: disciplina.nomeDisciplina, message: error.message}
+                return { status: 'falho', discipline: discipline.nomeDisciplina, message: error.message.split(":")[0]}
             }
         })
         
-        const resultados = await Promise.allSettled(promessas)
-        let sucesso = []
-        let falha = []
-        let erroInesperado = []
+        const results = await Promise.allSettled(promises)
+        let success = []
+        let fail = []
+        let unexpectedError = []
 
-        resultados.forEach((resultado) => {
-            if (resultado.status === 'fulfilled' && resultado.value.status === 'sucesso') {
-                sucesso.push(`Disciplina ${resultado.value.disciplina} inserida com sucesso.`);
-            } else if (resultado.status === 'fulfilled' && resultado.value.status === 'falho') {
-                falha.push(`Erro ao inserir disciplina ${resultado.value.disciplina}: ${resultado.value.message}`);
+        results.forEach((result) => {
+            if (result.status === 'fulfilled' && result.value.status === 'sucesso') {
+                success.push(`Disciplina ${result.value.discipline} inserida com sucesso.`);
+            } else if (result.status === 'fulfilled' && result.value.status === 'falho') {
+                if(result.value.message == 'SequelizeUniqueConstraintError') {
+                    fail.push(`Erro ao inserir ${result.value.discipline}: Dado duplicado`)
+                } else if(result.value.message == 'SequelizeForeignKeyConstraintError') {
+                    fail.push(`Erro ao inserir ${result.value.discipline}: Disciplina não encontrada`)
+                } else {
+                    fail.push(`Erro ao inserir ${result.value.discipline}: ${result.value.message}`)
+                }
             } else {
-                erroInesperado.push(`Erro inesperado:`, resultado.reason);
+                unexpectedError.push(`Erro inesperado:`, result.reason);
             }
         })
 
-        return { sucesso: sucesso, falha: falha, erroInesperado: erroInesperado}
+        return { success: success, fail: fail, unexpectedError: unexpectedError}
     }
 
     async postInteresseNaDisciplina(req, res){
         try {
-            if(!(req.tipoUsuario === 'cursista')){
+            if(!(req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            const cursista = await CursistaEspecializacao.findByPk(req.loginUsuario)
-            const dados = req.body
+            const specializationStudent = await CursistaEspecializacao.findByPk(req.loginUsuario)
+            const data = req.body
 
-            const status = await CursistaEspecializacaoController.inserirDisciplinas(dados, cursista)
+            const status = await CursistaEspecializacaoController.inserirDisciplinas(data, specializationStudent)
             
-            if(status.falha.length === 0 && status.erroInesperado.length === 0) {
-                return res.status(201).json(status.sucesso)
+            if(status.fail.length === 0 && status.unexpectedError.length === 0) {
+                return res.status(201).json(status.success)
             }
             return res.status(207).json(status)
         } catch (error) {
-            return res.status(500)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 }
