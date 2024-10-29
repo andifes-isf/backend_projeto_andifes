@@ -8,36 +8,40 @@ import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/tur
 // Controllers
 import UsuarioController from './usuarioController'
 
+// Utils
+import UserTypes from '../../utils/userType/userTypes'
+import MESSAGES from '../../utils/messages/messages_pt'
+
 class coordenadorNacionalIdiomaController {
     async post(req, res) {
         try {            
-            await UsuarioController.post(req, res, 'docenteministrante')
+            await UsuarioController.post(req, res, UserTypes.MINISTER_TEACHER)
 
-            const docenteExistente = await DocenteMinistrante.findOne({
+            const existingTeacher = await DocenteMinistrante.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(docenteExistente) {
+            if(existingTeacher) {
                 return res.status(409).json({
-                    msg: 'Docente Ministrante ja cadastrado'
+                    error: `${existingTeacher.login} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
     
-            const docente = await DocenteMinistrante.create({
+            const teacher = await DocenteMinistrante.create({
                 login: req.body.login
             })
 
-            return res.status(201).json(docente)
+            return res.status(201).json(teacher)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)            
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)            
         }
     }
 
     async get(_, res){
         try {
-            const docentes = await DocenteMinistrante.findAll({
+            const teachers = await DocenteMinistrante.findAll({
                 include: [
                     {
                         model: Usuario,
@@ -59,27 +63,27 @@ class coordenadorNacionalIdiomaController {
                 ]
             })
 
-            return res.status(200).json(docentes)
+            return res.status(200).json(teachers)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getMinhasTurmas(req, res){
         try {
-            if(!(req.tipoUsuario === 'docenteministrante')){
+            if(!(req.tipoUsuario === UserTypes.MINISTER_TEACHER)){
                 return res.status(403).json({
-                    error: "Acesso negado"
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            const docente = await DocenteMinistrante.findByPk(req.loginUsuario)
+            const teacher = await DocenteMinistrante.findByPk(req.loginUsuario)
 
-            const turmas = await docente.getTurmaDisciplinaEspecializacaos()
+            const classes = await teacher.getTurmaDisciplinaEspecializacaos()
 
-            return res.status(200).json(turmas)
+            return res.status(200).json(classes)
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 }

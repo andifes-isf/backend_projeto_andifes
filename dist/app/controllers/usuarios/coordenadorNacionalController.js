@@ -8,20 +8,24 @@ var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _intero
 // Controllers
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
+// Utils
+var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
+var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+
 class coordenadorNacionalController {
     async post(req, res) {
         try {            
-            await _usuarioController2.default.post(req, res, 'coordenadornacional')
+            await _usuarioController2.default.post(req, res, _userTypes2.default.NATIONAL_COORDINATOR)
 
-            const coordenadorExistente = await _coordenadornacional2.default.findOne({
+            const existingCoordinator = await _coordenadornacional2.default.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(coordenadorExistente) {
+            if(existingCoordinator) {
                 return res.status(409).json({
-                    msg: 'Coordenador Nacional ja cadastrado'
+                    error: `${existingCoordinator.login} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
                 })
             }
     
@@ -31,13 +35,13 @@ class coordenadorNacionalController {
 
             return res.status(201).json(coordenador)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)            
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)           
         }
     }
 
     async get(_, res){
         try {
-            const coordenadores = await _coordenadornacional2.default.findAll({
+            const coordinators = await _coordenadornacional2.default.findAll({
                 include: [
                     {
                         model: _usuario2.default,
@@ -48,35 +52,32 @@ class coordenadorNacionalController {
                 ]
             })
     
-            return res.status(200).json(coordenadores)
+            return res.status(200).json(coordinators)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async postEdital(req, res){
         try {
-            // Verifica se o usuario logado é um coordenador nacional
-            if(!(req.tipoUsuario === 'coordenadornacional')){
+            if(!(req.tipoUsuario === _userTypes2.default.NATIONAL_COORDINATOR)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: _messages_pt2.default.ACCESS_DENIED
                 })
             }
 
-            // Verifica se já existe
-            const editalExistente = await _editalcursoespecializacao2.default.findOne({
+            const existingEdital = await _editalcursoespecializacao2.default.findOne({
                 where: {
                     ano: req.body.ano
                 }
             })
 
-            if(editalExistente) {
+            if(existingEdital) {
                 return res.status(409).json({
-                    error: `Edital de ${req.body.ano} ja cadastrado`
+                    error: `Edital de ${req.body.ano} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
                 })
             }
 
-            // Cria edital
             const edital = await _editalcursoespecializacao2.default.create({
                 ano: req.body.ano,
                 documento: req.body.documento,
@@ -87,7 +88,7 @@ class coordenadorNacionalController {
             return res.status(201).json(edital)
 
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
 }

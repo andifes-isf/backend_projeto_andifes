@@ -4,13 +4,15 @@ import ProeficienciaProfessorIsf from '../../models/proeficiencia/proeficienciap
 import TurmaOC from '../../models/ofertacoletiva/turmaoc'
 import Curso from '../../models/ofertacoletiva/curso'
 
-// Classe auxiliar
+// Utils
 import nivelFactory from '../../utils/niveis/nivelFactory'
+import MESSAGES from "../../utils/messages/messages_pt"
+import UserTypes from '../../utils/userType/userTypes'
 
 class ProfessorIsFMinistraTurmaOCController {
     async post(req, res) {
         try {
-            if(!(req.tipoUsuario === 'professorisf')){
+            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
                     error: 'Acesso negado'
                 })

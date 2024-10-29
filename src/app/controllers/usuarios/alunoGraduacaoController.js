@@ -3,38 +3,39 @@ import AlunoGraduacao from "../../models/usuarios/alunograduacao";
 import Usuario from "../../models/usuarios/usuario";
 import ProfessorIsF from "../../models/usuarios/professorisf";
 import ProfessorIsFController from './professorIsFController'
+import MESSAGES from "../../utils/messages/messages_pt";
 
 class AlunoGraduacaoController {
     async post(req, res) {
         try {    
             await ProfessorIsFController.post(req, res, 0)
             
-            const alunoGraduacaoExistente = await AlunoGraduacao.findOne({
+            const existingGraduationStudent = await AlunoGraduacao.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(alunoGraduacaoExistente) {
+            if(existingGraduationStudent) {
                 return res.status(409).json({
-                    msg: "Cursista de especializacao ja cadastrado"
+                    error: `${existingGraduationStudent.login} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
             
-            const cursista = await AlunoGraduacao.create({
+            const graduationStudent = await AlunoGraduacao.create({
                 login: req.body.login
             })
     
-            return res.status(201).json(cursista)
+            return res.status(201).json(graduationStudent)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
 
     }
 
     async get(_, res){
         try {
-            const alunos = await AlunoGraduacao.findAll({
+            const graduationStudents = await AlunoGraduacao.findAll({
                 include: [
                     {
                         model: ProfessorIsF,
@@ -52,11 +53,11 @@ class AlunoGraduacaoController {
                 logging: console.log
             })
             
-            return res.status(200).json(alunos)
+            return res.status(200).json(graduationStudents)
             
         } catch (error) {
             console.log(error)
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
 
     }

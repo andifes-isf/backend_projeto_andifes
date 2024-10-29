@@ -1,28 +1,60 @@
 import * as Yup from 'yup'
+import MESSAGES from '../../utils/messages/messages_pt'
+
+import DisciplinaEspecializacao from '../../models/curso_especializacao/disciplinaespecializacao'
 import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
 import AlteracaoTurmaEspecializacao from '../../models/curso_especializacao/alteracaoturmaespecializacao'
 import MinistranteMinistraTurmaEspecializacao from '../../models/curso_especializacao/ministranteMinistraTurmaEspecializacao'
+import DocenteMinistrante from '../../models/usuarios/docenteministrante'
 
 class turmaDisciplinaEspecializacaoController {
     
+    static async validateData(className, disciplineName, ministerLogin) {
+        const existingClass = await TurmaDisciplinaEspecializacao.findOne({
+            where: {
+                nome: className,
+            }
+        })
+
+        const existingDiscipline = await DisciplinaEspecializacao.findOne({
+            where: {
+                nome: disciplineName
+            }
+        })
+
+        const existingMinister = await DocenteMinistrante.findOne({
+            where: {
+                login: ministerLogin
+            }
+        })
+
+        return [
+            existingClass !== null,
+            existingDiscipline == null,
+            existingMinister == null
+        ]
+    }
+
     async post(req, res){
         try {
 
-            const nomeTurma = req.body.edital + "_" + req.body.disciplina + "_" + req.body.mesOferta
+            const className = req.body.edital + "_" + req.body.disciplina + "_" + req.body.mesOferta
 
-            const turmaExistente = await TurmaDisciplinaEspecializacao.findOne({
-                where: {
-                    nome: nomeTurma,
-                }
-            })
+            const [existingClass, existingDiscipline, existingMinister] = await turmaDisciplinaEspecializacaoController.validateData(className, req.body.disciplina, req.body.loginMinistrante)
             
-            if(turmaExistente) {
+            if(existingClass) {
                 return res.status(409).json({
-                    msg: "Turma ja cadastrada no sistema"
+                    error: `${className} ` + MESSAGES.ALREADY_IN_SYSTEM
+                })
+            }
+
+            if(existingDiscipline || existingMinister) {
+                return res.status(409).json({
+                    error: `${req.body.loginMinistrante} ou ${req.body.disciplina} ` + MESSAGES.NOT_FOUND
                 })
             }
             
-            const turma = await TurmaDisciplinaEspecializacao.create({
+            const classObject = await TurmaDisciplinaEspecializacao.create({
                 disciplina: req.body.disciplina,
                 edital: req.body.edital,
                 nome: req.body.nome,
@@ -35,37 +67,38 @@ class turmaDisciplinaEspecializacaoController {
                 numeroReprovados: req.body.numeroReprovados,
             })	
 
-            const relacaoComTurma = await MinistranteMinistraTurmaEspecializacao.create({
-                nomeTurma: turma.nome,
+            const MinistersClass = await MinistranteMinistraTurmaEspecializacao.create({
+                nomeTurma: classObject.nome,
                 login: req.body.loginMinistrante
             })
             
             return res.status(201).json({
-                turma: turma,
+                turma: classObject,
                 relacao: relacaoComTurma
             })
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            console.log(error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
     
     async get(_, res) {
         try {
-            const turmas = await TurmaDisciplinaEspecializacao.findAll({
+            const classes = await TurmaDisciplinaEspecializacao.findAll({
                 order: [
                     ['edital', 'DESC']
                 ]
             })
             
-            return res.status(200).json(turmas)
+            return res.status(200).json(classes)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getPorAno(req, res) {
         try {
-            const turmas = await TurmaDisciplinaEspecializacao.findAll({
+            const classes = await TurmaDisciplinaEspecializacao.findAll({
                 where: {
                     edital: req.params.ano
                 },
@@ -74,9 +107,9 @@ class turmaDisciplinaEspecializacaoController {
                 ]
             })
             
-            return res.status(200).json(turmas)
+            return res.status(200).json(classes)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 }

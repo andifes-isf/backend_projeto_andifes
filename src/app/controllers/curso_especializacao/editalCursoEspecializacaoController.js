@@ -8,7 +8,7 @@ class editalEspecializacaoController {
 
             return res.status(200).json(editais)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
@@ -22,7 +22,7 @@ class editalEspecializacaoController {
 
             return res.status(200).json(editais)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 }

@@ -6,19 +6,23 @@ import InstituicaoEnsino from "../../models/instituicao/instituicaoensino";
 import proeficienciaProfessorIsF from '../../models/proeficiencia/proeficienciaprofessorisf'
 import usuarioController from "./usuarioController";
 
+// Utils
+import UserTypes from '../../utils/userType/userTypes'
+import MESSAGES from '../../utils/messages/messages_pt'
+
 class ProfessorIsFController {
     async post(req, res, cursista) {
         try {
-            await usuarioController.post(req, res, cursista ? 'cursista' : 'professorisf')
+            await usuarioController.post(req, res, cursista ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
     
-            const professorExistente = await ProfessorIsF.findOne({
+            const existingTeacher = await ProfessorIsF.findOne({
                 where: {
                     login: req.body.login,
                     inicio: req.body.inicio
                 }
             })
     
-            if(professorExistente) {
+            if(existingTeacher) {
                 return 0
             }
 
@@ -30,14 +34,14 @@ class ProfessorIsFController {
                 cursista: cursista
             })
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            throw new Error(error)
         }
 
     }
 
     async get(_, res){
         try {
-            const professores = await ProfessorIsF.findAll({
+            const teachers = await ProfessorIsF.findAll({
                 include: [
                     {
                         model: Usuario,
@@ -50,10 +54,6 @@ class ProfessorIsFController {
                         }
                     },
                     {
-
-                        // Precisaria testar, mas acredito que se quisermos pegar todas as relações que um professor tem com alguma instituição de ensino, a gente teria que 
-                        // incluir primeiro o comprovanteprofessorinstituicao e através dele incluir as instituicoesensino
-
                         model: InstituicaoEnsino,
                         attributes: {
                             exclude: ['idInstituicao']
@@ -66,23 +66,23 @@ class ProfessorIsFController {
                 logging: console.log
             })
             
-            return res.status(200).json(professores)
+            return res.status(200).json(teachers)
             
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
 
     }
 
     async postProeficiencia(req, res) {
         try {
-            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
     
-            const proeficiaenciaExistente = await proeficienciaProfessorIsF.findOne({
+            const existingProeficiency = await proeficienciaProfessorIsF.findOne({
                 where: {
                     login: req.loginUsuario,
                     idioma: req.body.idioma,
@@ -90,55 +90,54 @@ class ProfessorIsFController {
                 }
             })
     
-            if(proeficiaenciaExistente) {
+            if(existingProeficiency) {
                 return res.status(422).json({
-                    msg: "Proeficiencia do professor ja cadastrada"
+                    error: `${existingProeficiency.nivel} em ${existingProeficiency.idioma} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
     
-            const proeficiencia = await proeficienciaProfessorIsF.create({
+            const proeficiency = await proeficienciaProfessorIsF.create({
                 login: req.loginUsuario,
                 nivel: req.body.nivel,
                 idioma: req.body.idioma,
                 comprovante: req.body.comprovante
             })
     
-            return res.status(201).json(proeficiencia)   
+            return res.status(201).json(proeficiency)   
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getMinhaProeficiencia(req, res) {
         try {
-            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: "Acesso negado"
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            const proeficiencias = await proeficienciaProfessorIsF.findAll({
+            const proeficiencies = await proeficienciaProfessorIsF.findAll({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(proeficiencias)
+            return res.status(200).json(proeficiencies)
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async postInstituicao(req, res) {  
         try {
-            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
-                console.log(req.tipoUsuario)
+            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
     
-            const comprovanteExistente = await ComprovanteProfessorInstituicao.findOne({
+            const existingDocument = await ComprovanteProfessorInstituicao.findOne({
                 where: {
                     login: req.loginUsuario,
                     idInstituicao: req.body.idInstituicao,
@@ -146,13 +145,13 @@ class ProfessorIsFController {
                 }
             })
     
-            if(comprovanteExistente) {
+            if(existingDocument) {
                 return res.status(409).json({
-                    msg: "Comprovante de Professor ja cadastrado"
+                    error: `${existingDocument.comprovante} ` + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
             
-            const comprovante = await ComprovanteProfessorInstituicao.create({
+            const document = await ComprovanteProfessorInstituicao.create({
                 idInstituicao: req.body.idInstituicao,
                 login: req.loginUsuario,
                 inicio: req.body.inicio,
@@ -160,49 +159,49 @@ class ProfessorIsFController {
                 comprovante: req.body.comprovante
             })
     
-            return res.status(201).json(comprovante)    
+            return res.status(201).json(document)    
         } catch (error) {
-            return res.status(500).json(error.message)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getMinhasInstituicoes(req, res){
         try {
-            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            const comprovantes = await ComprovanteProfessorInstituicao.findAll({
+            const documents = await ComprovanteProfessorInstituicao.findAll({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(comprovantes)
+            return res.status(200).json(documents)
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getInstituicaoAtual(req, res){
         try {
-            if(!(req.tipoUsuario === "professorisf" || req.tipoUsuario === "cursista")){
+            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
-            const comprovante = await ComprovanteProfessorInstituicao.findOne({
+            const document = await ComprovanteProfessorInstituicao.findOne({
                 where: {
                     login: req.loginUsuario
                 }
             })
 
-            return res.status(200).json(comprovante)
+            return res.status(200).json(document)
         } catch (error) {
-            return res.status(500).json('Ocorreu um erro interno no servidor: ' + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 }

@@ -9,19 +9,23 @@ import TurmaOC from '../../models/ofertacoletiva/turmaoc'
 // Controller
 import usuarioController from './usuarioController'
 
+// Utils
+import MESSAGES from '../../utils/messages/messages_pt'
+import UserTypes from '../../utils/userType/userTypes'
+
 
 class alunoIsFController {
     async post(req, res, deInstituicao) {
         try {
             await usuarioController.post(req, res, 'alunoisf')
             
-            const alunoExistente = await AlunoIsF.findOne({
+            const existingStudent = await AlunoIsF.findOne({
                 where: {
                     login: req.body.login
                 }
             })
     
-            if(alunoExistente) {
+            if(existingStudent) {
                 return 0
             }
     
@@ -30,13 +34,13 @@ class alunoIsFController {
                 deInstituicao: deInstituicao
             })
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)            
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)          
         }
     }
 
     async get(_, res){
         try {
-            const alunos = await AlunoIsF.findAll({
+            const students = await AlunoIsF.findAll({
                 include: [
                     {
                         model: TurmaOC,
@@ -54,21 +58,21 @@ class alunoIsFController {
                 ]
             })
     
-            return res.status(200).json(alunos)
+            return res.status(200).json(students)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async postProeficiencia(req, res) {
         try {
-            if(!(req.tipoUsuario === 'alunoisf')){
+            if(!(req.tipoUsuario === UserTypes.ISF_STUDENT)){
                 return res.status(403).json({
-                    error: 'Acesso negado'
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
     
-            const proeficiaenciaExistente = await proeficienciaAlunoIsF.findOne({
+            const existingProeficiency = await proeficienciaAlunoIsF.findOne({
                 where: {
                     login: req.loginUsuario,
                     idioma: req.body.idioma,
@@ -76,30 +80,30 @@ class alunoIsFController {
                 }
             })
     
-            if(proeficiaenciaExistente) {
+            if(existingProeficiency) {
                 return res.status(422).json({
-                    msg: "Proeficiencia do aluno ja cadastrada"
+                    error: "Proeficiência " + MESSAGES.ALREADY_IN_SYSTEM
                 })
             }
             
-            const proeficiaencia = await proeficienciaAlunoIsF.create({
+            const proeficiency = await proeficienciaAlunoIsF.create({
                 login: req.loginUsuario,
                 nivel: req.body.nivel,
                 idioma: req.body.idioma,
                 comprovante: req.body.comprovante
             })
     
-            return res.status(201).json(proeficiaencia)    
+            return res.status(201).json(proeficiency)    
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 
     async getMinhaProeficiencia(req, res) {
         try {
-            if(!(req.tipoUsuario === "alunoisf")){
+            if(!(req.tipoUsuario === UserTypes.ISF_STUDENT)){
                 return res.status(403).json({
-                    error: "Acesso negado"
+                    error: MESSAGES.ACCESS_DENIED
                 })
             }
 
@@ -111,7 +115,7 @@ class alunoIsFController {
 
             return res.status(200).json(proeficiaencias)
         } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
 }
