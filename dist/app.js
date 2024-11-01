@@ -1,22 +1,31 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _express = require('express'); var _express2 = _interopRequireDefault(_express);
-var _routes = require('./app/routes/routes'); var _routes2 = _interopRequireDefault(_routes);
-require('./database');
+"use strict";// import express from 'express'
+// import routes from './app/routes/routes'
+// import './database'
 
-class App {
-    constructor() {
-        this.server = _express2.default.call(void 0, )
-        this.middleware()
-        this.routes()
-    }
+// const app = express()
 
-    middleware() {
-        this.server.use(_express2.default.json())
-    }
+// app.use(express.json())
+// app.use(routes)
 
-    routes() {
-        this.server.use(_routes2.default)
-    }
-}
+// app.listen(8800, () => {
+//     console.log('Teste')
+// })
+
+// class App {
+//     constructor() {
+//         this.server = express()
+//         this.middleware()
+//         this.routes()
+//     }
+
+//     middleware() {
+//         this.server.use(express.json())
+//     }
+
+//     routes() {
+//         this.server.use(routes)
+//     }
+// }
 
 
-exports. default = new App().server
+// export default new App().server

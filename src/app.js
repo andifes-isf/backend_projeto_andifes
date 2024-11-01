@@ -1,22 +1,31 @@
-import express from 'express'
-import routes from './app/routes/routes'
-import './database'
+// import express from 'express'
+// import routes from './app/routes/routes'
+// import './database'
 
-class App {
-    constructor() {
-        this.server = express()
-        this.middleware()
-        this.routes()
-    }
+// const app = express()
 
-    middleware() {
-        this.server.use(express.json())
-    }
+// app.use(express.json())
+// app.use(routes)
 
-    routes() {
-        this.server.use(routes)
-    }
-}
+// app.listen(8800, () => {
+//     console.log('Teste')
+// })
+
+// class App {
+//     constructor() {
+//         this.server = express()
+//         this.middleware()
+//         this.routes()
+//     }
+
+//     middleware() {
+//         this.server.use(express.json())
+//     }
+
+//     routes() {
+//         this.server.use(routes)
+//     }
+// }
 
 
-export default new App().server
+// export default new App().server
