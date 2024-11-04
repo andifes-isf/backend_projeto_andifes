@@ -9,6 +9,7 @@ import 'express-async-errors'
 import express, { request, response, nextFunction} from 'express'
 import routes from './app/routes/routes'
 import './database'
+import CustomError from './app/utils/CustomError/CustomError'
 
 const app = express()
 
@@ -16,10 +17,12 @@ app.use(express.json())
 app.use(routes)
 
 app.use((error, req, res, next) => {
-    return res.status(error.status).json(error.message)
+    if(error instanceof CustomError) {
+        return res.status(error.status).json(error.message)
+    }
+
+    return res.status(500).json(error.message)
 })
 
 
-app.listen(8800, () => {
-    console.log('Teste')
-})
+app.listen(8800)

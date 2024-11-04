@@ -1,29 +1,26 @@
 import * as Yup from 'yup'
+
+// Models
 import EditalCursoEspecializacao from '../../models/curso_especializacao/editalcursoespecializacao'
+
+// Utils
+import httpStatus from '../../utils/httpStatus/httpStatus'
 
 class editalEspecializacaoController {
     async get(_, res){
-        try {
-            const editais = await EditalCursoEspecializacao.findAll()
+        const notices = await EditalCursoEspecializacao.findAll()
 
-            return res.status(200).json(editais)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
+        return res.status(httpStatus.CREATED).json(notices)
     }
 
     async getEditalPorCoordenador(req, res){
-        try {
-            const editais = await EditalCursoEspecializacao.findAll({
-                where: {
-                    criador: req.params.criador
-                }
-            })
+        const notices = await EditalCursoEspecializacao.findAll({
+            where: {
+                criador: req.params.criador
+            }
+        })
 
-            return res.status(200).json(editais)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
+        return res.status(httpStatus.SUCCESS).json(notices)
     }
 }
 

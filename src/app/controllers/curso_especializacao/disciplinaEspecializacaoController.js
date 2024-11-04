@@ -1,38 +1,39 @@
 import * as Yup from 'yup'
+
+// Models
 import DisciplinaEspecializacao from '../../models/curso_especializacao/disciplinaespecializacao'
+
+// Utils
 import MESSAGES from '../../utils/messages/messages_pt'
 import CustomError from '../../utils/CustomError/CustomError'
+import httpStatus from '../../utils/httpStatus/httpStatus'
 
 class disciplinaEspecializacaoController {
     async post(req, res){
-        const disciplinaExistente = await DisciplinaEspecializacao.findOne({
+        const existingDiscipline = await DisciplinaEspecializacao.findOne({
             where: {
                 nome: req.body.nome
             }
         })
 
-        if(disciplinaExistente) {
-            throw new CustomError(`${disciplinaExistente.nome} ` + MESSAGES.ALREADY_IN_SYSTEM, 409)
+        if(existingDiscipline) {
+            throw new CustomError(`${existingDiscipline.nome} ` + MESSAGES.ALREADY_IN_SYSTEM, httpStatus.BAD_REQUEST)
         }
 
-        const disciplina = await DisciplinaEspecializacao.create({
+        const discipline = await DisciplinaEspecializacao.create({
             nome: req.body.nome,
             descricao: req.body.descricao,
             eixoTematico: req.body.eixoTematico,
             categoria: req.body.categoria
         })	
 
-        return res.status(201).json(disciplina)
+        return res.status(httpStatus.CREATED).json(discipline)
     }
 
     async get(_, res) {
-        try {
-            const disciplinas = await DisciplinaEspecializacao.findAll()
+        const disciplines = await DisciplinaEspecializacao.findAll()
 
-            return res.status(200).json(disciplinas)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
+        return res.status(httpStatus.SUCCESS).json(disciplines)
     }
 }
 
