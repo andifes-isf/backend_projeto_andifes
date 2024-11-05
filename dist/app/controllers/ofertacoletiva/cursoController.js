@@ -1,50 +1,50 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _curso = require('../../models/ofertacoletiva/curso'); var _curso2 = _interopRequireDefault(_curso);
+"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }// Models
+var _curso = require('../../models/ofertacoletiva/curso'); var _curso2 = _interopRequireDefault(_curso);
+
+// Utils
+var _httpStatus = require('../../utils/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
+var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _CustomError = require('../../utils/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
 
 class cursoController {
-    async post(req, res) {
-        try {
-            const cursoExistente = await _curso2.default.findOne({
-                where: {
-                    nome: req.body.nome
-                }
-            })
-    
-            if(cursoExistente) {
-                return res.status(409).json({
-                    msg: "Curso ja cadastrado"
-                })
+    static async verifyExistingCourse(name) {
+        const existingCourse = await _curso2.default.findOne({
+            where: {
+                nome: name
             }
-    
-            const curso = await _curso2.default.create({
-                nome: req.body.nome,
-                idioma: req.body.idioma,
-                categoria: req.body.categoria,
-                nivel: req.body.nivel,
-                cargaHoraria: req.body.cargaHoraria,
-                ementa: req.body.ementa,
-                justificativa: req.body.justificativa,
-                objetivos: req.body.objetivos,
-                metodologia: req.body.metodologia,
-                descricaoAvaliacao: req.body.descricaoAvaliacao,
-                aspectosFuncionais: req.body.aspectosFuncionais,
-                aspectosInterculturais: req.body.aspectosInterculturais,
-                aspectosLinguisticos: req.body.aspectosLinguisticos
-            })
-    
-            return res.status(201).json(curso)
-        } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        })
+
+        if(existingCourse) {
+            throw new (0, _CustomError2.default)(name + _messages_pt2.default.ALREADY_IN_SYSTEM, _httpStatus2.default.BAD_REQUEST)
         }
     }
 
-    async get(_, res) {
-        try {
-            const cursos = await _curso2.default.findAll()
+    async post(req, res) {
+        await cursoController.verifyExistingCourse(req.body.nome)
 
-            return res.status(200).json(cursos)
-        } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)    
-        }
+        const course = await _curso2.default.create({
+            nome: req.body.nome,
+            idioma: req.body.idioma,
+            categoria: req.body.categoria,
+            nivel: req.body.nivel,
+            cargaHoraria: req.body.cargaHoraria,
+            ementa: req.body.ementa,
+            justificativa: req.body.justificativa,
+            objetivos: req.body.objetivos,
+            metodologia: req.body.metodologia,
+            descricaoAvaliacao: req.body.descricaoAvaliacao,
+            aspectosFuncionais: req.body.aspectosFuncionais,
+            aspectosInterculturais: req.body.aspectosInterculturais,
+            aspectosLinguisticos: req.body.aspectosLinguisticos
+        })
+
+        return res.status(_httpStatus2.default.CREATED).json(course)
+    }
+
+    async get(_, res) {
+        const courses = await _curso2.default.findAll()
+
+        return res.status(_httpStatus2.default.SUCCESS).json(courses)
     }
 }
 

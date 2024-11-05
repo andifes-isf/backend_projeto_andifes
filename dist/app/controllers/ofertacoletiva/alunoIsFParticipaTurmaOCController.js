@@ -6,85 +6,92 @@ var _proeficienciaalunoisf = require('../../models/proeficiencia/proeficienciaal
 var _turmaoc = require('../../models/ofertacoletiva/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
 var _curso = require('../../models/ofertacoletiva/curso'); var _curso2 = _interopRequireDefault(_curso);
 
-// Classe auxiliar
+// Utils
 var _nivelFactory = require('../../utils/niveis/nivelFactory'); var _nivelFactory2 = _interopRequireDefault(_nivelFactory);
 var _nivel = require('../../utils/niveis/nivel'); var _nivel2 = _interopRequireDefault(_nivel);
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
 var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _httpStatus = require('../../utils/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
+var _CustomError = require('../../utils/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
+
 
 class AlunoIsFParticipaTurmaOCController {
 
+    static async verifyExistingClass(classId) {
+        const classObject = await _turmaoc2.default.findOne({
+            where: {
+                idTurma: classId
+            }
+        })
+
+        if(!classObject){
+            throw new (0, _CustomError2.default)(`Turma ${classId} ` + _messages_pt2.default.NOT_FOUND, _httpStatus2.default.BAD_REQUEST)
+        }   
+
+        return classObject
+    }
+
+    static async verifyStudentInClass(login, classId) {
+        const studentInClass = await _alunoisfparticipaturmaoc2.default.findOne({
+            where: {
+                login: login,
+                idTurma: classId
+            }
+        })
+
+        if(studentInClass){
+            throw new (0, _CustomError2.default)(`${login} ` + _messages_pt2.default.ALREADY_IN_CLASS, _httpStatus2.default.BAD_REQUEST)
+        }
+    }
+
+    static async verifyStudentProeficiency(course, proeficiency) {
+        const proeficiencyLevel = _nivelFactory2.default.createInstanceOfNivel(course.idioma)
+
+        const levelDifference = proeficiencyLevel.distanciaEntreNiveis(proeficiency ? proeficiency.nivel : 'nenhum', course.nivel)
+        
+        if(levelDifference < -1) {
+            throw new (0, _CustomError2.default)(_messages_pt2.default.USER_WITHOUT_PROEFICIENCY_LEVEL, _httpStatus2.default.BAD_REQUEST)
+        }
+    }
+ 
     async post(req, res) {
+        if(!(req.tipoUsuario === _userTypes2.default.ISF_STUDENT)){
+            throw new (0, _CustomError2.default)(_messages_pt2.default.ACCESS_DENIED, _httpStatus2.default.NOT_FOUND)
+        }
 
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.ISF_STUDENT)){
-                return res.status(404).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
+
+
+        const classObject = await AlunoIsFParticipaTurmaOCController.verifyExistingClass(req.params.idTurma)
+        
+        await AlunoIsFParticipaTurmaOCController.verifyStudentInClass(req.loginUsuario, req.params.idTurma)
+        
+        const course = await _curso2.default.findOne({
+            where: {
+                idCurso: classObject.idCurso
             }
-    
-            const studentInClass = await _alunoisfparticipaturmaoc2.default.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idTurma: req.body.idTurma
-                }
-            })
-
-            if(studentInClass){
-                return res.status(409).json({
-                    error: `${studentInClass.login} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
-                })
-            }
-
-            const turma = await _turmaoc2.default.findOne({
-                where: {
-                    idTurma: req.body.idTurma
-                }
-            })
-
-            if(!turma){
-                return res.status(422).json({
-                    error: `Turma ${req.body.idTurma} ` + _messages_pt2.default.NOT_FOUND
-                })
-            }   
-            
-            const curso = await _curso2.default.findOne({
-                where: {
-                    idCurso: turma.idCurso
-                }
-            })
-            
-            const proeficienciaAluno = await _proeficienciaalunoisf2.default.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idioma: curso.idioma
-                },
-                order: [
-                    ['nivel', 'DESC']
-                ],
-                limit: 1
-            })
-
-            const nivelProeficiencia = _nivelFactory2.default.createInstanceOfNivel(curso.idioma)
-            const diferencaEntreNivel = nivelProeficiencia.distanciaEntreNiveis(proeficienciaAluno ? proeficienciaAluno.nivel : 'nenhum', curso.nivel)
-            if(diferencaEntreNivel < -1) {
-                return res.status(422).json({
-                    error: _messages_pt2.default.STUDENT_WITHOUT_PROEFICIENCY_LEVEL
-                })
-            }
-
-            const relacao = await _alunoisfparticipaturmaoc2.default.create({
+        })
+        
+        const studentProeficiency = await _proeficienciaalunoisf2.default.findOne({
+            where: {
                 login: req.loginUsuario,
-                idTurma: req.body.idTurma,
-                inicio: req.body.inicio,
-                termino: req.body.termino
-            })
+                idioma: course.idioma
+            },
+            order: [
+                ['nivel', 'DESC']
+            ],
+            limit: 1
+        })
 
-            return res.status(201).json(relacao)
+        await AlunoIsFParticipaTurmaOCController.verifyStudentProeficiency(course, studentProeficiency)
 
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }    
+        const relation = await _alunoisfparticipaturmaoc2.default.create({
+            login: req.loginUsuario,
+            idTurma: req.params.idTurma,
+            inicio: req.body.inicio,
+            termino: req.body.termino
+        })
+
+        return res.status(_httpStatus2.default.CREATED).json(relation)
     }
 }
 
