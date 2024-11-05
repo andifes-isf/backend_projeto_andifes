@@ -49,6 +49,14 @@ class InstituicaoEnsino extends _sequelize.Model {
             sourceKey: 'idInstituicao',
             timestamps: false
         })
+
+        this.hasOne(models.InstituicaoEnsinoBrasileira, {
+            foreignKey: 'idInstituicao'
+        })
+
+        this.hasOne(models.InstituicaoEnsinoEstrangeira, {
+            foreignKey: 'idInstituicao'
+        })
     }
 
 }

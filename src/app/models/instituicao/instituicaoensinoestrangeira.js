@@ -36,6 +36,13 @@ class InstituicaoEnsinoEstrangeira extends Model {
         return this
 
     }
+
+    static associate(models) {
+        this.belongsTo(models.InstituicaoEnsino, {
+            foreignKey: 'idInstituicao'
+        })
+    }
+
 }
 
 export default InstituicaoEnsinoEstrangeira

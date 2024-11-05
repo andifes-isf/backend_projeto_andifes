@@ -11,6 +11,7 @@ const MESSAGES = {
     ADVISOR_ADVISES_STUDENT: 'Esse orientador já orienta esse cursista',
     FEEDBACK_IS_NEEDED: 'Feedback necessário para essa atividade',
     DOMAIN_NOT_SUPPORTED: 'Domínio inserido não suportado. Por favor insira um email com um dos seguintes domínios: gmail.com, yahoo.com, outlook.com ou hotmail.com',
+    EXISTING_ACRONYM: 'já está cadastrada para outra universidade',
 
     // Tratamento de erros
     INTERNAL_SERVER_ERROR: 'Ocorreu um erro interno no servidor: ',
