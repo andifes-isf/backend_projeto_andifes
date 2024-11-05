@@ -1,6 +1,10 @@
 import * as Yup from 'yup'
+
+// Models
 import InstituicaoEnsinoEstrangeira from '../../models/instituicao/instituicaoensinoestrangeira'
 import instituicaoEnsinoController from './instituicaoEnsinoController'
+
+// Utils
 import MESSAGES from '../../utils/messages/messages_pt'
 import httpStatus from '../../utils/httpStatus/httpStatus'
 import CustomError from '../../utils/CustomError/CustomError'
