@@ -48,14 +48,15 @@ class AlunoDeInstituicao extends _sequelize.Model {
     static associate(models) {
         this.belongsTo(models.AlunoIsF, {
             foreignKey: 'login'
-        });
+        })
 
         this.belongsToMany(models.InstituicaoEnsino, {
             through: 'comprovantealunoinstituicao',
             foreignKey: 'login',
             sourceKey: 'login',
-            timestamps: false
-        });
+            timestamps: false,
+            as: "institution"
+        })
     }
 
 }
