@@ -1,14 +1,15 @@
 import jwt from 'jsonwebtoken'
 import { promisify } from 'util'
 import authConfig from '../../config/auth'
+import MESSAGES from '../utils/messages/messages_pt'
+import CustomError from '../utils/CustomError/CustomError'
+import httpStatus from '../utils/httpStatus/httpStatus'
 
 export default async(req, res, next) => {
     const { authorization } = req.headers
 
     if(!authorization) {
-        return res.status(401).json({
-            error: 'E preciso estar logado para acessar essa pagina'
-        })
+        throw new CustomError(MESSAGES.LOGIN_NECESSARY, httpStatus.UNAUTHORIZED)
     }
 
     // Desestruturação de vetor (Bearer, ...token)
@@ -20,9 +21,7 @@ export default async(req, res, next) => {
         req.loginUsuario = login
         req.tipoUsuario = tipo
     } catch (error) {
-        return res.status(401).json({
-            error: 'Token de acesso inválido'
-        })
+        throw new CustomError(MESSAGES.ACCESS_DENIED, httpStatus.UNAUTHORIZED)
     }
 
     return next()

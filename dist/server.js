@@ -18,7 +18,10 @@ app.use(_routes2.default)
 
 app.use((error, req, res, next) => {
     if(error instanceof _CustomError2.default) {
-        return res.status(error.status).json(error.message)
+        return res.status(error.status).json({
+            error: error.message,
+            stack: error.stack
+        })
     }
 
     console.log(error)

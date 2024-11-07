@@ -1,5 +1,5 @@
 const MESSAGES = {
-    ACCESS_DENIED: 'Acesso negado',
+    ACCESS_DENIED: 'Você não possui permissão para acessar essa página',
     USER_NOT_FOUNDED: 'Usuário não encontrado',
     INVALID_PASSWORD: 'Senha inválida',
     ALREADY_IN_SYSTEM: ' já está no sistema',
@@ -13,6 +13,7 @@ const MESSAGES = {
     FEEDBACK_IS_NEEDED: 'Feedback necessário para essa atividade',
     DOMAIN_NOT_SUPPORTED: 'Domínio inserido não suportado. Por favor insira um email com um dos seguintes domínios: gmail.com, yahoo.com, outlook.com ou hotmail.com',
     EXISTING_ACRONYM: ' já está cadastrada para outra universidade',
+    LOGIN_NECESSARY: 'É preciso estar logado para acessar essa página',
 
     // Tratamento de erros
     INTERNAL_SERVER_ERROR: 'Ocorreu um erro interno no servidor: ',
