@@ -14,6 +14,6 @@ router.get('/notificacoes', AuthMiddleware, usuarioController.getNotificacoes)
 
 router.get('/notificacoes_nao_lidas', AuthMiddleware, usuarioController.getNotificacoesNaoLidas)
 
-router.get('/notificacao/:id', AuthMiddleware, usuarioController.getNotificacao)
+router.get('/notificacao/:idNotificacao', AuthMiddleware, usuarioController.getNotificacao)
 
 export default router

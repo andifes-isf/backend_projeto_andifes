@@ -19,8 +19,8 @@ var _docenteorientador = require('../../models/usuarios/docenteorientador'); var
 var _notificationType = require('../../utils/notificationType/notificationType'); var _notificationType2 = _interopRequireDefault(_notificationType);
 var _languageFactory = require('../../utils/languages/languageFactory'); var _languageFactory2 = _interopRequireDefault(_languageFactory);
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
-var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 var _referencedModel = require('../../utils/referencedModel/referencedModel'); var _referencedModel2 = _interopRequireDefault(_referencedModel);
+var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
@@ -35,7 +35,7 @@ class CursistaEspecializacaoController {
 
         if(existingSpecializationStudent) {
             return new (0, _CustomError2.default)(
-                `${existingSpecializationStudent.login}` + _messages_pt2.default.ALREADY_IN_SYSTEM,
+                _messages_pt2.default.EXISTING_SPECIALIZATION_STUDENT + login,
                 _ErrorType2.default.DUPLICATE_ENTRY
             )
         }
@@ -53,6 +53,8 @@ class CursistaEspecializacaoController {
         }
         
         const { error, teacher } = await _professorIsFController2.default.post(req, res, 1)
+
+        console.log(teacher)
 
         if (error) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({

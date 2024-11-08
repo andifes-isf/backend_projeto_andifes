@@ -25,7 +25,7 @@ class ProfessorIsFController {
 
         if(existingTeacher) {
             return new (0, _CustomError2.default)(
-                `${login}` + _messages_pt2.default.ALREADY_IN_SYSTEM,
+                _messages_pt2.default.EXISTING_ISF_TEACHER + login,
                 _ErrorType2.default.DUPLICATE_ENTRY
             )
         }
@@ -34,8 +34,6 @@ class ProfessorIsFController {
     async post(req, res, cursista) {
         const existingTeacher = await ProfessorIsFController.verifyExistingTeacher(req.body.login, req.body.inicio)
         
-        console.log(existingTeacher)
-
         if (existingTeacher) {
             return {
                 error: true,
@@ -43,7 +41,15 @@ class ProfessorIsFController {
             }
         }
         
-        await _usuarioController2.default.post(req, res, cursista ? _userTypes2.default.CURSISTA : _userTypes2.default.ISF_TEACHER)
+        const { error, user} = await _usuarioController2.default.post(req, res, cursista ? _userTypes2.default.CURSISTA : _userTypes2.default.ISF_TEACHER)
+
+        console.log(user)
+        if (error) {
+            return {
+                error: true,
+                teacher: user
+            }
+        }
 
         const teacher = await _professorisf2.default.create({
             login: req.body.login,
@@ -60,38 +66,35 @@ class ProfessorIsFController {
     }
 
     async get(_, res){
-        try {
-            const teachers = await _professorisf2.default.findAll({
-                include: [
-                    {
-                        model: _usuario2.default,
-                        attributes: {
-                            include: [
-                                [_sequelize.Sequelize.fn('CONCAT_WS', ' ', _sequelize.Sequelize.col('Usuario.nome'), _sequelize.Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
-                                [_sequelize.Sequelize.fn('CONCAT_WS', '@', _sequelize.Sequelize.col('nomeEmail'), _sequelize.Sequelize.col('dominio')), 'email']
-                            ],
-                            exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
-                        }
-                    },
-                    {
-                        model: _instituicaoensino2.default,
-                        attributes: {
-                            exclude: ['idInstituicao']
-                        },
-                        through: {
-                            attributes: ['inicio']
-                        },
+        const teachers = await _professorisf2.default.findAll({
+            include: [
+                {
+                    model: _usuario2.default,
+                    attributes: {
+                        include: [
+                            [_sequelize.Sequelize.fn('CONCAT_WS', ' ', _sequelize.Sequelize.col('Usuario.nome'), _sequelize.Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
+                            [_sequelize.Sequelize.fn('CONCAT_WS', '@', _sequelize.Sequelize.col('nomeEmail'), _sequelize.Sequelize.col('dominio')), 'email']
+                        ],
+                        exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
                     }
-                ],
-                logging: console.log
-            })
-            
-            return res.status(200).json(teachers)
-            
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
-
+                },
+                {
+                    model: _instituicaoensino2.default,
+                    attributes: {
+                        exclude: ['idInstituicao']
+                    },
+                    through: {
+                        attributes: ['inicio']
+                    },
+                }
+            ],
+            logging: console.log
+        })
+        
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            teachers
+        })
     }
 
     async postProeficiencia(req, res) {

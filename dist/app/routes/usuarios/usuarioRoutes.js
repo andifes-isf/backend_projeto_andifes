@@ -14,6 +14,6 @@ router.get('/notificacoes', _auth2.default, _usuarioController2.default.getNotif
 
 router.get('/notificacoes_nao_lidas', _auth2.default, _usuarioController2.default.getNotificacoesNaoLidas)
 
-router.get('/notificacao/:id', _auth2.default, _usuarioController2.default.getNotificacao)
+router.get('/notificacao/:idNotificacao', _auth2.default, _usuarioController2.default.getNotificacao)
 
 exports. default = router

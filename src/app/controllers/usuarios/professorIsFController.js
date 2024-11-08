@@ -25,7 +25,7 @@ class ProfessorIsFController {
 
         if(existingTeacher) {
             return new CustomError(
-                `${login}` + MESSAGES.ALREADY_IN_SYSTEM,
+                MESSAGES.EXISTING_ISF_TEACHER + login,
                 ErrorType.DUPLICATE_ENTRY
             )
         }
@@ -34,8 +34,6 @@ class ProfessorIsFController {
     async post(req, res, cursista) {
         const existingTeacher = await ProfessorIsFController.verifyExistingTeacher(req.body.login, req.body.inicio)
         
-        console.log(existingTeacher)
-
         if (existingTeacher) {
             return {
                 error: true,
@@ -43,7 +41,15 @@ class ProfessorIsFController {
             }
         }
         
-        await usuarioController.post(req, res, cursista ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
+        const { error, user} = await usuarioController.post(req, res, cursista ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
+
+        console.log(user)
+        if (error) {
+            return {
+                error: true,
+                teacher: user
+            }
+        }
 
         const teacher = await ProfessorIsF.create({
             login: req.body.login,
@@ -60,38 +66,35 @@ class ProfessorIsFController {
     }
 
     async get(_, res){
-        try {
-            const teachers = await ProfessorIsF.findAll({
-                include: [
-                    {
-                        model: Usuario,
-                        attributes: {
-                            include: [
-                                [Sequelize.fn('CONCAT_WS', ' ', Sequelize.col('Usuario.nome'), Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
-                                [Sequelize.fn('CONCAT_WS', '@', Sequelize.col('nomeEmail'), Sequelize.col('dominio')), 'email']
-                            ],
-                            exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
-                        }
-                    },
-                    {
-                        model: InstituicaoEnsino,
-                        attributes: {
-                            exclude: ['idInstituicao']
-                        },
-                        through: {
-                            attributes: ['inicio']
-                        },
+        const teachers = await ProfessorIsF.findAll({
+            include: [
+                {
+                    model: Usuario,
+                    attributes: {
+                        include: [
+                            [Sequelize.fn('CONCAT_WS', ' ', Sequelize.col('Usuario.nome'), Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
+                            [Sequelize.fn('CONCAT_WS', '@', Sequelize.col('nomeEmail'), Sequelize.col('dominio')), 'email']
+                        ],
+                        exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
                     }
-                ],
-                logging: console.log
-            })
-            
-            return res.status(200).json(teachers)
-            
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
-
+                },
+                {
+                    model: InstituicaoEnsino,
+                    attributes: {
+                        exclude: ['idInstituicao']
+                    },
+                    through: {
+                        attributes: ['inicio']
+                    },
+                }
+            ],
+            logging: console.log
+        })
+        
+        return res.status(httpStatus.SUCCESS).json({
+            error: false,
+            teachers
+        })
     }
 
     async postProeficiencia(req, res) {

@@ -19,8 +19,8 @@ import Notificacao from "../../models/utils/notificacao";
 import notificationType from '../../utils/notificationType/notificationType'
 import LanguageFactory from "../../utils/languages/languageFactory";
 import UserTypes from '../../utils/userType/userTypes'
-import MESSAGES from '../../utils/messages/messages_pt'
 import ReferencedModel from "../../utils/referencedModel/referencedModel";
+import MESSAGES from '../../utils/response/messages/messages_pt'
 import CustomError from "../../utils/response/CustomError/CustomError";
 import ErrorType from "../../utils/response/ErrorType/ErrorType";
 import httpStatus from "../../utils/response/httpStatus/httpStatus";
@@ -35,7 +35,7 @@ class CursistaEspecializacaoController {
 
         if(existingSpecializationStudent) {
             return new CustomError(
-                `${existingSpecializationStudent.login}` + MESSAGES.ALREADY_IN_SYSTEM,
+                MESSAGES.EXISTING_SPECIALIZATION_STUDENT + login,
                 ErrorType.DUPLICATE_ENTRY
             )
         }
@@ -53,6 +53,8 @@ class CursistaEspecializacaoController {
         }
         
         const { error, teacher } = await ProfessorIsFController.post(req, res, 1)
+
+        console.log(teacher)
 
         if (error) {
             return res.status(httpStatus.BAD_REQUEST).json({

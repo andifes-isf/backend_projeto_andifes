@@ -17,6 +17,7 @@ app.use(_express2.default.json())
 app.use(_routes2.default)
 
 app.use((error, req, res, next) => {
+    console.log(error)
     return res.status(500).json(error.message)
 })
 

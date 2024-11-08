@@ -4,42 +4,33 @@ var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _intero
 // Utils
 var _emailDomainFactory = require('../../utils/emailDomain/emailDomainFactory'); var _emailDomainFactory2 = _interopRequireDefault(_emailDomainFactory);
 var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
+var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
+var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
 class usuarioController {
+    static async verifyExistingObject(model, key) {
+        const existingObject = await model.findByPk(key)
+
+        if (existingObject) {
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.EXISTING_USER + key,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
+        }
+    }
+
     async post(req, res, tipo) {
-        // const schema = Yup.object().shape({
-        //     login: Yup.string().required(),
-        //     name: Yup.string().required(),
-        //     sobrenome: Yup.string().required(),
-        //     DDI: Yup.number().required(),
-        //     DDD: Yup.number().required(),
-        //     telefone: Yup.number().required(),
-        //     nomeEmail: Yup.string().required(),
-        //     dominio: Yup.string().required(),
-        //     senha: Yup.string().required(),
-        // })
+        const existingUser = await usuarioController.verifyExistingObject(_usuario2.default, req.body.login)
 
-        // if(!(await schema.isValid(req.body))) {
-        //     return res.json({
-        //         error: 'Validação falhou'
-        //     })
-        // }
-
-        const usuarioExistente = await _usuario2.default.findOne({
-            where: {
-                login: req.body.login
+        if(existingUser) {
+            return {
+                error: true,
+                user: existingUser
             }
-        })
-
-        if(usuarioExistente) {
-            return 0
         }
 
-        if(_emailDomainFactory2.default.getDomain(req.body.dominio) == null) {
-            throw new Error(_messages_pt2.default.DOMAIN_NOT_SUPPORTED)
-        }
-
-        return await _usuario2.default.create({
+        const user = await _usuario2.default.create({
             login: req.body.login,
             nome: req.body.nome,
             sobrenome: req.body.sobrenome,
@@ -54,82 +45,96 @@ class usuarioController {
             senha: req.body.senha,
             tipo: tipo
         })
+
+        return {
+            error: false,
+            user: user
+        }
     }
 
     async get(_, res) {
-        try {
-            const users = await _usuario2.default.findAll()
-            
-            return res.status(200).json(users)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
+        const users = await _usuario2.default.findAll()
+        
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            users
+        })
     }
 
     async getMyData(req, res) {
-        try {
-            const user = await _usuario2.default.findOne({
-                where: {
-                    login: req.loginUsuario
-                }
-            })
+        const user = await _usuario2.default.findOne({
+            where: {
+                login: req.loginUsuario
+            }
+        })
 
-            return res.status(200).json(user)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            user
+        })
     }
 
     async getNotificacoes(req, res){
-        try {
-            const user = await _usuario2.default.findByPk(req.loginUsuario)
+        const user = await _usuario2.default.findByPk(req.loginUsuario)
 
-            const notifications = await user.getNotificacaos() 
+        const notifications = await user.getNotificacaos() 
 
-            return res.status(200).json(notifications)
-
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            notifications
+        })
     }
 
     async getNotificacoesNaoLidas(req, res){
-        try {
-            const user = await _usuario2.default.findByPk(req.loginUsuario)
+        const user = await _usuario2.default.findByPk(req.loginUsuario)
 
-            const notifications = await user.getNotificacoesNaoLidas() 
+        const notifications = await user.getNotificacoesNaoLidas() 
 
-            return res.status(200).json(notifications)
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            notifications
+        })
+    }
 
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
+    static async verifyExistingNotification(user, id, login) {
+        const notification = await user.getNotificacaos({
+            where: {
+                idNotificacao: id,
+                login: login
+            }
+        }) 
+
+        if(notification.length === 0){
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.NOTIFICATION_NOT_FOUND + id,
+                _ErrorType2.default.NOT_FOUND
+            )
         }
+
+        return notification[0]
     }
 
     async getNotificacao(req, res){
-        try {
-            const user = await _usuario2.default.findByPk(req.loginUsuario)
+        const user = await _usuario2.default.findByPk(req.loginUsuario)
 
-            const notification = await user.getNotificacaos({
-                where: {
-                    idNotificacao: req.params.id,
-                    login: req.loginUsuario
-                }
-            }) 
-            
-            if(notification.length === 0){
-                return res.status(404).json({
-                    error: 'Notificação ' + _messages_pt2.default.NOT_FOUND
-                })
-            }
-            notification[0].lida = 1
-            await notification[0].save()
+        const notification = await usuarioController.verifyExistingNotification(user, req.params.idNotificacao, req.loginUsuario)
 
-            return res.status(200).json(notification)
-
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
+        if (notification instanceof _CustomError2.default) {
+            console.log('ASDF')
+            return res.status(_httpStatus2.default.SUCCESS).json({
+                error: true,
+                message: notification.message,
+                errorName: notification.name
+            })
         }
+        
+        notification.lida = 1
+        await notification.save()
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            notification
+        })
     }
 }
 
