@@ -83,7 +83,10 @@ class alunoIsFController {
             ]
         })
 
-        return res.status(_httpStatus2.default.SUCCESS).json(students)
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            students
+        })
     }
 
     static async verifyExistingProeficiency(login, language, level) {
