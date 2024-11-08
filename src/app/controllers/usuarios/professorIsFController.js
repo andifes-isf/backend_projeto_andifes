@@ -8,35 +8,55 @@ import usuarioController from "./usuarioController";
 
 // Utils
 import UserTypes from '../../utils/userType/userTypes'
-import MESSAGES from '../../utils/messages/messages_pt'
+import MESSAGES from '../../utils/response/messages/messages_pt'
+import CustomError from "../../utils/response/CustomError/CustomError";
+import httpStatus from "../../utils/response/httpStatus/httpStatus";
+import ErrorType from "../../utils/response/ErrorType/ErrorType";
+
 
 class ProfessorIsFController {
-    async post(req, res, cursista) {
-        try {
-            await usuarioController.post(req, res, cursista ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
-    
-            const existingTeacher = await ProfessorIsF.findOne({
-                where: {
-                    login: req.body.login,
-                    inicio: req.body.inicio
-                }
-            })
-    
-            if(existingTeacher) {
-                return 0
+    static async verifyExistingTeacher(login, inicio) {
+        const existingTeacher = await ProfessorIsF.findOne({
+            where: {
+                login: login,
+                inicio: inicio
             }
+        })
 
-            return await ProfessorIsF.create({
-                login: req.body.login,
-                poca: req.body.poca,
-                inicio: req.body.inicio,
-                fim: req.body.fim,
-                cursista: cursista
-            })
-        } catch (error) {
-            throw new Error(error)
+        if(existingTeacher) {
+            return new CustomError(
+                `${login}` + MESSAGES.ALREADY_IN_SYSTEM,
+                ErrorType.DUPLICATE_ENTRY
+            )
         }
+    }
 
+    async post(req, res, cursista) {
+        const existingTeacher = await ProfessorIsFController.verifyExistingTeacher(req.body.login, req.body.inicio)
+        
+        console.log(existingTeacher)
+
+        if (existingTeacher) {
+            return {
+                error: true,
+                teacher: existingTeacher
+            }
+        }
+        
+        await usuarioController.post(req, res, cursista ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
+
+        const teacher = await ProfessorIsF.create({
+            login: req.body.login,
+            poca: req.body.poca,
+            inicio: req.body.inicio,
+            fim: req.body.fim,
+            cursista: cursista
+        })
+
+        return {
+            error: false,
+            teacher: teacher
+        }
     }
 
     async get(_, res){

@@ -21,34 +21,55 @@ var _languageFactory = require('../../utils/languages/languageFactory'); var _la
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
 var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 var _referencedModel = require('../../utils/referencedModel/referencedModel'); var _referencedModel2 = _interopRequireDefault(_referencedModel);
+var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
+var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
+var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
 class CursistaEspecializacaoController {
-    async post(req, res) {
-        try {    
-            await _professorIsFController2.default.post(req, res, 1)
-            
-            const existingSpecializationStudent = await _cursistaespecializacao2.default.findOne({
-                where: {
-                    login: req.body.login
-                }
-            })
-    
-            if(existingSpecializationStudent) {
-                return res.status(409).json({
-                    error: `${existingSpecializationStudent.login} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
-                })
+    static async verifyExistingSpecializationStudent(login) {
+        const existingSpecializationStudent = await _cursistaespecializacao2.default.findOne({
+            where: {
+                login: login
             }
-            
-            const specializationStudent = await _cursistaespecializacao2.default.create({
-                login: req.body.login
-            })
-    
-            return res.status(201).json(specializationStudent)
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
+        })
 
+        if(existingSpecializationStudent) {
+            return new (0, _CustomError2.default)(
+                `${existingSpecializationStudent.login}` + _messages_pt2.default.ALREADY_IN_SYSTEM,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
+        }
+    }
+
+    async post(req, res) {
+        const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingSpecializationStudent(req.body.login)
+        
+        if (existingSpecializationStudent) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingSpecializationStudent.message,
+                errorName: existingSpecializationStudent.name
+            })
+        }
+        
+        const { error, teacher } = await _professorIsFController2.default.post(req, res, 1)
+
+        if (error) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: teacher.message,
+                errorName: teacher.name
+            })
+        }
+        
+        const specializationStudent = await _cursistaespecializacao2.default.create({
+            login: req.body.login
+        })
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            teacher
+        })
     }
 
     async get(_, res){

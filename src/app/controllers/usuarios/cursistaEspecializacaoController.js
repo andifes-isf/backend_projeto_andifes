@@ -21,34 +21,55 @@ import LanguageFactory from "../../utils/languages/languageFactory";
 import UserTypes from '../../utils/userType/userTypes'
 import MESSAGES from '../../utils/messages/messages_pt'
 import ReferencedModel from "../../utils/referencedModel/referencedModel";
+import CustomError from "../../utils/response/CustomError/CustomError";
+import ErrorType from "../../utils/response/ErrorType/ErrorType";
+import httpStatus from "../../utils/response/httpStatus/httpStatus";
 
 class CursistaEspecializacaoController {
-    async post(req, res) {
-        try {    
-            await ProfessorIsFController.post(req, res, 1)
-            
-            const existingSpecializationStudent = await CursistaEspecializacao.findOne({
-                where: {
-                    login: req.body.login
-                }
-            })
-    
-            if(existingSpecializationStudent) {
-                return res.status(409).json({
-                    error: `${existingSpecializationStudent.login} ` + MESSAGES.ALREADY_IN_SYSTEM
-                })
+    static async verifyExistingSpecializationStudent(login) {
+        const existingSpecializationStudent = await CursistaEspecializacao.findOne({
+            where: {
+                login: login
             }
-            
-            const specializationStudent = await CursistaEspecializacao.create({
-                login: req.body.login
-            })
-    
-            return res.status(201).json(specializationStudent)
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
+        })
 
+        if(existingSpecializationStudent) {
+            return new CustomError(
+                `${existingSpecializationStudent.login}` + MESSAGES.ALREADY_IN_SYSTEM,
+                ErrorType.DUPLICATE_ENTRY
+            )
+        }
+    }
+
+    async post(req, res) {
+        const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingSpecializationStudent(req.body.login)
+        
+        if (existingSpecializationStudent) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: existingSpecializationStudent.message,
+                errorName: existingSpecializationStudent.name
+            })
+        }
+        
+        const { error, teacher } = await ProfessorIsFController.post(req, res, 1)
+
+        if (error) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: teacher.message,
+                errorName: teacher.name
+            })
+        }
+        
+        const specializationStudent = await CursistaEspecializacao.create({
+            login: req.body.login
+        })
+
+        return res.status(httpStatus.CREATED).json({
+            error: false,
+            teacher
+        })
     }
 
     async get(_, res){

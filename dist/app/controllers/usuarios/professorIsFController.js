@@ -8,35 +8,55 @@ var _usuarioController = require('./usuarioController'); var _usuarioController2
 
 // Utils
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
-var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
+var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
+var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
+
 
 class ProfessorIsFController {
-    async post(req, res, cursista) {
-        try {
-            await _usuarioController2.default.post(req, res, cursista ? _userTypes2.default.CURSISTA : _userTypes2.default.ISF_TEACHER)
-    
-            const existingTeacher = await _professorisf2.default.findOne({
-                where: {
-                    login: req.body.login,
-                    inicio: req.body.inicio
-                }
-            })
-    
-            if(existingTeacher) {
-                return 0
+    static async verifyExistingTeacher(login, inicio) {
+        const existingTeacher = await _professorisf2.default.findOne({
+            where: {
+                login: login,
+                inicio: inicio
             }
+        })
 
-            return await _professorisf2.default.create({
-                login: req.body.login,
-                poca: req.body.poca,
-                inicio: req.body.inicio,
-                fim: req.body.fim,
-                cursista: cursista
-            })
-        } catch (error) {
-            throw new Error(error)
+        if(existingTeacher) {
+            return new (0, _CustomError2.default)(
+                `${login}` + _messages_pt2.default.ALREADY_IN_SYSTEM,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
         }
+    }
 
+    async post(req, res, cursista) {
+        const existingTeacher = await ProfessorIsFController.verifyExistingTeacher(req.body.login, req.body.inicio)
+        
+        console.log(existingTeacher)
+
+        if (existingTeacher) {
+            return {
+                error: true,
+                teacher: existingTeacher
+            }
+        }
+        
+        await _usuarioController2.default.post(req, res, cursista ? _userTypes2.default.CURSISTA : _userTypes2.default.ISF_TEACHER)
+
+        const teacher = await _professorisf2.default.create({
+            login: req.body.login,
+            poca: req.body.poca,
+            inicio: req.body.inicio,
+            fim: req.body.fim,
+            cursista: cursista
+        })
+
+        return {
+            error: false,
+            teacher: teacher
+        }
     }
 
     async get(_, res){
