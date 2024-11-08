@@ -9,19 +9,54 @@ var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _Error
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
 class usuarioController {
-    static async verifyExistingObject(model, key) {
+    // AUXILIAR FUNCTIONS
+
+    static verifyUserType(userTypes, userType) {
+        const founded = userTypes.find((type) => {
+            return type == userType
+        })
+
+        if (typeof founded === "undefined") {
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.ACCESS_DENIED,
+                _ErrorType2.default.UNAUTHORIZED_ACCESS
+            )
+        }
+    }
+
+    static async verifyExistingObject(model, key, message) {
         const existingObject = await model.findByPk(key)
 
         if (existingObject) {
             return new (0, _CustomError2.default)(
-                _messages_pt2.default.EXISTING_USER + key,
+                message + key,
                 _ErrorType2.default.DUPLICATE_ENTRY
             )
         }
     }
 
-    async post(req, res, tipo) {
-        const existingUser = await usuarioController.verifyExistingObject(_usuario2.default, req.body.login)
+    static async verifyExistingNotification(user, id, login) {
+        const notification = await user.getNotificacaos({
+            where: {
+                idNotificacao: id,
+                login: login
+            }
+        }) 
+
+        if(notification.length === 0){
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.NOTIFICATION_NOT_FOUND + id,
+                _ErrorType2.default.NOT_FOUND
+            )
+        }
+
+        return notification[0]
+    }
+
+    // ENDPOINTS
+
+    static async postUser(req, _, tipo) {
+        const existingUser = await usuarioController.verifyExistingObject(_usuario2.default, req.body.login, _messages_pt2.default.EXISTING_USER)
 
         if(existingUser) {
             return {
@@ -96,24 +131,6 @@ class usuarioController {
         })
     }
 
-    static async verifyExistingNotification(user, id, login) {
-        const notification = await user.getNotificacaos({
-            where: {
-                idNotificacao: id,
-                login: login
-            }
-        }) 
-
-        if(notification.length === 0){
-            return new (0, _CustomError2.default)(
-                _messages_pt2.default.NOTIFICATION_NOT_FOUND + id,
-                _ErrorType2.default.NOT_FOUND
-            )
-        }
-
-        return notification[0]
-    }
-
     async getNotificacao(req, res){
         const user = await _usuario2.default.findByPk(req.loginUsuario)
 
@@ -138,4 +155,4 @@ class usuarioController {
     }
 }
 
-exports. default = new usuarioController()
+exports. default = usuarioController

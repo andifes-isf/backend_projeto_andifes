@@ -16,15 +16,8 @@ import CustomError from '../../utils/response/CustomError/CustomError'
 import httpStatus from '../../utils/response/httpStatus/httpStatus'
 import ErrorType from '../../utils/response/ErrorType/ErrorType'
 
-class alunoIsFController {
-    static verifyUserType(userType) {
-        if(!(userType === UserTypes.ISF_STUDENT)){
-            return new CustomError(
-                MESSAGES.ACCESS_DENIED,
-                ErrorType.UNAUTHORIZED_ACCESS
-            )
-        }
-    }
+class alunoIsFController extends usuarioController {
+    // AUXILIAR FUNCTIONS
 
     static async verifyExistingStudent(login) {
         const existingStudent = await AlunoIsF.findOne({
@@ -42,7 +35,7 @@ class alunoIsFController {
     }
 
     async post(req, res, deInstituicao) {
-        const existingStudent = await alunoIsFController.verifyExistingStudent(req.body.login)
+        const existingStudent = await alunoIsFController.verifyExistingObject(AlunoIsF, req.body.login, MESSAGES.EXISTING_ISF_STUDENT)
 
         if (existingStudent) {
             return {
@@ -51,8 +44,15 @@ class alunoIsFController {
             }
         }
         
-        await usuarioController.post(req, res, UserTypes.ISF_STUDENT)
+        const { error, user } = await alunoIsFController.postUser(req, res, UserTypes.ISF_STUDENT)
         
+        if (error) {
+            return {
+                error: true,
+                student: user
+            }
+        }
+
         const student = await AlunoIsF.create({
             login: req.body.login,
             deInstituicao: deInstituicao
@@ -107,8 +107,8 @@ class alunoIsFController {
     }
 
     async postProeficiencia(req, res) {
-        const authorizationError = alunoIsFController.verifyUserType(req.tipoUsuario)
-        
+        const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], req.tipoUsuario)
+
         if (authorizationError) {
             return res.status(httpStatus.UNAUTHORIZED).json({
                 error: true,
@@ -141,7 +141,7 @@ class alunoIsFController {
     }
 
     async getMinhaProeficiencia(req, res) {
-        const authorizationError = alunoIsFController.verifyUserType(req.tipoUsuario)
+        const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], req.tipoUsuario)
     
         if (authorizationError) {
             return res.status(401).json({

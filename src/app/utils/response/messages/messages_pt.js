@@ -3,6 +3,8 @@ const MESSAGES = {
     EXISTING_USER: "Usuário já cadastrado no sistema: ",
     EXISTING_ISF_TEACHER: "Professor IsF já cadastrado no sistema: ",
     EXISTING_SPECIALIZATION_STUDENT: "Cursista de Especialização já cadastrado no sistema: ",
+    EXISTING_ISF_STUDENT: "Aluno IsF já cadastrado no sistema: ",
+    EXISTING_INSTITUTION_STUDENT: "Aluno de Instituição já cadastrado no sistema: ",
 
     // NOT_FOUND
     NOTIFICATION_NOT_FOUND: "Notificação não encontrada: ",

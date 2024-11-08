@@ -35,7 +35,7 @@ class AlunoDeInstituicao extends Model {
                     unique: true,
                     using: 'BTREE',
                     fields: [
-                        { name: 'login' }
+                        { name: 'nDocumento' }
                     ]
                 }]
             }

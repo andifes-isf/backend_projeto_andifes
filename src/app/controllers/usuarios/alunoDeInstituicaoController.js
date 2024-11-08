@@ -12,9 +12,9 @@ import alunoIsFController from './alunoIsFController'
 
 // Utils
 import { Op } from 'sequelize'
-import CustomError from '../../utils/CustomError/CustomError'
-import MESSAGES from '../../utils/messages/messages_pt'
-import httpStatus from '../../utils/httpStatus/httpStatus'
+import CustomError from '../../utils/response/CustomError/CustomError'
+import MESSAGES from '../../utils/response/messages/messages_pt'
+import httpStatus from '../../utils/response/httpStatus/httpStatus'
 import UserTypes from '../../utils/userType/userTypes'
 import ErrorType from '../../utils/response/ErrorType/ErrorType'
 
@@ -28,19 +28,22 @@ class alunoDeinstituicaoController {
         }
     }
 
-    static async verifyExistingInstitutionStudent(login) {
-        const student = await AlunoDeInstituicao.findByPk(login)
+    static async verifyExistingInstitutionStudent(id) {
+        const student = await AlunoDeInstituicao.findByPk(id)
+
+        console.log(student)
 
         if(student) {
+            console.log(MESSAGES.EXISTING_INSTITUTION_STUDENT)
             return new CustomError(
-                login + MESSAGES.ALREADY_IN_SYSTEM,
+                MESSAGES.EXISTING_INSTITUTION_STUDENT + student.login,
                 ErrorType.DUPLICATE_ENTRY
             )
         }
     }
 
     async post(req, res) {
-        const existingStudent = await alunoDeinstituicaoController.verifyExistingInstitutionStudent(req.loginUsuario)
+        const existingStudent = await alunoDeinstituicaoController.verifyExistingInstitutionStudent(req.body.nDocumento)
         
         if (existingStudent) {
             return res.status(httpStatus.BAD_REQUEST).json({

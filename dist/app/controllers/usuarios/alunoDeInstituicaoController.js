@@ -12,9 +12,9 @@ var _alunoIsFController = require('./alunoIsFController'); var _alunoIsFControll
 
 // Utils
 var _sequelize = require('sequelize');
-var _CustomError = require('../../utils/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
-var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
-var _httpStatus = require('../../utils/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
+var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
+var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 
@@ -28,19 +28,22 @@ class alunoDeinstituicaoController {
         }
     }
 
-    static async verifyExistingInstitutionStudent(login) {
-        const student = await _alunodeinstituicao2.default.findByPk(login)
+    static async verifyExistingInstitutionStudent(id) {
+        const student = await _alunodeinstituicao2.default.findByPk(id)
+
+        console.log(student)
 
         if(student) {
+            console.log(_messages_pt2.default.EXISTING_INSTITUTION_STUDENT)
             return new (0, _CustomError2.default)(
-                login + _messages_pt2.default.ALREADY_IN_SYSTEM,
+                _messages_pt2.default.EXISTING_INSTITUTION_STUDENT + student.login,
                 _ErrorType2.default.DUPLICATE_ENTRY
             )
         }
     }
 
     async post(req, res) {
-        const existingStudent = await alunoDeinstituicaoController.verifyExistingInstitutionStudent(req.loginUsuario)
+        const existingStudent = await alunoDeinstituicaoController.verifyExistingInstitutionStudent(req.body.nDocumento)
         
         if (existingStudent) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
