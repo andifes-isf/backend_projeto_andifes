@@ -17,14 +17,6 @@ app.use(_express2.default.json())
 app.use(_routes2.default)
 
 app.use((error, req, res, next) => {
-    if(error instanceof _CustomError2.default) {
-        return res.status(error.status).json({
-            error: error.message,
-            stack: error.stack
-        })
-    }
-
-    console.log(error)
     return res.status(500).json(error.message)
 })
 

@@ -10,113 +10,154 @@ import TurmaOC from '../../models/ofertacoletiva/turmaoc'
 import usuarioController from './usuarioController'
 
 // Utils
-import MESSAGES from '../../utils/messages/messages_pt'
+import MESSAGES from '../../utils/response/messages/messages_pt'
 import UserTypes from '../../utils/userType/userTypes'
-
+import CustomError from '../../utils/response/CustomError/CustomError'
+import httpStatus from '../../utils/response/httpStatus/httpStatus'
+import ErrorType from '../../utils/response/ErrorType/ErrorType'
 
 class alunoIsFController {
-    async post(req, res, deInstituicao) {
-        try {
-            await usuarioController.post(req, res, 'alunoisf')
-            
-            const existingStudent = await AlunoIsF.findOne({
-                where: {
-                    login: req.body.login
-                }
-            })
-    
-            if(existingStudent) {
-                return 0
+    static verifyUserType(userType) {
+        if(!(userType === UserTypes.ISF_STUDENT)){
+            return new CustomError(
+                MESSAGES.ACCESS_DENIED,
+                ErrorType.UNAUTHORIZED_ACCESS
+            )
+        }
+    }
+
+    static async verifyExistingStudent(login) {
+        const existingStudent = await AlunoIsF.findOne({
+            where: {
+                login: login
             }
-    
-            return await AlunoIsF.create({
-                login: req.body.login,
-                deInstituicao: deInstituicao
-            })
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)          
+        })
+
+        if(existingStudent) {
+            return new CustomError(
+                `${login}` + MESSAGES.ALREADY_IN_SYSTEM,
+                ErrorType.DUPLICATE_ENTRY
+            )
+        }
+    }
+
+    async post(req, res, deInstituicao) {
+        const existingStudent = await alunoIsFController.verifyExistingStudent(req.body.login)
+
+        if (existingStudent) {
+            return {
+                error: true,
+                student: existingStudent
+            }
+        }
+        
+        await usuarioController.post(req, res, UserTypes.ISF_STUDENT)
+        
+        const student = await AlunoIsF.create({
+            login: req.body.login,
+            deInstituicao: deInstituicao
+        })
+
+        return {
+            error: false,
+            student: student
         }
     }
 
     async get(_, res){
-        try {
-            const students = await AlunoIsF.findAll({
-                include: [
-                    {
-                        model: TurmaOC,
-                        attributes: {
-                            exclude: ['idTurma', 'idCurso', ]
-                        },
-                        include: {
-                            model: Curso,
-                            attributes: ['nome']
-                        },
-                        through: {
-                            attributes: []
-                        }
+        const students = await AlunoIsF.findAll({
+            include: [
+                {
+                    model: TurmaOC,
+                    attributes: {
+                        exclude: ['idTurma', 'idCurso', ]
+                    },
+                    include: {
+                        model: Curso,
+                        attributes: ['nome']
+                    },
+                    through: {
+                        attributes: []
                     }
-                ]
-            })
-    
-            return res.status(200).json(students)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
+                }
+            ]
+        })
+
+        return res.status(httpStatus.SUCCESS).json(students)
+    }
+
+    static async verifyExistingProeficiency(login, language, level) {
+        const existingProeficiency = await proeficienciaAlunoIsF.findOne({
+            where: {
+                login: login,
+                idioma: language,
+                nivel: level
+            }
+        })
+
+        if(existingProeficiency) {
+            return new CustomError(
+                "Proeficiência" + MESSAGES.ALREADY_IN_SYSTEM,
+                ErrorType.DUPLICATE_ENTRY
+            )
         }
     }
 
     async postProeficiencia(req, res) {
-        try {
-            if(!(req.tipoUsuario === UserTypes.ISF_STUDENT)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
-    
-            const existingProeficiency = await proeficienciaAlunoIsF.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idioma: req.body.idioma,
-                    nivel: req.body.nivel
-                }
+        const authorizationError = alunoIsFController.verifyUserType(req.tipoUsuario)
+        
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-    
-            if(existingProeficiency) {
-                return res.status(422).json({
-                    error: "Proeficiência " + MESSAGES.ALREADY_IN_SYSTEM
-                })
-            }
-            
-            const proeficiency = await proeficienciaAlunoIsF.create({
-                login: req.loginUsuario,
-                nivel: req.body.nivel,
-                idioma: req.body.idioma,
-                comprovante: req.body.comprovante
-            })
-    
-            return res.status(201).json(proeficiency)    
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const existingProeficiencyError = await alunoIsFController.verifyExistingProeficiency(req.loginUsuario, req.body.idioma, req.body.nivel)
+
+        if (existingProeficiencyError) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: existingProeficiencyError.message,
+                errorName: existingProeficiencyError.name
+            })
+        }
+        
+        const proeficiency = await proeficienciaAlunoIsF.create({
+            login: req.loginUsuario,
+            nivel: req.body.nivel,
+            idioma: req.body.idioma,
+            comprovante: req.body.comprovante
+        })
+
+        return res.status(201).json({
+            error: false,
+            proeficiency
+        })
     }
 
     async getMinhaProeficiencia(req, res) {
-        try {
-            if(!(req.tipoUsuario === UserTypes.ISF_STUDENT)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
-
-            const proeficiaencias = await proeficienciaAlunoIsF.findAll({
-                where: {
-                    login: req.loginUsuario
-                }
+        const authorizationError = alunoIsFController.verifyUserType(req.tipoUsuario)
+    
+        if (authorizationError) {
+            return res.status(401).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(proeficiaencias)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const proeficiencies = await proeficienciaAlunoIsF.findAll({
+            where: {
+                login: req.loginUsuario
+            }
+        })
+
+        return res.status(200).json({
+            error: false,
+            proeficiencies
+        })
     }
 }
 

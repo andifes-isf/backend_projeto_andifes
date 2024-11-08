@@ -16,11 +16,15 @@ var _CustomError = require('../../utils/CustomError/CustomError'); var _CustomEr
 var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 var _httpStatus = require('../../utils/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
+var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 
 class alunoDeinstituicaoController {
-    static verifyAuthorization(userType) {
+    static verifyUserType(userType) {
         if(!(userType === _userTypes2.default.ISF_STUDENT)){
-            throw new (0, _CustomError2.default)(_messages_pt2.default.ACCESS_DENIED, _httpStatus2.default.UNAUTHORIZED)
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.ACCESS_DENIED,
+                _ErrorType2.default.UNAUTHORIZED_ACCESS
+            )
         }
     }
 
@@ -28,23 +32,45 @@ class alunoDeinstituicaoController {
         const student = await _alunodeinstituicao2.default.findByPk(login)
 
         if(student) {
-            throw new (0, _CustomError2.default)(login + _messages_pt2.default.ALREADY_IN_SYSTEM, _httpStatus2.default.BAD_REQUEST)
+            return new (0, _CustomError2.default)(
+                login + _messages_pt2.default.ALREADY_IN_SYSTEM,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
         }
     }
 
     async post(req, res) {
-        await _alunoIsFController2.default.post(req, res, 1)
+        const existingStudent = await alunoDeinstituicaoController.verifyExistingInstitutionStudent(req.loginUsuario)
+        
+        if (existingStudent) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingStudent.message,
+                errorName: existingStudent.name
+            })
+        }
 
-        await alunoDeinstituicaoController.verifyExistingInstitutionStudent(req.loginUsuario)
+        const { error, student } = await _alunoIsFController2.default.post(req, res, 1)
 
-        const student = await _alunodeinstituicao2.default.create({
+        if (error) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: student.message,
+                errorName: student.name
+            })
+        }
+
+        const institutionStudent = await _alunodeinstituicao2.default.create({
             nDocumento: req.body.nDocumento,
             cargo: req.body.cargo,
             areaAtuacao: req.body.areaAtuacao,
             login: req.body.login
         })
     
-        return res.status(_httpStatus2.default.CREATED).json(student)
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            institutionStudent
+        })
     }
 
     async get(_, res) {
@@ -78,14 +104,20 @@ class alunoDeinstituicaoController {
             ]
         })
 
-        return res.status(_httpStatus2.default.SUCCESS).json(students)
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            students
+        })
     }
 
     static async verifyExistingInstitution(institutionId) {
         const institution = await _instituicaoensino2.default.findByPk(institutionId)
 
         if(!institution) {
-            throw new (0, _CustomError2.default)(`Instituição ${institutionId}` + _messages_pt2.default.NOT_FOUND, _httpStatus2.default.BAD_REQUEST)
+            return new (0, _CustomError2.default)(
+                `Instituição ${institutionId}` + _messages_pt2.default.NOT_FOUND,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
         }
     }
 
@@ -99,11 +131,14 @@ class alunoDeinstituicaoController {
         })
 
         if(existingRegistrantion) {
-            throw new (0, _CustomError2.default)(existingRegistrantion.comprovante + _messages_pt2.default.ALREADY_IN_SYSTEM, _httpStatus2.default.BAD_REQUEST)
+            return new (0, _CustomError2.default)(
+                existingRegistrantion.comprovante + _messages_pt2.default.ALREADY_IN_SYSTEM,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
         }
     }
 
-    static async closeRegistration(login, institutionId) {
+    static async closeRegistration(login) {
         const registration = await _comprovantealunoinstituicao2.default.findOne({
             where: {
                 login: login,
@@ -118,11 +153,35 @@ class alunoDeinstituicaoController {
     }
 
     async postInstituicao(req, res){
-        alunoDeinstituicaoController.verifyAuthorization(req.tipoUsuario)
+        const authorizationError = alunoDeinstituicaoController.verifyUserType(req.tipoUsuario)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }
 
-        await alunoDeinstituicaoController.verifyExistingInstitution(req.params.idInstituicao)
+        const existingInstitution = await alunoDeinstituicaoController.verifyExistingInstitution(req.params.idInstituicao)
 
-        await alunoDeinstituicaoController.verifyExistingRegistration(req.loginUsuario, req.params.idInstituicao, req.body.inicio)
+        if (existingInstitution) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingInstitution.message,
+                errorName: existingInstitution.name
+            })
+        }
+
+        const existingRegistration = await alunoDeinstituicaoController.verifyExistingRegistration(req.loginUsuario, req.params.idInstituicao, req.body.inicio)
+
+        if (existingRegistration) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingRegistration.message,
+                errorName: existingRegistration.name
+            })
+        }
 
         await alunoDeinstituicaoController.closeRegistration(req.loginUsuario, req.params.idInstituicao)
         
@@ -133,11 +192,22 @@ class alunoDeinstituicaoController {
             comprovante: req.body.comprovante
         })
 
-        return res.status(_httpStatus2.default.CREATED).json(registration)  
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            registration
+        })  
     }
 
     async getMinhasInstituicoes(req, res){
-        alunoDeinstituicaoController.verifyAuthorization(req.tipoUsuario)
+        const authorizationError = alunoDeinstituicaoController.verifyUserType(req.tipoUsuario)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }
 
         const registrations = await _comprovantealunoinstituicao2.default.findAll({
             where: {
@@ -145,11 +215,22 @@ class alunoDeinstituicaoController {
             }
         })
 
-        return res.status(_httpStatus2.default.SUCCESS).json(registrations)
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            registrations
+        })
     }
 
     async getInstituicaoAtual(req, res){
-        alunoDeinstituicaoController.verifyAuthorization(req.tipoUsuario)
+        const authorizationError = alunoDeinstituicaoController.verifyUserType(req.tipoUsuario)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }
 
         const registration = await _comprovantealunoinstituicao2.default.findOne({
             where: {
@@ -160,7 +241,10 @@ class alunoDeinstituicaoController {
             }
         })
 
-        return res.status(_httpStatus2.default.SUCCESS).json(registration)
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            registration
+        })
     }
 }
 

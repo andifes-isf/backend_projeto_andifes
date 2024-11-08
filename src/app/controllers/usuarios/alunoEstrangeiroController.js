@@ -1,66 +1,87 @@
 import * as Yup from 'yup'
+
+// Models
 import AlunoEstrangeiro from '../../models/usuarios/alunoestrangeiro'
 import alunoIsFController from './alunoIsFController'
 import AlunoIsF from '../../models/usuarios/alunoisf'
 import Usuario from '../../models/usuarios/usuario'
+
+// Utils
 import MESSAGES from '../../utils/messages/messages_pt'
+import CustomError from '../../utils/CustomError/CustomError'
+import httpStatus from '../../utils/httpStatus/httpStatus'
+import ErrorType from '../../utils/response/ErrorType/ErrorType'
 
 class alunoEstrangeiroController {
-    async post(req, res) {
-        try {
-            await alunoIsFController.post(req, res, 0)
-            
-            const existingStudent = await AlunoEstrangeiro.findOne({
-                where: {
-                    login: req.body.login
-                }
-            })
-    
-            if(existingStudent) {
-                return res.status(409).json({
-                    error: `${existingStudent.login} ` + MESSAGES.ALREADY_IN_SYSTEM
-                })
+    static async verifyExistingStudent(login) {
+        const existingStudent = await AlunoEstrangeiro.findOne({
+            where: {
+                login: login
             }
-    
-            const aluno = await AlunoEstrangeiro.create({
-                paisOrigem: req.body.paisOrigem,
-                comprovante: req.body.comprovante,
-                tipo: req.body.tipo,
-                login: req.body.login,
-                codigo: req.body.codigo
-            })
+        })
+
+        if(existingStudent) {
+            return new CustomError(
+                `${existingStudent.login}` + MESSAGES.ALREADY_IN_SYSTEM,
+                ErrorType.DUPLICATE_ENTRY
+            )
+        }
+    }
+
+    async post(req, res) {
+        const existingStudent = await alunoEstrangeiroController.verifyExistingStudent(req.body.login)
         
-            return res.status(201).json(aluno)
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
+        if (existingStudent) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: existingStudent.message,
+                errorName: existingStudent.name
+            })
         }
 
+        const { error, student } = await alunoIsFController.post(req, res, 0)
+
+        if (error) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: student.message,
+                errorName: student.name
+            })
+        }
+
+        const foreignStudent = await AlunoEstrangeiro.create({
+            paisOrigem: req.body.paisOrigem,
+            comprovante: req.body.comprovante,
+            tipo: req.body.tipo,
+            login: req.body.login,
+            codigo: req.body.codigo
+        })
+    
+        return res.status(httpStatus.CREATED).json({
+            error: false,
+            foreignStudent
+        })
     }
 
     async get(_, res) {
-        try {
-            const alunos = await AlunoEstrangeiro.findAll({
-                include: [
-                    {
-                        model: AlunoIsF,
+        const alunos = await AlunoEstrangeiro.findAll({
+            include: [
+                {
+                    model: AlunoIsF,
+                    attributes: {
+                        exclude: ['login']
+                    },
+                    include: [{
+                        model: Usuario,
                         attributes: {
-                            exclude: ['login']
-                        },
-                        include: [{
-                            model: Usuario,
-                            attributes: {
-                                exclude: ['login', 'senha_encriptada', 'ativo', 'tipo']
-                            }
-                        }]
-                    }
-                ]
-            })
+                            exclude: ['login', 'senha_encriptada', 'ativo', 'tipo']
+                        }
+                    }]
+                }
+            ]
+        })
 
-            return res.status(200).json(alunos)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
+        return res.status(httpStatus.SUCCESS).json(alunos)
     }
 }
 

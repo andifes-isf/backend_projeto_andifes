@@ -3,7 +3,7 @@ import Usuario from '../../models/usuarios/usuario'
 
 // Utils
 import EmailDomainFactory from '../../utils/emailDomain/emailDomainFactory'
-import MESSAGES from '../../utils/messages/messages_pt'
+import MESSAGES from '../../utils/response/messages/messages_pt'
 
 class usuarioController {
     async post(req, res, tipo) {

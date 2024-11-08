@@ -17,14 +17,6 @@ app.use(express.json())
 app.use(routes)
 
 app.use((error, req, res, next) => {
-    if(error instanceof CustomError) {
-        return res.status(error.status).json({
-            error: error.message,
-            stack: error.stack
-        })
-    }
-
-    console.log(error)
     return res.status(500).json(error.message)
 })
 

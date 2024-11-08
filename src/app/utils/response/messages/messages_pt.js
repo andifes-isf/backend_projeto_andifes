@@ -1,6 +1,7 @@
 const MESSAGES = {
     ACCESS_DENIED: 'Você não possui permissão para acessar essa página',
     USER_NOT_FOUNDED: 'Usuário não encontrado',
+    INVALID_TOKEN: 'Token de acesso inválido',
     INVALID_PASSWORD: 'Senha inválida',
     ALREADY_IN_SYSTEM: ' já está no sistema',
     ALREADY_IN_CLASS: ' já está nessa turma',

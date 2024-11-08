@@ -1,15 +1,20 @@
 import jwt from 'jsonwebtoken'
 import { promisify } from 'util'
 import authConfig from '../../config/auth'
-import MESSAGES from '../utils/messages/messages_pt'
-import CustomError from '../utils/CustomError/CustomError'
-import httpStatus from '../utils/httpStatus/httpStatus'
+import MESSAGES from '../utils/response/messages/messages_pt'
+import CustomError from '../utils/response/CustomError/CustomError'
+import httpStatus from '../utils/response/httpStatus/httpStatus'
+import ErrorType from '../utils/response/ErrorType/ErrorType'
 
 export default async(req, res, next) => {
     const { authorization } = req.headers
 
     if(!authorization) {
-        throw new CustomError(MESSAGES.LOGIN_NECESSARY, httpStatus.UNAUTHORIZED)
+        return res.status(httpStatus.UNAUTHORIZED).json({
+            error: true,
+            message: MESSAGES.LOGIN_NECESSARY,
+            errorName: ErrorType.UNAUTHORIZED_ACCESS
+        })
     }
 
     // Desestruturação de vetor (Bearer, ...token)
@@ -21,9 +26,13 @@ export default async(req, res, next) => {
         req.loginUsuario = login
         req.tipoUsuario = tipo
     } catch (error) {
-        throw new CustomError(MESSAGES.ACCESS_DENIED, httpStatus.UNAUTHORIZED)
+        return res.status(httpStatus.UNAUTHORIZED).json({
+            error: true,
+            message: MESSAGES.INVALID_TOKEN,
+            errorName: ErrorType.UNAUTHORIZED_ACCESS
+        })
     }
-
+    
     return next()
 
 }

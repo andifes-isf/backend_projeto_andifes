@@ -3,7 +3,7 @@ var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _intero
 
 // Utils
 var _emailDomainFactory = require('../../utils/emailDomain/emailDomainFactory'); var _emailDomainFactory2 = _interopRequireDefault(_emailDomainFactory);
-var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 
 class usuarioController {
     async post(req, res, tipo) {
