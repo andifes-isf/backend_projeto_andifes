@@ -17,22 +17,7 @@ import httpStatus from '../../utils/response/httpStatus/httpStatus'
 import ErrorType from '../../utils/response/ErrorType/ErrorType'
 
 class alunoIsFController extends usuarioController {
-    // AUXILIAR FUNCTIONS
-
-    static async verifyExistingStudent(login) {
-        const existingStudent = await AlunoIsF.findOne({
-            where: {
-                login: login
-            }
-        })
-
-        if(existingStudent) {
-            return new CustomError(
-                `${login}` + MESSAGES.ALREADY_IN_SYSTEM,
-                ErrorType.DUPLICATE_ENTRY
-            )
-        }
-    }
+    // Auxiliar Functions 
 
     async post(req, res, deInstituicao) {
         const existingStudent = await alunoIsFController.verifyExistingObject(AlunoIsF, req.body.login, MESSAGES.EXISTING_ISF_STUDENT)
@@ -64,6 +49,25 @@ class alunoIsFController extends usuarioController {
         }
     }
 
+    static async verifyExistingProeficiency(login, language, level) {
+        const existingProeficiency = await proeficienciaAlunoIsF.findOne({
+            where: {
+                login: login,
+                idioma: language,
+                nivel: level
+            }
+        })
+
+        if(existingProeficiency) {
+            return new CustomError(
+                MESSAGES.EXISTING_PROEFICIENCY + language + " " +  level,
+                ErrorType.DUPLICATE_ENTRY
+            )
+        }
+    }
+
+    // Endpoints
+
     async get(_, res){
         const students = await AlunoIsF.findAll({
             include: [
@@ -89,25 +93,10 @@ class alunoIsFController extends usuarioController {
         })
     }
 
-    static async verifyExistingProeficiency(login, language, level) {
-        const existingProeficiency = await proeficienciaAlunoIsF.findOne({
-            where: {
-                login: login,
-                idioma: language,
-                nivel: level
-            }
-        })
-
-        if(existingProeficiency) {
-            return new CustomError(
-                "Proeficiência" + MESSAGES.ALREADY_IN_SYSTEM,
-                ErrorType.DUPLICATE_ENTRY
-            )
-        }
-    }
-
     async postProeficiencia(req, res) {
-        const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], req.tipoUsuario)
+        const userType = req.tipoUsuario
+
+        const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], userType)
 
         if (authorizationError) {
             return res.status(httpStatus.UNAUTHORIZED).json({
@@ -117,7 +106,10 @@ class alunoIsFController extends usuarioController {
             })
         }
 
-        const existingProeficiencyError = await alunoIsFController.verifyExistingProeficiency(req.loginUsuario, req.body.idioma, req.body.nivel)
+        const userLogin = req.loginUsuario
+        const { language, level, document } = req.body
+
+        const existingProeficiencyError = await alunoIsFController.verifyExistingProeficiency(userLogin, language, level)
 
         if (existingProeficiencyError) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -126,12 +118,12 @@ class alunoIsFController extends usuarioController {
                 errorName: existingProeficiencyError.name
             })
         }
-        
+
         const proeficiency = await proeficienciaAlunoIsF.create({
-            login: req.loginUsuario,
-            nivel: req.body.nivel,
-            idioma: req.body.idioma,
-            comprovante: req.body.comprovante
+            login: userLogin,
+            nivel: level,
+            idioma: language,
+            comprovante: document
         })
 
         return res.status(201).json({
@@ -141,7 +133,9 @@ class alunoIsFController extends usuarioController {
     }
 
     async getMinhaProeficiencia(req, res) {
-        const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], req.tipoUsuario)
+        const userType = req.tipoUsuario
+
+        const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], userType)
     
         if (authorizationError) {
             return res.status(401).json({
