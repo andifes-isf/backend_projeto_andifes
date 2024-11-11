@@ -19,7 +19,7 @@ var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _Error
 class alunoIsFController extends _usuarioController2.default {
     // Auxiliar Functions 
 
-    async post(req, res, deInstituicao) {
+    static async postIsFStudent(req, res, deInstituicao) {
         const existingStudent = await alunoIsFController.verifyExistingObject(_alunoisf2.default, req.body.login, _messages_pt2.default.EXISTING_ISF_STUDENT)
 
         if (existingStudent) {
@@ -158,4 +158,4 @@ class alunoIsFController extends _usuarioController2.default {
     }
 }
 
-exports. default = new alunoIsFController()
+exports. default = alunoIsFController

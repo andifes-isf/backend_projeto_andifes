@@ -7,6 +7,7 @@ class AlunoEstrangeiro extends _sequelize.Model {
               login: {
                 type: _sequelize2.default.STRING,
                 allowNull: false,
+                primaryKey: true,
                 references: {
                     model: 'alunoisf',
                     key: 'login',

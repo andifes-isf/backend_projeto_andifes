@@ -53,8 +53,6 @@ class usuarioController {
         return notification[0]
     }
 
-    // ENDPOINTS
-
     static async postUser(req, _, tipo) {
         const existingUser = await usuarioController.verifyExistingObject(Usuario, req.body.login, MESSAGES.EXISTING_USER)
 
@@ -86,6 +84,8 @@ class usuarioController {
             user: user
         }
     }
+    
+    // ENDPOINTS
 
     async get(_, res) {
         const users = await Usuario.findAll()

@@ -7,29 +7,16 @@ import AlunoIsF from '../../models/usuarios/alunoisf'
 import Usuario from '../../models/usuarios/usuario'
 
 // Utils
-import MESSAGES from '../../utils/messages/messages_pt'
-import CustomError from '../../utils/CustomError/CustomError'
-import httpStatus from '../../utils/httpStatus/httpStatus'
+import MESSAGES from '../../utils/response/messages/messages_pt'
+import CustomError from '../../utils/response/CustomError/CustomError'
+import httpStatus from '../../utils/response/httpStatus/httpStatus'
 import ErrorType from '../../utils/response/ErrorType/ErrorType'
 
-class alunoEstrangeiroController {
-    static async verifyExistingStudent(login) {
-        const existingStudent = await AlunoEstrangeiro.findOne({
-            where: {
-                login: login
-            }
-        })
-
-        if(existingStudent) {
-            return new CustomError(
-                `${existingStudent.login}` + MESSAGES.ALREADY_IN_SYSTEM,
-                ErrorType.DUPLICATE_ENTRY
-            )
-        }
-    }
+class alunoEstrangeiroController extends alunoIsFController {
+    // Endpoints
 
     async post(req, res) {
-        const existingStudent = await alunoEstrangeiroController.verifyExistingStudent(req.body.login)
+        const existingStudent = await alunoEstrangeiroController.verifyExistingObject(AlunoEstrangeiro, req.body.login, MESSAGES.EXISTING_FOREIGN_STUDENT)
         
         if (existingStudent) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -39,7 +26,7 @@ class alunoEstrangeiroController {
             })
         }
 
-        const { error, student } = await alunoIsFController.post(req, res, 0)
+        const { error, student } = await alunoEstrangeiroController.postIsFStudent(req, res, 0)
 
         if (error) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -49,12 +36,14 @@ class alunoEstrangeiroController {
             })
         }
 
+        const { homeCountry, document, type, login, code } = req.body
+
         const foreignStudent = await AlunoEstrangeiro.create({
-            paisOrigem: req.body.paisOrigem,
-            comprovante: req.body.comprovante,
-            tipo: req.body.tipo,
-            login: req.body.login,
-            codigo: req.body.codigo
+            paisOrigem: homeCountry,
+            comprovante: document,
+            tipo: type,
+            login: login,
+            codigo: code
         })
     
         return res.status(httpStatus.CREATED).json({
@@ -64,7 +53,7 @@ class alunoEstrangeiroController {
     }
 
     async get(_, res) {
-        const alunos = await AlunoEstrangeiro.findAll({
+        const students = await AlunoEstrangeiro.findAll({
             include: [
                 {
                     model: AlunoIsF,
@@ -81,7 +70,10 @@ class alunoEstrangeiroController {
             ]
         })
 
-        return res.status(httpStatus.SUCCESS).json(alunos)
+        return res.status(httpStatus.SUCCESS).json({
+            error: false,
+            students
+        })
     }
 }
 
