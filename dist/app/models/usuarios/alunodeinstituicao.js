@@ -35,7 +35,7 @@ class AlunoDeInstituicao extends _sequelize.Model {
                     unique: true,
                     using: 'BTREE',
                     fields: [
-                        { name: 'nDocumento' }
+                        { name: 'login' }
                     ]
                 }]
             }

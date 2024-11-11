@@ -7,29 +7,16 @@ var _alunoisf = require('../../models/usuarios/alunoisf'); var _alunoisf2 = _int
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 // Utils
-var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
-var _CustomError = require('../../utils/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
-var _httpStatus = require('../../utils/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
+var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
+var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 
-class alunoEstrangeiroController {
-    static async verifyExistingStudent(login) {
-        const existingStudent = await _alunoestrangeiro2.default.findOne({
-            where: {
-                login: login
-            }
-        })
-
-        if(existingStudent) {
-            return new (0, _CustomError2.default)(
-                `${existingStudent.login}` + _messages_pt2.default.ALREADY_IN_SYSTEM,
-                _ErrorType2.default.DUPLICATE_ENTRY
-            )
-        }
-    }
+class alunoEstrangeiroController extends _alunoIsFController2.default {
+    // Endpoints
 
     async post(req, res) {
-        const existingStudent = await alunoEstrangeiroController.verifyExistingStudent(req.body.login)
+        const existingStudent = await alunoEstrangeiroController.verifyExistingObject(_alunoestrangeiro2.default, req.body.login, _messages_pt2.default.EXISTING_FOREIGN_STUDENT)
         
         if (existingStudent) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
@@ -39,7 +26,7 @@ class alunoEstrangeiroController {
             })
         }
 
-        const { error, student } = await _alunoIsFController2.default.post(req, res, 0)
+        const { error, student } = await alunoEstrangeiroController.postIsFStudent(req, res, 0)
 
         if (error) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
@@ -49,12 +36,14 @@ class alunoEstrangeiroController {
             })
         }
 
+        const { homeCountry, document, type, login, code } = req.body
+
         const foreignStudent = await _alunoestrangeiro2.default.create({
-            paisOrigem: req.body.paisOrigem,
-            comprovante: req.body.comprovante,
-            tipo: req.body.tipo,
-            login: req.body.login,
-            codigo: req.body.codigo
+            paisOrigem: homeCountry,
+            comprovante: document,
+            tipo: type,
+            login: login,
+            codigo: code
         })
     
         return res.status(_httpStatus2.default.CREATED).json({
@@ -64,7 +53,7 @@ class alunoEstrangeiroController {
     }
 
     async get(_, res) {
-        const alunos = await _alunoestrangeiro2.default.findAll({
+        const students = await _alunoestrangeiro2.default.findAll({
             include: [
                 {
                     model: _alunoisf2.default,
@@ -81,7 +70,10 @@ class alunoEstrangeiroController {
             ]
         })
 
-        return res.status(_httpStatus2.default.SUCCESS).json(alunos)
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            students
+        })
     }
 }
 

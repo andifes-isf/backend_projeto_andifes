@@ -18,32 +18,45 @@ import httpStatus from '../../utils/response/httpStatus/httpStatus'
 import UserTypes from '../../utils/userType/userTypes'
 import ErrorType from '../../utils/response/ErrorType/ErrorType'
 
-class alunoDeinstituicaoController {
-    static verifyUserType(userType) {
-        if(!(userType === UserTypes.ISF_STUDENT)){
+class alunoDeinstituicaoController extends alunoIsFController {
+    // Auxiliar Functions
+
+    static async verifyExistingRegistration(login, institutionId, begin) {
+        const existingRegistrantion = await ComprovanteAlunoInstituicao.findOne({
+            where: {
+                login: login,
+                idInstituicao: institutionId,
+                inicio: begin
+            }
+        })
+
+        if(existingRegistrantion) {
             return new CustomError(
-                MESSAGES.ACCESS_DENIED,
-                ErrorType.UNAUTHORIZED_ACCESS
-            )
-        }
-    }
-
-    static async verifyExistingInstitutionStudent(id) {
-        const student = await AlunoDeInstituicao.findByPk(id)
-
-        console.log(student)
-
-        if(student) {
-            console.log(MESSAGES.EXISTING_INSTITUTION_STUDENT)
-            return new CustomError(
-                MESSAGES.EXISTING_INSTITUTION_STUDENT + student.login,
+                MESSAGES.EXISTING_INSTITUTION_USER_RELATIONSHIP + institutionId,
                 ErrorType.DUPLICATE_ENTRY
             )
         }
     }
 
+    static async closeRegistration(login) {
+        const registration = await ComprovanteAlunoInstituicao.findOne({
+            where: {
+                login: login,
+                termino: {
+                    [Op.is]: null
+                }
+            }
+        })
+
+        registration.termino = new Date().toISOString().split("T")[0]
+        registration.save()
+    }
+
+
+    // Endpoints
+
     async post(req, res) {
-        const existingStudent = await alunoDeinstituicaoController.verifyExistingInstitutionStudent(req.body.nDocumento)
+        const existingStudent = await alunoDeinstituicaoController.verifyExistingObject(AlunoDeInstituicao, req.body.nDocumento, MESSAGES.EXISTING_INSTITUTION_STUDENT)
         
         if (existingStudent) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -53,7 +66,7 @@ class alunoDeinstituicaoController {
             })
         }
 
-        const { error, student } = await alunoIsFController.post(req, res, 1)
+        const { error, student } = await alunoIsFController.postIsFStudent(req, res, 1)
 
         if (error) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -113,50 +126,10 @@ class alunoDeinstituicaoController {
         })
     }
 
-    static async verifyExistingInstitution(institutionId) {
-        const institution = await InstituicaoEnsino.findByPk(institutionId)
-
-        if(!institution) {
-            return new CustomError(
-                `Instituição ${institutionId}` + MESSAGES.NOT_FOUND,
-                ErrorType.DUPLICATE_ENTRY
-            )
-        }
-    }
-
-    static async verifyExistingRegistration(login, institutionId, begin) {
-        const existingRegistrantion = await ComprovanteAlunoInstituicao.findOne({
-            where: {
-                login: login,
-                idInstituicao: institutionId,
-                inicio: begin
-            }
-        })
-
-        if(existingRegistrantion) {
-            return new CustomError(
-                existingRegistrantion.comprovante + MESSAGES.ALREADY_IN_SYSTEM,
-                ErrorType.DUPLICATE_ENTRY
-            )
-        }
-    }
-
-    static async closeRegistration(login) {
-        const registration = await ComprovanteAlunoInstituicao.findOne({
-            where: {
-                login: login,
-                termino: {
-                    [Op.is]: null
-                }
-            }
-        })
-
-        registration.termino = new Date().toISOString().split("T")[0]
-        registration.save()
-    }
-
     async postInstituicao(req, res){
-        const authorizationError = alunoDeinstituicaoController.verifyUserType(req.tipoUsuario)
+        const userType = req.tipoUsuario
+
+        const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], userType)
         
         if (authorizationError) {
             return res.status(httpStatus.UNAUTHORIZED).json({
@@ -166,9 +139,11 @@ class alunoDeinstituicaoController {
             })
         }
 
-        const existingInstitution = await alunoDeinstituicaoController.verifyExistingInstitution(req.params.idInstituicao)
+        // Seria bom ver como mudar para que fosse passado o nome, ou sigla, da instituição, ao invés do Id dela
 
-        if (existingInstitution) {
+        const existingInstitution = await alunoDeinstituicaoController.verifyExistingObject(InstituicaoEnsino, req.params.idInstituicao, MESSAGES.EXISTING_INSTITUTION)
+
+        if (!existingInstitution) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
                 message: existingInstitution.message,
@@ -179,6 +154,7 @@ class alunoDeinstituicaoController {
         const existingRegistration = await alunoDeinstituicaoController.verifyExistingRegistration(req.loginUsuario, req.params.idInstituicao, req.body.inicio)
 
         if (existingRegistration) {
+            console.log("entrou aqui")
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
                 message: existingRegistration.message,
@@ -202,7 +178,9 @@ class alunoDeinstituicaoController {
     }
 
     async getMinhasInstituicoes(req, res){
-        const authorizationError = alunoDeinstituicaoController.verifyUserType(req.tipoUsuario)
+        const userType = req.tipoUsuario
+
+        const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], userType)
         
         if (authorizationError) {
             return res.status(httpStatus.UNAUTHORIZED).json({
@@ -225,7 +203,9 @@ class alunoDeinstituicaoController {
     }
 
     async getInstituicaoAtual(req, res){
-        const authorizationError = alunoDeinstituicaoController.verifyUserType(req.tipoUsuario)
+        const userType = req.tipoUsuario
+
+        const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], userType)
         
         if (authorizationError) {
             return res.status(httpStatus.UNAUTHORIZED).json({

@@ -7,6 +7,8 @@ const MESSAGES = {
     EXISTING_INSTITUTION_STUDENT: "Aluno de Instituição já cadastrado no sistema: ",
     EXISTING_FOREIGN_STUDENT: "Aluno Estrangeiro já cadastrado no sistema: ",
     EXISTING_PROEFICIENCY: "Proeficência já cadastrada no sistema: ",
+    EXISTING_INSTITUTION: "Instituição de Ensino já cadastrada no sistema: ",
+    EXISTING_INSTITUTION_USER_RELATIONSHIP: "Usuário já cadastrado na Instituição de Ensino ",
     
     ALREADY_IN_SYSTEM: ' já está no sistema',
     ALREADY_IN_CLASS: ' já está nessa turma',
