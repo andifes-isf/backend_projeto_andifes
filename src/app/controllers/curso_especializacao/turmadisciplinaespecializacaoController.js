@@ -73,7 +73,7 @@ class turmaDisciplinaEspecializacaoController {
         
         return res.status(httpStatus.CREATED).json({
             turma: classObject,
-            relacao: relacaoComTurma
+            relacao: MinistersClass
         })
     }
     

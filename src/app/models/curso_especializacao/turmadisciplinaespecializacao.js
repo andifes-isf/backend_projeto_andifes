@@ -10,7 +10,8 @@ class TurmaDisciplinaEspecializacao extends Model {
                     primaryKey: true
                 },
                 edital: {
-                    type: Sequelize.CHAR(4)
+                    type: Sequelize.CHAR(4),
+                    primaryKey: true
                 },
                 nome: {
                     type: Sequelize.STRING,

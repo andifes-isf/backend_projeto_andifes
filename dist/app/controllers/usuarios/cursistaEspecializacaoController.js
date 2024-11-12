@@ -10,6 +10,7 @@ var _professorisf = require('../../models/usuarios/professorisf'); var _professo
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 var _turmadisciplinaespecializacao = require('../../models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
 var _ouvidoria_curso_especializacao = require('../../models/curso_especializacao/ouvidoria_curso_especializacao'); var _ouvidoria_curso_especializacao2 = _interopRequireDefault(_ouvidoria_curso_especializacao);
+var _disciplinaespecializacao = require('../../models/curso_especializacao/disciplinaespecializacao'); var _disciplinaespecializacao2 = _interopRequireDefault(_disciplinaespecializacao);
 
 // Controllers
 var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
@@ -26,82 +27,8 @@ var _CustomError = require('../../utils/response/CustomError/CustomError'); var 
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
-class CursistaEspecializacaoController {
-    static async verifyExistingSpecializationStudent(login) {
-        const existingSpecializationStudent = await _cursistaespecializacao2.default.findOne({
-            where: {
-                login: login
-            }
-        })
-
-        if(existingSpecializationStudent) {
-            return new (0, _CustomError2.default)(
-                _messages_pt2.default.EXISTING_SPECIALIZATION_STUDENT + login,
-                _ErrorType2.default.DUPLICATE_ENTRY
-            )
-        }
-    }
-
-    async post(req, res) {
-        const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingSpecializationStudent(req.body.login)
-        
-        if (existingSpecializationStudent) {
-            return res.status(_httpStatus2.default.BAD_REQUEST).json({
-                error: true,
-                message: existingSpecializationStudent.message,
-                errorName: existingSpecializationStudent.name
-            })
-        }
-        
-        const { error, teacher } = await _professorIsFController2.default.post(req, res, 1)
-
-        console.log(teacher)
-
-        if (error) {
-            return res.status(_httpStatus2.default.BAD_REQUEST).json({
-                error: true,
-                message: teacher.message,
-                errorName: teacher.name
-            })
-        }
-        
-        const specializationStudent = await _cursistaespecializacao2.default.create({
-            login: req.body.login
-        })
-
-        return res.status(_httpStatus2.default.CREATED).json({
-            error: false,
-            teacher
-        })
-    }
-
-    async get(_, res){
-        try {
-            const specializationStudents = await _cursistaespecializacao2.default.findAll({
-                include: [
-                    {
-                        model: _professorisf2.default,
-                        attributes: {
-                            exclude: ['login'],
-                        },
-                        include: [{
-                            model: _usuario2.default,
-                            attributes: {
-                                exclude: ['login', 'senha_encriptada', 'ativo']
-                            }
-                        }]
-                    }
-                ]
-            })
-
-            return res.status(200).json(specializationStudents)
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
-
-    }
-
+class CursistaEspecializacaoController extends _professorIsFController2.default {
+    // Auxiliar Functions
     static async getEntities(login){
         const specializationStudent = await _cursistaespecializacao2.default.findByPk(login)
         const advisor = await specializationStudent.getOrientador({
@@ -126,7 +53,10 @@ class CursistaEspecializacaoController {
         const { idioma, name, level, description, workload, portfolio_link, category } = material
 
         if(CursistaEspecializacaoController.verifyLanguage(idioma) == null) {
-            throw new Error('Idioma selecionado não suportado pelo sistema')
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.LANGUAGE_NOT_FOUND,
+                _ErrorType2.default.NOT_FOUND
+            )            
         }
 
         return await specializationStudent.createMaterial({
@@ -140,197 +70,76 @@ class CursistaEspecializacaoController {
             categoria: category,
         })
     }
-    
-    async postPracticalReport(req, res) {
-        try {
-            if (!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: 'Acesso negado'
-                })
+
+    static async verifyExistingReport(login, name) {
+        const existinReport = await _relatorio_pratico2.default.findOne({
+            where: {
+                nome: name,
+                login: login
             }
+        })
 
-            const [specializationStudent, advisor] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
-
-            const existinReport = await _relatorio_pratico2.default.findOne({
-                where: {
-                    nome: req.body.name,
-                    login: req.loginUsuario
-                }
-            })
-
-            if(existinReport){
-                return res.status(409).json({
-                    error: `${existinReport.nome} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
-                })
-            }
-
-            const report = await CursistaEspecializacaoController.createReport(specializationStudent, advisor, req.body)
-            
-            await _notificacao2.default.create({
-                login: advisor.login,
-                mensagem: `${req.loginUsuario} ` + _messages_pt2.default.NEW_MATERIAL,
-                tipo: _notificationType2.default.PENDENCIA,
-                chaveReferenciado: req.body.name,
-                modeloReferenciado: _referencedModel2.default.PRACTICAL_REPORT
-            })
-
-            return res.status(201).json(report)
-
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
-
-    }
-
-    async getMyMaterials(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }            
-
-            const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
-
-            const myMaterials = await specializationStudent.getMaterial()
-
-            return res.status(200).json(myMaterials)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
-    }
-
-    async getNotViewedMaterials(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
-
-            const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
-
-            const materials = await specializationStudent.getMaterial({
-                where: {
-                    visualizado_pelo_cursista: false
-                }
-            })
-
-            return res.status(200).json(materials)
-
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
-    }
-
-    async getMaterial(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
-
-            const [specializationStudent, advisor] = await CursistaEspecializacaoController.getEntities(req.loginUsuario)
-
-            const report = await specializationStudent.getMaterial({
-                where: {
-                    nome: req.params.nome
-                }
-            })
-
-            if(!(report[0].dataAvaliacao == null)) {
-                report[0].visualizado_pelo_cursista = true
-                await report[0].save()
-            }
-
-            return res.status(200).json(report)
-
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
-    }
-
-    async postCursaTurma(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
-
-            const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
-            const classObject = await _turmadisciplinaespecializacao2.default.findOne({
-                where: {
-                    nome: req.params.nome_turma
-                }
-            })
-
-            if(classObject == null) {
-                return res.status(422).json({
-                    error: `${req.params.nome_turma} ` + _messages_pt2.default.NOT_FOUND
-                })
-            }
-
-            if(await specializationStudent.hasTurma(turma)){
-                return res.status(422).json({
-                    error: `${specializationStudent.login} ` + _messages_pt2.default.ALREADY_IN_CLASS
-                })
-            }
-
-            await specializationStudent.addTurma(classObject)
-
-            return res.status(201).json(await specializationStudent.getTurma())
-
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
-    }
-
-    async getMinhasTurmas(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
-
-            const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
-
-            const myClasses = await specializationStudent.getTurma()
-
-            return res.status(200).json(myClasses)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
+        if (existinReport) {
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.EXISTING_PRACTICAL_REPORT,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
         }
     }
 
     static async inserirInteresse(discipline, year, specializationStudent){
-        try {
-            await specializationStudent.createInteresse({
-                ano: year,
-                nomeDisciplina: discipline.nomeDisciplina,
-                preferencia: discipline.preferencia
-            })    
+        const existingDiscipline = await _disciplinaespecializacao2.default.findOne({
+            where: {
+                nome: discipline.nomeDisciplina
+            }
+        })
 
-            return true
-        } catch (error) {
-            throw new Error(error)
+        if (!existingDiscipline) {
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.DISCIPLINE_NOT_FOUND + discipline.nomeDisciplina,
+                _ErrorType2.default.NOT_FOUND
+            )
         }
+        
+        const existingInterest = await _InteresseNaDisciplina2.default.findOne({
+            where: {
+                login: specializationStudent.login,
+                nomeDisciplina: discipline.nomeDisciplina,
+                ano: year
+            }
+        })
+
+        if (existingInterest) {
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.EXISTING_SPECIALIZATIONSTUDENT_DISCIPLINE_INTEREST + discipline.nomeDisciplina,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
+        }
+
+        await specializationStudent.createInteresse({
+            ano: year,
+            nomeDisciplina: discipline.nomeDisciplina,
+            preferencia: discipline.preferencia
+        })
     }
 
     static async inserirDisciplinas(data, specializationStudent){
         const disciplines = data.interesse
         const year = data.ano
-
+        
         const promises = disciplines.map(async (discipline) => {
-            try {
-                await CursistaEspecializacaoController.inserirInteresse(discipline, year, specializationStudent)
-                
-                return { status: 'sucesso', disciplina: discipline.nomeDisciplina}
-            } catch (error) {
-                return { status: 'falho', discipline: discipline.nomeDisciplina, message: error.message.split(":")[0]}
+            const insertInterest = await CursistaEspecializacaoController.inserirInteresse(discipline, year, specializationStudent)
+            
+            if (insertInterest) {
+                return {
+                    error: true,
+                    errorInfo: insertInterest
+                }
+            }
+
+            return {
+                error: false,
+                discipline: discipline.nomeDisciplina
             }
         })
         
@@ -340,16 +149,11 @@ class CursistaEspecializacaoController {
         let unexpectedError = []
 
         results.forEach((result) => {
-            if (result.status === 'fulfilled' && result.value.status === 'sucesso') {
-                success.push(`Disciplina ${result.value.discipline} inserida com sucesso.`);
-            } else if (result.status === 'fulfilled' && result.value.status === 'falho') {
-                if(result.value.message == 'SequelizeUniqueConstraintError') {
-                    fail.push(`Erro ao inserir ${result.value.discipline}: Dado duplicado`)
-                } else if(result.value.message == 'SequelizeForeignKeyConstraintError') {
-                    fail.push(`Erro ao inserir ${result.value.discipline}: Disciplina não encontrada`)
-                } else {
-                    fail.push(`Erro ao inserir ${result.value.discipline}: ${result.value.message}`)
-                }
+            console.log(result)
+            if (result.value.error === false) {
+                success.push(_messages_pt2.default.NEW_SPECIALIZATIONSTUDENT_DISCIPLINE_INTEREST + result.value.discipline)
+            } else if (result.value.error === true) {
+                fail.push([result.value.errorInfo.message, result.value.errorInfo.name])
             } else {
                 unexpectedError.push(`Erro inesperado:`, result.reason);
             }
@@ -358,46 +162,302 @@ class CursistaEspecializacaoController {
         return { success: success, fail: fail, unexpectedError: unexpectedError}
     }
 
-    async postInteresseNaDisciplina(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
-
-            const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
-            const data = req.body
-
-            const status = await CursistaEspecializacaoController.inserirDisciplinas(data, specializationStudent)
-            
-            if(status.fail.length === 0 && status.unexpectedError.length === 0) {
-                return res.status(201).json(status.success)
-            }
-            return res.status(207).json(status)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
+    // Endpoints
+    
+    async post(req, res) {
+        const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingObject(_cursistaespecializacao2.default, req.body.login, _messages_pt2.default.EXISTING_SPECIALIZATION_STUDENT)
+        
+        if (existingSpecializationStudent) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingSpecializationStudent.message,
+                errorName: existingSpecializationStudent.name
+            })
         }
+        
+        const { error, teacher } = await CursistaEspecializacaoController.postIsFTeacher(req, res, 1)
+
+        if (error) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: teacher.message,
+                errorName: teacher.name
+            })
+        }
+        
+        const specializationStudent = await _cursistaespecializacao2.default.create({
+            login: req.body.login
+        })
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            specializationStudent
+        })
+    }
+
+    async get(_, res){
+        const specializationStudents = await _cursistaespecializacao2.default.findAll({
+            include: [
+                {
+                    model: _professorisf2.default,
+                    attributes: {
+                        exclude: ['login'],
+                    },
+                    include: [{
+                        model: _usuario2.default,
+                        attributes: {
+                            exclude: ['login', 'senha_encriptada', 'ativo']
+                        }
+                    }]
+                }
+            ]
+        })
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            specializationStudents
+        })
+    }
+    
+    async postPracticalReport(req, res) {
+        const userType = req.tipoUsuario
+
+        const authorizationError = CursistaEspecializacaoController.verifyUserType([_userTypes2.default.CURSISTA], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }
+
+        const [specializationStudent, advisor] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
+
+        const existingReport = await CursistaEspecializacaoController.verifyExistingReport(req.loginUsuario, req.body.name)
+
+        if(existingReport){
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingReport.message,
+                errorName: existingReport.name
+            })
+        }
+
+        const report = await CursistaEspecializacaoController.createReport(specializationStudent, advisor, req.body)
+        
+        await _notificacao2.default.create({
+            login: advisor.login,
+            mensagem: `${req.loginUsuario} ` + _messages_pt2.default.NEW_MATERIAL,
+            tipo: _notificationType2.default.PENDENCIA,
+            chaveReferenciado: req.body.name,
+            modeloReferenciado: _referencedModel2.default.PRACTICAL_REPORT
+        })
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            report
+        })
+    }
+
+    async getMyMaterials(req, res){
+        const userType = req.tipoUsuario
+
+        const authorizationError = CursistaEspecializacaoController.verifyUserType([_userTypes2.default.CURSISTA], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }       
+
+        const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+
+        const myMaterials = await specializationStudent.getMaterial()
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            myMaterials
+        })
+    }
+
+    async getNotViewedMaterials(req, res){
+        const userType = req.tipoUsuario
+
+        const authorizationError = CursistaEspecializacaoController.verifyUserType([_userTypes2.default.CURSISTA], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }
+
+        const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+
+        const materials = await specializationStudent.getMaterial({
+            where: {
+                visualizado_pelo_cursista: false
+            }
+        })
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            materials
+        })
+    }
+
+    async getMaterial(req, res){
+        const userType = req.tipoUsuario
+
+        const authorizationError = CursistaEspecializacaoController.verifyUserType([_userTypes2.default.CURSISTA], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }
+
+        const [specializationStudent, advisor] = await CursistaEspecializacaoController.getEntities(req.loginUsuario)
+
+        const material = await specializationStudent.getMaterial({
+            where: {
+                nome: req.params.nome
+            }
+        })
+
+        if (!material) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: _messages_pt2.default.PRACTICAL_REPORT_NOT_FOUND + req.params.nome,
+                errorName: _ErrorType2.default.NOT_FOUND
+            })
+        }
+
+        if(!(material[0].data_avaliacao == null)) {
+            material[0].visualizado_pelo_cursista = true
+            await material[0].save()
+        }
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            material
+        })
+    }
+
+    async postCursaTurma(req, res){
+        const userType = req.tipoUsuario
+
+        const authorizationError = CursistaEspecializacaoController.verifyUserType([_userTypes2.default.CURSISTA], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }
+
+        const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+        const classObject = await _turmadisciplinaespecializacao2.default.findOne({
+            where: {
+                nome: req.params.nome_turma
+            }
+        })
+
+        if(classObject == null) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: _messages_pt2.default.CLASS_NOT_FOUND + req.params.nome_turma,
+                errorName: _ErrorType2.default.NOT_FOUND
+            })
+        }
+
+        if(await specializationStudent.hasTurma(classObject)){
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: _messages_pt2.default.EXISTING_CLASS_SPECIALIZATIONSTUDENT_RELATIONSHIP,
+                errorName: _ErrorType2.default.DUPLICATE_ENTRY
+            })
+        }
+
+        await specializationStudent.addTurma(classObject)
+        const classes = await specializationStudent.getTurma()
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            classes
+        })
+    }
+
+    async getMinhasTurmas(req, res){
+        const userType = req.tipoUsuario
+
+        const authorizationError = CursistaEspecializacaoController.verifyUserType([_userTypes2.default.CURSISTA], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }
+
+        const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+
+        const myClasses = await specializationStudent.getTurma()
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            myClasses
+        })
+    }
+
+    async postInteresseNaDisciplina(req, res){
+        const userType = req.tipoUsuario
+
+        const authorizationError = CursistaEspecializacaoController.verifyUserType([_userTypes2.default.CURSISTA], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }
+
+        const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+        const data = req.body
+
+        const status = await CursistaEspecializacaoController.inserirDisciplinas(data, specializationStudent)
+        
+        if(status.fail.length === 0 && status.unexpectedError.length === 0) {
+            const success = status.success
+            return res.status(_httpStatus2.default.CREATED).json({
+                error: false,
+                success
+            })
+        }
+        return res.status(_httpStatus2.default.BAD_REQUEST).json({
+            error: true,
+            status})
     }
 
     async postReclamation(req, res) {
-        // const userType = req.tipoUsuario
+        const userType = req.tipoUsuario
 
-        // const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], userType)
+        const authorizationError = CursistaEspecializacaoController.verifyUserType([_userTypes2.default.CURSISTA], userType)
         
-        // if (authorizationError) {
-        //     return res.status(httpStatus.UNAUTHORIZED).json({
-        //         error: true,
-        //         message: authorizationError.message,
-        //         errorName: authorizationError.name
-        //     })
-        // }
-
-        if (!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
-            return res.status(403).json({
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
                 error: true,
-                message: _messages_pt2.default.ACCESS_DENIED,
-                errorName: _ErrorType2.default.UNAUTHORIZED_ACCESS
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
         }
 
