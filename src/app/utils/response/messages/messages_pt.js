@@ -18,7 +18,6 @@ const MESSAGES = {
     // NOT_FOUND
     NOTIFICATION_NOT_FOUND: "Notificação não encontrada: ",
     USER_NOT_FOUNDED: 'Usuário não encontrado: ',
-
     NOT_FOUND: ' não encontrado',
 
     // AUTHORIZATION

@@ -10,7 +10,6 @@ import DocenteMinistrante from '../../models/usuarios/docenteministrante'
 // Utils
 import MESSAGES from '../../utils/messages/messages_pt'
 import httpStatus from '../../utils/httpStatus/httpStatus'
-import { TableHints } from 'sequelize'
 import CustomError from '../../utils/CustomError/CustomError'
 
 class turmaDisciplinaEspecializacaoController {

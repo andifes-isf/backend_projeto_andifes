@@ -10,7 +10,6 @@ var _docenteministrante = require('../../models/usuarios/docenteministrante'); v
 // Utils
 var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 var _httpStatus = require('../../utils/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
-var _sequelize = require('sequelize');
 var _CustomError = require('../../utils/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
 
 class turmaDisciplinaEspecializacaoController {
