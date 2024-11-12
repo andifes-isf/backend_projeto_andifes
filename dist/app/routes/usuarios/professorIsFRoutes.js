@@ -10,7 +10,7 @@ router.post('/adicionar_proeficiencia', _auth2.default, _professorIsFController2
 
 router.get('/visualizar_minha_proeficiencia', _auth2.default, _professorIsFController2.default.getMinhaProeficiencia)
 
-router.post('/adicionar_instituicao', _auth2.default, _professorIsFController2.default.postInstituicao)
+router.post('/adicionar_instituicao/:idInstituicao', _auth2.default, _professorIsFController2.default.postInstituicao)
 
 router.get('/visualizar_minhas_instituicoes', _auth2.default, _professorIsFController2.default.getMinhasInstituicoes)
 

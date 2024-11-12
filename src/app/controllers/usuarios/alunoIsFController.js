@@ -126,7 +126,7 @@ class alunoIsFController extends usuarioController {
             comprovante: document
         })
 
-        return res.status(201).json({
+        return res.status(httpStatus.CREATED).json({
             error: false,
             proeficiency
         })
@@ -151,7 +151,7 @@ class alunoIsFController extends usuarioController {
             }
         })
 
-        return res.status(200).json({
+        return res.status(httpStatus.SUCCESS).json({
             error: false,
             proeficiencies
         })

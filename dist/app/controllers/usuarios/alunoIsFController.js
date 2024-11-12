@@ -126,7 +126,7 @@ class alunoIsFController extends _usuarioController2.default {
             comprovante: document
         })
 
-        return res.status(201).json({
+        return res.status(_httpStatus2.default.CREATED).json({
             error: false,
             proeficiency
         })
@@ -151,7 +151,7 @@ class alunoIsFController extends _usuarioController2.default {
             }
         })
 
-        return res.status(200).json({
+        return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
             proeficiencies
         })

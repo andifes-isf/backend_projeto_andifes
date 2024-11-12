@@ -154,7 +154,6 @@ class alunoDeinstituicaoController extends alunoIsFController {
         const existingRegistration = await alunoDeinstituicaoController.verifyExistingRegistration(req.loginUsuario, req.params.idInstituicao, req.body.inicio)
 
         if (existingRegistration) {
-            console.log("entrou aqui")
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
                 message: existingRegistration.message,
