@@ -297,4 +297,4 @@ class ProfessorIsFController extends _usuarioController2.default {
     }
 }
 
-exports. default = new ProfessorIsFController()
+exports. default = ProfessorIsFController
