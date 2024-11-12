@@ -67,6 +67,11 @@ class CursistaEspecializacao extends _sequelize.Model {
             foreignKey: 'login',
             as: 'interesse'
         })
+
+        this.hasOne(models.OuvidoriaCursoEspecializacao, {
+            foreignKey: 'login',
+            as: 'reclamation'
+        })
     }
 }
 

@@ -9,9 +9,10 @@ var _cursistacursaturmaespecializacao = require('../app/models/curso_especializa
 var _disciplinaespecializacao = require('../app/models/curso_especializacao/disciplinaespecializacao'); var _disciplinaespecializacao2 = _interopRequireDefault(_disciplinaespecializacao);
 var _editalcursoespecializacao = require('../app/models/curso_especializacao/editalcursoespecializacao'); var _editalcursoespecializacao2 = _interopRequireDefault(_editalcursoespecializacao);
 var _InteresseNaDisciplina = require('../app/models/curso_especializacao/InteresseNaDisciplina'); var _InteresseNaDisciplina2 = _interopRequireDefault(_InteresseNaDisciplina);
-var _relatorio_pratico = require('../app/models/curso_especializacao/relatorio_pratico'); var _relatorio_pratico2 = _interopRequireDefault(_relatorio_pratico);
 var _ministranteMinistraTurmaEspecializacao = require('../app/models/curso_especializacao/ministranteMinistraTurmaEspecializacao'); var _ministranteMinistraTurmaEspecializacao2 = _interopRequireDefault(_ministranteMinistraTurmaEspecializacao);
+var _ouvidoria_curso_especializacao = require('../app/models/curso_especializacao/ouvidoria_curso_especializacao'); var _ouvidoria_curso_especializacao2 = _interopRequireDefault(_ouvidoria_curso_especializacao);
 var _OrientadorOrientaCursista = require('../app/models/curso_especializacao/OrientadorOrientaCursista'); var _OrientadorOrientaCursista2 = _interopRequireDefault(_OrientadorOrientaCursista);
+var _relatorio_pratico = require('../app/models/curso_especializacao/relatorio_pratico'); var _relatorio_pratico2 = _interopRequireDefault(_relatorio_pratico);
 var _turmadisciplinaespecializacao = require('../app/models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
 
 // instituicao
@@ -58,6 +59,7 @@ const models = [
     _editalcursoespecializacao2.default,
     _InteresseNaDisciplina2.default,
     _ministranteMinistraTurmaEspecializacao2.default,
+    _ouvidoria_curso_especializacao2.default,
     _OrientadorOrientaCursista2.default,
     _relatorio_pratico2.default,
     _turmadisciplinaespecializacao2.default,

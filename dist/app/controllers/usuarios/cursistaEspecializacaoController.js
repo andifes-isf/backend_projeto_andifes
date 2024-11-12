@@ -9,6 +9,7 @@ var _notificacao = require('../../models/utils/notificacao'); var _notificacao2 
 var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 var _turmadisciplinaespecializacao = require('../../models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
+var _ouvidoria_curso_especializacao = require('../../models/curso_especializacao/ouvidoria_curso_especializacao'); var _ouvidoria_curso_especializacao2 = _interopRequireDefault(_ouvidoria_curso_especializacao);
 
 // Controllers
 var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
@@ -377,6 +378,42 @@ class CursistaEspecializacaoController {
         } catch (error) {
             return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
+    }
+
+    async postReclamation(req, res) {
+        // const userType = req.tipoUsuario
+
+        // const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], userType)
+        
+        // if (authorizationError) {
+        //     return res.status(httpStatus.UNAUTHORIZED).json({
+        //         error: true,
+        //         message: authorizationError.message,
+        //         errorName: authorizationError.name
+        //     })
+        // }
+
+        if (!(req.tipoUsuario === _userTypes2.default.CURSISTA)){
+            return res.status(403).json({
+                error: true,
+                message: _messages_pt2.default.ACCESS_DENIED,
+                errorName: _ErrorType2.default.UNAUTHORIZED_ACCESS
+            })
+        }
+
+        const { message_topic, message, anonymous } = req.body
+        
+        const reclamation = await _ouvidoria_curso_especializacao2.default.create({
+            topico_mensagem: message_topic,
+            mensagem: message,
+            anonimo: anonymous,
+            login: anonymous ? null : req.loginUsuario
+        })
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            reclamation
+        })
     }
 }
 

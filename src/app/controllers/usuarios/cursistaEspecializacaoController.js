@@ -9,6 +9,7 @@ import Notificacoes from '../../models/utils/notificacao'
 import ProfessorIsF from "../../models/usuarios/professorisf";
 import Usuario from "../../models/usuarios/usuario";
 import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
+import OuvidoriaCursoEspecializacao from "../../models/curso_especializacao/ouvidoria_curso_especializacao";
 
 // Controllers
 import ProfessorIsFController from './professorIsFController'
@@ -377,6 +378,42 @@ class CursistaEspecializacaoController {
         } catch (error) {
             return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+    }
+
+    async postReclamation(req, res) {
+        // const userType = req.tipoUsuario
+
+        // const authorizationError = alunoIsFController.verifyUserType([UserTypes.ISF_STUDENT], userType)
+        
+        // if (authorizationError) {
+        //     return res.status(httpStatus.UNAUTHORIZED).json({
+        //         error: true,
+        //         message: authorizationError.message,
+        //         errorName: authorizationError.name
+        //     })
+        // }
+
+        if (!(req.tipoUsuario === UserTypes.CURSISTA)){
+            return res.status(403).json({
+                error: true,
+                message: MESSAGES.ACCESS_DENIED,
+                errorName: ErrorType.UNAUTHORIZED_ACCESS
+            })
+        }
+
+        const { message_topic, message, anonymous } = req.body
+        
+        const reclamation = await OuvidoriaCursoEspecializacao.create({
+            topico_mensagem: message_topic,
+            mensagem: message,
+            anonimo: anonymous,
+            login: anonymous ? null : req.loginUsuario
+        })
+
+        return res.status(httpStatus.CREATED).json({
+            error: false,
+            reclamation
+        })
     }
 }
 

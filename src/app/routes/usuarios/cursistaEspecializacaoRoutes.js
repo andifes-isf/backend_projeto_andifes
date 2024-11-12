@@ -22,4 +22,6 @@ router.get('/minhas_turmas', AuthMiddleware, cursistaEspecializacaoController.ge
 
 router.post('/interesse_nas_disciplinas', AuthMiddleware, cursistaEspecializacaoController.postInteresseNaDisciplina)
 
+router.post('/reclamacao', AuthMiddleware, cursistaEspecializacaoController.postReclamation)
+
 export default router
