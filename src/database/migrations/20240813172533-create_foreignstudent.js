@@ -1,33 +1,33 @@
-"use strict";'use strict';
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('foreign_isfstudent', {
+    await queryInterface.createTable('isfstudent_foreign', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
         primaryKey: true
       },
-      paisOrigem: {
+      home_country: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      comprovante: {
+      register: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      tipo: {
+      type: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      codigo: {
+      code: {
         type: Sequelize.STRING,
         allowNull: false
       },
     })
 
-    await queryInterface.addConstraint('foreign_isfstudent', {
+    await queryInterface.addConstraint('isfstudent_foreign', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_alunoisfestrangeiro',

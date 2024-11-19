@@ -20,7 +20,7 @@ class ProfessorIsF extends _sequelize.Model {
                     type: _sequelize2.default.TEXT,
                     allowNull: false
                 },
-                inicio: {
+                start: {
                     type: _sequelize2.default.DATEONLY,
                     allowNull: false,
                     primaryKey: true,
@@ -33,7 +33,7 @@ class ProfessorIsF extends _sequelize.Model {
                         }
                     }
                 },
-                termino: {
+                end: {
                     type: _sequelize2.default.DATEONLY,
                     validate: {
                         isBeforeBegin(value) {
@@ -43,7 +43,7 @@ class ProfessorIsF extends _sequelize.Model {
                         }
                     }
                 },
-                cursista: {
+                specialization_student: {
                     type: _sequelize2.default.BOOLEAN,
                     allowNull: false
                 }
@@ -51,7 +51,7 @@ class ProfessorIsF extends _sequelize.Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'professor_isf',
+                tableName: 'isf_teacher',
                 indexes: [{
                     name: "primary",
                     unique: true,

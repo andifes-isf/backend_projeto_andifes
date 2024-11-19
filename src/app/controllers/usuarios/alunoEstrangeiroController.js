@@ -36,14 +36,14 @@ class alunoEstrangeiroController extends alunoIsFController {
             })
         }
 
-        const { homeCountry, document, type, login, code } = req.body
+        const { home_country, register, type, login, code } = req.body
 
         const foreignStudent = await AlunoEstrangeiro.create({
-            paisOrigem: homeCountry,
-            comprovante: document,
-            tipo: type,
+            home_country: home_country,
+            register: register,
+            type: type,
             login: login,
-            codigo: code
+            code: code
         })
     
         return res.status(httpStatus.CREATED).json({

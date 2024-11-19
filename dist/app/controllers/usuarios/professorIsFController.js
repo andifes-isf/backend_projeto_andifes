@@ -18,7 +18,7 @@ var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _Error
 class ProfessorIsFController extends _usuarioController2.default {
     // Auxiliar Functions
 
-    static async postIsFTeacher(req, res, cursista) {
+    static async postIsFTeacher(req, res, specialization_student) {
         const existingTeacher = await ProfessorIsFController.verifyExistingObject(_professorisf2.default, req.body.login, _messages_pt2.default.EXISTING_ISF_TEACHER)
 
         if (existingTeacher) {
@@ -40,9 +40,9 @@ class ProfessorIsFController extends _usuarioController2.default {
         const teacher = await _professorisf2.default.create({
             login: req.body.login,
             poca: req.body.poca,
-            inicio: req.body.inicio,
-            fim: req.body.fim,
-            cursista: cursista
+            start: req.body.start,
+            end: req.body.end,
+            specialization_student: specialization_student
         })
 
         return {

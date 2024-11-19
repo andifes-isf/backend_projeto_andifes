@@ -18,7 +18,7 @@ import ErrorType from "../../utils/response/ErrorType/ErrorType";
 class ProfessorIsFController extends usuarioController {
     // Auxiliar Functions
 
-    static async postIsFTeacher(req, res, cursista) {
+    static async postIsFTeacher(req, res, specialization_student) {
         const existingTeacher = await ProfessorIsFController.verifyExistingObject(ProfessorIsF, req.body.login, MESSAGES.EXISTING_ISF_TEACHER)
 
         if (existingTeacher) {
@@ -40,9 +40,9 @@ class ProfessorIsFController extends usuarioController {
         const teacher = await ProfessorIsF.create({
             login: req.body.login,
             poca: req.body.poca,
-            inicio: req.body.inicio,
-            fim: req.body.fim,
-            cursista: cursista
+            start: req.body.start,
+            end: req.body.end,
+            specialization_student: specialization_student
         })
 
         return {

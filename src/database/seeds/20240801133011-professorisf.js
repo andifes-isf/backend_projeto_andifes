@@ -38,6 +38,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('professor_isf', null, {})
+    await queryInterface.bulkDelete('isf_teacher', null, {})
   }
 };
