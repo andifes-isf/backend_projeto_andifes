@@ -88,7 +88,7 @@ class ProfessorIsF extends _sequelize.Model {
         })
 
         this.belongsToMany(models.InstituicaoEnsino, {
-            through: 'comprovanteprofessorinstituicao', 
+            through: 'teacher_institution_register', 
             foreignKey: 'login',
             targetKey: 'idInstituicao',
             timestamps: false

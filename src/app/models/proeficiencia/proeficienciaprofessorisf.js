@@ -25,7 +25,7 @@ class ProeficienciaProfessorIsF extends Model {
         sequelize,
         timestamps: true,
         updatedAt: false,
-        tableName: 'proeficienciaprofessorisf',
+        tableName: 'isfteacher_proeficiency',
         indexes: [{
             name: 'primary_key',
             unique: true,

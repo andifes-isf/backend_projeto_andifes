@@ -24,7 +24,7 @@ class ProeficienciaAlunoIsf extends Model {
       {
         sequelize,
         timestamps: false,
-        tableName: 'proeficienciaalunoisf',
+        tableName: 'isfstudent_proeficiency',
         indexes: [{
             name: 'primary_key',
             unique: true,

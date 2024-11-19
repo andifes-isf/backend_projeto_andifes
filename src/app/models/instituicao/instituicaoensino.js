@@ -44,7 +44,7 @@ class InstituicaoEnsino extends Model {
         })
 
         this.belongsToMany(models.ProfessorIsF, {
-            through: 'comprovanteprofessorinstituicao',
+            through: 'teacher_institution_register',
             foreignKey: 'idInstituicao',
             sourceKey: 'idInstituicao',
             timestamps: false

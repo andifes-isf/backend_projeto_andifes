@@ -43,7 +43,7 @@ class ComprovanteProfessorInstituicao extends _sequelize.Model {
       {
         sequelize,
         timestamps: false,
-        tableName: 'comprovanteprofessorinstituicao',
+        tableName: 'teacher_institution_register',
         indexes: [{
             name: 'primary_key',
             unique: true,
