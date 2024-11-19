@@ -3,17 +3,17 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('usuario', {
+    return queryInterface.createTable('user', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
         primaryKey: true
       },
-      nome: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      sobrenome: {
+      surname: {
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -25,35 +25,35 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      telefone: {
+      phone: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      etnia: {
+      ethnicty: {
         type: Sequelize.ENUM('amarelo', 'branco', 'indigena', 'pardo', 'preto', 'quilombola')
       },
-      genero: {
+      gender: {
         type: Sequelize.ENUM('feminino', 'masculino', 'nao binario', 'outros')
       },
-      ativo: {
+      active: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: true
       },
-      nomeEmail: {
+      email: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
-      dominio: {
+      email_domain: {
         type: Sequelize.ENUM('gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'),
         allowNull: false
       },
-      senha_encriptada: {
+      encrypted_password: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      tipo: {
+      type: {
         type: Sequelize.ENUM('alunoisf', 'professorisf', 'cursista', 'coordenadornacional', 'coordenadornacionalidioma', 'docenteorientador', 'docenteministrante'),
         allowNull: false
       }
@@ -61,6 +61,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('usuario')
+    return queryInterface.dropTable('user')
   }
 };

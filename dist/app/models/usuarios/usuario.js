@@ -7,26 +7,27 @@ class Usuario extends _sequelize.Model {
             {
                 login: {
                     type: _sequelize2.default.STRING,
+                    allowNull: false,
                     primaryKey: true
-                },
-                nome: _sequelize2.default.STRING,
-                sobrenome: _sequelize2.default.STRING,
+                  },
+                name: _sequelize2.default.STRING,
+                surname: _sequelize2.default.STRING,
                 DDI: _sequelize2.default.INTEGER,
                 DDD: _sequelize2.default.INTEGER,
-                telefone: _sequelize2.default.INTEGER,
-                etnia: _sequelize2.default.ENUM('branco', 'pardo', 'preto', 'amarelo', 'indigena'),
-                genero: _sequelize2.default.ENUM('masculino', 'feminino', 'nao binario'),
-                ativo: _sequelize2.default.BOOLEAN,
-                nomeEmail: _sequelize2.default.STRING,
-                dominio: _sequelize2.default.ENUM('gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'),
-                senha: _sequelize2.default.VIRTUAL,
-                senha_encriptada: _sequelize2.default.STRING,
-                tipo: _sequelize2.default.ENUM('alunoisf', 'professorisf', 'cursista', 'coordenadornacional', 'coordenadornacionalidioma', 'docenteorientador', 'docenteministrante'),
+                phone: _sequelize2.default.INTEGER,
+                ethnicty: _sequelize2.default.ENUM('amarelo', 'branco', 'indigena', 'pardo', 'preto', 'quilombola'),
+                gender: _sequelize2.default.ENUM('feminino', 'masculino', 'nao binario', 'outros'),
+                active: _sequelize2.default.BOOLEAN,
+                email: _sequelize2.default.STRING,
+                email_domain: _sequelize2.default.ENUM('gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'),
+                password: _sequelize2.default.VIRTUAL,
+                encrypted_password: _sequelize2.default.STRING,
+                type: _sequelize2.default.ENUM('alunoisf', 'professorisf', 'cursista', 'coordenadornacional', 'coordenadornacionalidioma', 'docenteorientador', 'docenteministrante')
             },
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'usuario',
+                tableName: 'user',
                 indexes: [{
                     name: "primary_key",
                     unique: true,
@@ -37,16 +38,16 @@ class Usuario extends _sequelize.Model {
                 }, {
                     name: 'unique_telefone',
                     unique: true,
-                    fields: ['DDI', 'DDD', 'telefone'],
+                    fields: ['DDI', 'DDD', 'phone'],
                 }]
             }
         )
 
         // Hooks
-        this.addHook('beforeSave', async (usuario) => {
-            if(usuario.senha) {
+        this.addHook('beforeSave', async (user) => {
+            if(user.password) {
                 const salt = await _bcrypt2.default.genSalt(12)
-                usuario.senha_encriptada = await _bcrypt2.default.hash(usuario.senha, salt)
+                user.encrypted_password = await _bcrypt2.default.hash(user.password, salt)
             }
         })
 

@@ -53,7 +53,7 @@ class usuarioController {
         return notification[0]
     }
 
-    static async postUser(req, _, tipo) {
+    static async postUser(req, _, type) {
         const existingUser = await usuarioController.verifyExistingObject(Usuario, req.body.login, MESSAGES.EXISTING_USER)
 
         if(existingUser) {
@@ -65,18 +65,18 @@ class usuarioController {
 
         const user = await Usuario.create({
             login: req.body.login,
-            nome: req.body.nome,
-            sobrenome: req.body.sobrenome,
+            name: req.body.name,
+            surname: req.body.surname,
             DDI: req.body.DDI,
             DDD: req.body.DDD,
-            telefone: req.body.telefone,
-            etnia: req.body.etnia,
-            genero: req.body.genero,
-            ativo: 1,
-            nomeEmail: req.body.nomeEmail,
-            dominio: req.body.dominio,
-            senha: req.body.senha,
-            tipo: tipo
+            phone: req.body.phone,
+            ethnicity: req.body.ethnicity,
+            gender: req.body.gender,
+            active: 1,
+            email: req.body.email,
+            email_domain: req.body.email_domain,
+            password: req.body.password,
+            type: type
         })
 
         return {

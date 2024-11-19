@@ -21,7 +21,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_login_coordenadornacionalidioma',
       references: {
-        table: 'usuario',
+        table: 'user',
         field: 'login'
       },
       onDelete: 'cascade',
