@@ -26,7 +26,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_login_alunodeinstituicao',
       references: {
-        table: 'alunoisf',
+        table: 'aluno_isf',
         field: 'login'
       },
       onDelete: 'cascade',

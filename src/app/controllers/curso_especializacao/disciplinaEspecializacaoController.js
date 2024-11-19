@@ -4,9 +4,9 @@ import * as Yup from 'yup'
 import DisciplinaEspecializacao from '../../models/curso_especializacao/disciplinaespecializacao'
 
 // Utils
-import MESSAGES from '../../utils/messages/messages_pt'
-import CustomError from '../../utils/CustomError/CustomError'
-import httpStatus from '../../utils/httpStatus/httpStatus'
+import MESSAGES from '../../utils/response/messages/messages_pt'
+import CustomError from '../../utils/response/CustomError/CustomError'
+import httpStatus from '../../utils/response/httpStatus/httpStatus'
 
 class disciplinaEspecializacaoController {
     async post(req, res){

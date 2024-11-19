@@ -17,7 +17,7 @@ import RelatorioPratico from '../../models/curso_especializacao/relatorio_pratic
 
 // Utils
 import UserTypes from '../../utils/userType/userTypes'
-import MESSAGES from '../../utils/messages/messages_pt'
+import MESSAGES from '../../utils/response/messages/messages_pt'
 import ReferencedModel from '../../utils/referencedModel/referencedModel'
 
 class coordenadorNacionalIdiomaController {

@@ -9,7 +9,6 @@ import 'express-async-errors'
 import express, { request, response, nextFunction} from 'express'
 import routes from './app/routes/routes'
 import './database'
-import CustomError from './app/utils/CustomError/CustomError'
 
 const app = express()
 

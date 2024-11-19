@@ -19,7 +19,7 @@ class AlunoDeInstituicao extends Model {
                     type: Sequelize.STRING,
                     allowNull: false,
                     references: {
-                        model: 'alunoisf',
+                        model: 'aluno_isf',
                         key: 'login',
                     },
                     onDelete: 'CASCADE',

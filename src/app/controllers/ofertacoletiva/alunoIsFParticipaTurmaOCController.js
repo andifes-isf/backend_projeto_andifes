@@ -8,11 +8,10 @@ import Curso from '../../models/ofertacoletiva/curso'
 
 // Utils
 import nivelFactory from '../../utils/niveis/nivelFactory'
-import nivelProeficiencia from '../../utils/niveis/nivel'
 import UserTypes from '../../utils/userType/userTypes'
-import MESSAGES from '../../utils/messages/messages_pt'
-import httpStatus from '../../utils/httpStatus/httpStatus'
-import CustomError from '../../utils/CustomError/CustomError'
+import MESSAGES from '../../utils/response/messages/messages_pt'
+import httpStatus from '../../utils/response/httpStatus/httpStatus'
+import CustomError from '../../utils/response/CustomError/CustomError'
 
 
 class AlunoIsFParticipaTurmaOCController {

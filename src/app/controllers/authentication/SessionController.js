@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import bcrypt from 'bcrypt'
 import Usuario from '../../models/usuarios/usuario'
 import authConfig from '../../../config/auth'
-import MESSAGES from '../../utils/messages/messages_pt'
+import MESSAGES from '../../utils/response/messages/messages_pt'
 
 class SessionController {
     async store(req, res) {

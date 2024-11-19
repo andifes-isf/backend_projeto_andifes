@@ -9,7 +9,6 @@ require('express-async-errors');
 var _express = require('express'); var _express2 = _interopRequireDefault(_express);
 var _routes = require('./app/routes/routes'); var _routes2 = _interopRequireDefault(_routes);
 require('./database');
-var _CustomError = require('./app/utils/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
 
 const app = _express2.default.call(void 0, )
 

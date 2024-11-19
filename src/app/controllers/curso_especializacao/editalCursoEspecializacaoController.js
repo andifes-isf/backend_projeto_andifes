@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 import EditalCursoEspecializacao from '../../models/curso_especializacao/editalcursoespecializacao'
 
 // Utils
-import httpStatus from '../../utils/httpStatus/httpStatus'
+import httpStatus from '../../utils/response/httpStatus/httpStatus'
 
 class editalEspecializacaoController {
     async get(_, res){

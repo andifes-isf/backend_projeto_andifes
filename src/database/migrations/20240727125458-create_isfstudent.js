@@ -1,9 +1,9 @@
-"use strict";'use strict';
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('alunoisf', {
+    await queryInterface.createTable('aluno_isf', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -15,7 +15,7 @@ module.exports = {
       }
     })
 
-    await queryInterface.addConstraint('alunoisf', {
+    await queryInterface.addConstraint('aluno_isf', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_alunoisf',

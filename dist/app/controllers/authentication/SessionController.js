@@ -3,7 +3,7 @@ var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
 var _bcrypt = require('bcrypt'); var _bcrypt2 = _interopRequireDefault(_bcrypt);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 var _auth = require('../../../config/auth'); var _auth2 = _interopRequireDefault(_auth);
-var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 
 class SessionController {
     async store(req, res) {

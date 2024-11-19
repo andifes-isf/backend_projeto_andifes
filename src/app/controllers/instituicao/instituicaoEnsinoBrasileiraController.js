@@ -5,9 +5,9 @@ import InstituicaoEnsinoBrasileira from '../../models/instituicao/instituicaoens
 import instituicaoEnsinoController from './instituicaoEnsinoController'
 
 // Utils
-import MESSAGES from '../../utils/messages/messages_pt'
-import CustomError from '../../utils/CustomError/CustomError'
-import httpStatus from '../../utils/httpStatus/httpStatus'
+import MESSAGES from '../../utils/response/messages/messages_pt'
+import CustomError from '../../utils/response/CustomError/CustomError'
+import httpStatus from '../../utils/response/httpStatus/httpStatus'
 
 class instituicaoEnsinoBrasileiraController {
     async post(req, res){

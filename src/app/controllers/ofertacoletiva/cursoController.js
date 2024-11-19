@@ -2,9 +2,9 @@
 import Curso from "../../models/ofertacoletiva/curso";
 
 // Utils
-import httpStatus from "../../utils/httpStatus/httpStatus";
-import MESSAGES from "../../utils/messages/messages_pt";
-import CustomError from "../../utils/CustomError/CustomError";
+import httpStatus from "../../utils/response/httpStatus/httpStatus";
+import MESSAGES from "../../utils/response/messages/messages_pt";
+import CustomError from "../../utils/response/CustomError/CustomError";
 
 class cursoController {
     static async verifyExistingCourse(name) {

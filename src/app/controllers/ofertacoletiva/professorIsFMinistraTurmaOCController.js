@@ -6,10 +6,10 @@ import Curso from '../../models/ofertacoletiva/curso'
 
 // Utils
 import nivelFactory from '../../utils/niveis/nivelFactory'
-import MESSAGES from "../../utils/messages/messages_pt"
+import MESSAGES from "../../utils/response/messages/messages_pt"
 import UserTypes from '../../utils/userType/userTypes'
-import httpStatus from "../../utils/httpStatus/httpStatus"
-import CustomError from "../../utils/CustomError/CustomError"
+import httpStatus from "../../utils/response/httpStatus/httpStatus"
+import CustomError from "../../utils/response/CustomError/CustomError"
 
 class ProfessorIsFMinistraTurmaOCController {
     static async verifyExistingClass(classId) {

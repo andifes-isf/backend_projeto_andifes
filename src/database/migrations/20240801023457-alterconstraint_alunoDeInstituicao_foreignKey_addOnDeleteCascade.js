@@ -10,7 +10,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_login_alunodeinstituicao',
       references: {
-        table: 'alunoisf',
+        table: 'aluno_isf',
         field: 'login'
       },
       onDelete: 'CASCADE',
@@ -27,7 +27,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_login_alunodeinstituicao',
       references: {
-        table: 'alunoisf',
+        table: 'aluno_isf',
         field: 'login'
       },
       onDelete: 'NO ACTION' // ou qualquer outro comportamento desejado

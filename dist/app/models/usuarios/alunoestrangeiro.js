@@ -9,7 +9,7 @@ class AlunoEstrangeiro extends _sequelize.Model {
                 allowNull: false,
                 primaryKey: true,
                 references: {
-                    model: 'alunoisf',
+                    model: 'aluno_isf',
                     key: 'login',
                 },
                 onDelete: 'CASCADE',

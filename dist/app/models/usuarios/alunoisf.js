@@ -20,7 +20,7 @@ class AlunoIsF extends _sequelize.Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'alunoisf',
+                tableName: 'aluno_isf',
                 indexes: [{
                     name: "primary_key",
                     unique: true,

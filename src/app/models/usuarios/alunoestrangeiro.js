@@ -9,7 +9,7 @@ class AlunoEstrangeiro extends Model {
                 allowNull: false,
                 primaryKey: true,
                 references: {
-                    model: 'alunoisf',
+                    model: 'aluno_isf',
                     key: 'login',
                 },
                 onDelete: 'CASCADE',
