@@ -7,20 +7,33 @@ class CursistaEspecializacao extends _sequelize.Model {
                 login: {
                     type: _sequelize2.default.STRING,
                     allowNull: false,
-                    primaryKey: true,
-                    references: {
-                      model: 'professorisf',
-                      key: 'login',
-                      name: 'fk_login_cursistaespecializacao'
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
-                }
+                    primaryKey: true
+                },
+                horas_praticas: {
+                    type: _sequelize2.default.INTEGER,
+                    defaultValue: 0
+                },
+                horas_NC: {
+                    type: _sequelize2.default.INTEGER,
+                    defaultValue: 0
+                },
+                horas_CCTI: {
+                    type: _sequelize2.default.INTEGER,
+                    defaultValue: 0
+                },
+                horas_CCIP: {
+                    type: _sequelize2.default.INTEGER,
+                    defaultValue: 0
+                },
+                horas_CCI: {
+                    type: _sequelize2.default.INTEGER,
+                    defaultValue: 0
+                },
             },
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'cursistaespecializacao',
+                tableName: 'cursista_especializacao',
                 indexes: [{
                     name: "primary",
                     unique: true,

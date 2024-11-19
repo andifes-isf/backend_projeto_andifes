@@ -1,11 +1,9 @@
 import { Sequelize } from "sequelize";
 
-// Models
-import CursistaCursaTurmaEspecializacao from "../../models/curso_especializacao/cursistacursaturmaespecializacao";
+// Modelscursistacursaturmaespecializacao";
 import CursistaEspecializacao from "../../models/usuarios/cursistaespecializacao";
 import InteresseNaDisciplina from '../../models/curso_especializacao/InteresseNaDisciplina'
 import RelatorioPratico from "../../models/curso_especializacao/relatorio_pratico";
-import Notificacoes from '../../models/utils/notificacao'
 import ProfessorIsF from "../../models/usuarios/professorisf";
 import Usuario from "../../models/usuarios/usuario";
 import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
@@ -14,7 +12,6 @@ import DisciplinaEspecializacao from '../../models/curso_especializacao/discipli
 
 // Controllers
 import ProfessorIsFController from './professorIsFController'
-import DocenteOrientador from "../../models/usuarios/docenteorientador";
 import Notificacao from "../../models/utils/notificacao";
 
 // Utils
