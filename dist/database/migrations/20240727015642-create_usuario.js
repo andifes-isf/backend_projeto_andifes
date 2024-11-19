@@ -9,7 +9,7 @@ module.exports = {
         allowNull: false,
         primaryKey: true
       },
-      name: {
+      nome: {
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -29,11 +29,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      raca: {
-        type: Sequelize.ENUM('branco', 'pardo', 'preto', 'amarelo', 'indigena')
+      etnia: {
+        type: Sequelize.ENUM('amarelo', 'branco', 'indigena', 'pardo', 'preto', 'quilombola')
       },
       genero: {
-        type: Sequelize.ENUM('masculino', 'feminino', 'nao binario')
+        type: Sequelize.ENUM('feminino', 'masculino', 'nao binario', 'outros')
       },
       ativo: {
         type: Sequelize.BOOLEAN,
@@ -49,16 +49,18 @@ module.exports = {
         type: Sequelize.ENUM('gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'),
         allowNull: false
       },
-      senha: {
+      senha_encriptada: {
         type: Sequelize.STRING,
         allowNull: false
       },
       tipo: {
-        type: Sequelize.ENUM('alunoisf', 'professorisf'),
+        type: Sequelize.ENUM('alunoisf', 'professorisf', 'cursista', 'coordenadornacional', 'coordenadornacionalidioma', 'docenteorientador', 'docenteministrante'),
         allowNull: false
       }
     })
   },
 
-  down: () => {}
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('usuario')
+  }
 };
