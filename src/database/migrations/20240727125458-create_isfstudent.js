@@ -3,19 +3,19 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('aluno_isf', {
+    await queryInterface.createTable('isf_student', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
         primaryKey: true,
       },
-      deInstituicao: {
+      from_institution: {
         type: Sequelize.BOOLEAN,
         allowNull: false
       }
     })
 
-    await queryInterface.addConstraint('aluno_isf', {
+    await queryInterface.addConstraint('isf_student', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_alunoisf',

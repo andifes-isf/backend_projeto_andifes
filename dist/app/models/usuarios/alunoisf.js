@@ -8,12 +8,12 @@ class AlunoIsF extends _sequelize.Model {
                     type: _sequelize2.default.STRING,
                     primaryKey: true
                 },
-                deInstituicao: _sequelize2.default.BOOLEAN
+                from_institution: _sequelize2.default.BOOLEAN
             },
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'aluno_isf',
+                tableName: 'isf_student',
                 indexes: [{
                     name: "primary_key",
                     unique: true,

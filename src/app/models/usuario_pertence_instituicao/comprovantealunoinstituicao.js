@@ -18,7 +18,7 @@ class ComprovanteAlunoInstituicao extends Model {
                 login: {
                     type: Sequelize.STRING,
                     references: {
-                        model: 'aluno_isf_instituicao',
+                        model: 'isfstudent_institution',
                         key: 'login'
                     },
                     onDelete: 'CASCADE',

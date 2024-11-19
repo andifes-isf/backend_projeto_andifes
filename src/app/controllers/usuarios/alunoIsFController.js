@@ -19,7 +19,7 @@ import ErrorType from '../../utils/response/ErrorType/ErrorType'
 class alunoIsFController extends usuarioController {
     // Auxiliar Functions 
 
-    static async postIsFStudent(req, res, deInstituicao) {
+    static async postIsFStudent(req, res, from_institution) {
         const existingStudent = await alunoIsFController.verifyExistingObject(AlunoIsF, req.body.login, MESSAGES.EXISTING_ISF_STUDENT)
 
         if (existingStudent) {
@@ -40,7 +40,7 @@ class alunoIsFController extends usuarioController {
 
         const student = await AlunoIsF.create({
             login: req.body.login,
-            deInstituicao: deInstituicao
+            from_institution: from_institution
         })
 
         return {

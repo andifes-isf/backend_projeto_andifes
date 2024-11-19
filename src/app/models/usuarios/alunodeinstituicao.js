@@ -4,14 +4,14 @@ class AlunoDeInstituicao extends Model {
     static init (sequelize) {
         super.init(
             {
-                nDocumento: {
+                register_number: {
                     type: Sequelize.STRING,
                     unique: true
                 },
-                cargo: {
+                position: {
                     type: Sequelize.INTEGER,
                 },
-                areaAtuacao: {
+                activity_area: {
                     type: Sequelize.ENUM('ciencias exatas e da terra','ciencias biologicas','engenharia/tecnologia','ciencias da saude','ciencias agrarias','ciencias sociais','ciencias humanas','linguistica','letras e artes', 'prefiro nao dizer'),
                     allowNull: false
                 },
@@ -23,7 +23,7 @@ class AlunoDeInstituicao extends Model {
             {                
                 sequelize,
                 timestamps: false,
-                tableName: 'aluno_isf_instituicao',
+                tableName: 'isfstudent_institution',
                 indexes: [{
                     name: 'primary_key',
                     unique: true,

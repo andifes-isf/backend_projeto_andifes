@@ -77,9 +77,9 @@ class alunoDeinstituicaoController extends alunoIsFController {
         }
 
         const institutionStudent = await AlunoDeInstituicao.create({
-            nDocumento: req.body.nDocumento,
-            cargo: req.body.cargo,
-            areaAtuacao: req.body.areaAtuacao,
+            register_number: req.body.register_number,
+            position: req.body.position,
+            activity_area: req.body.activity_area,
             login: req.body.login
         })
     
