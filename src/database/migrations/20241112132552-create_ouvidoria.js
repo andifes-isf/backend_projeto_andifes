@@ -36,7 +36,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_login_ouvidoria_curso_especializacao',
       references: {
-        table: 'cursista_especializacao',
+        table: 'specialization_student',
         field: 'login'
       },
       onDelete: 'cascade',

@@ -28,7 +28,7 @@ class ProfessorIsFController extends usuarioController {
             }
         }
         
-        const { error, user} = await usuarioController.postUser(req, res, cursista ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
+        const { error, user} = await usuarioController.postUser(req, res, specialization_student ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
 
         if (error) {
             return {

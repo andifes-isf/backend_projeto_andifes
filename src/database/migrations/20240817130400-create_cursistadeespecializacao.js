@@ -3,35 +3,35 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('cursista_especializacao', {
+    await queryInterface.createTable('specialization_student', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
         primaryKey: true
       },
-      horas_praticas: {
+      practical_hours: {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
-      horas_NC: {
+      nc_hours: {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
-      horas_CCTI: {
+      ccti_hours: {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
-      horas_CCIP: {
+      ccip_hours: {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
-      horas_CCI: {
+      cci_hours: {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
     })
 
-    await queryInterface.addConstraint('cursista_especializacao', {
+    await queryInterface.addConstraint('specialization_student', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_cursistaespecializacao',

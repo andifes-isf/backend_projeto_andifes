@@ -9,23 +9,23 @@ class CursistaEspecializacao extends Model {
                     allowNull: false,
                     primaryKey: true
                 },
-                horas_praticas: {
+                practical_hours: {
                     type: Sequelize.INTEGER,
                     defaultValue: 0
                 },
-                horas_NC: {
+                nc_hours: {
                     type: Sequelize.INTEGER,
                     defaultValue: 0
                 },
-                horas_CCTI: {
+                ccti_hours: {
                     type: Sequelize.INTEGER,
                     defaultValue: 0
                 },
-                horas_CCIP: {
+                ccip_hours: {
                     type: Sequelize.INTEGER,
                     defaultValue: 0
                 },
-                horas_CCI: {
+                cci_hours: {
                     type: Sequelize.INTEGER,
                     defaultValue: 0
                 },
@@ -33,7 +33,7 @@ class CursistaEspecializacao extends Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'cursista_especializacao',
+                tableName: 'specialization_student',
                 indexes: [{
                     name: "primary",
                     unique: true,
