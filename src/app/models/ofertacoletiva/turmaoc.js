@@ -14,12 +14,6 @@ class TurmaOC extends Model {
                 type: Sequelize.BIGINT,
                 allowNull: false,
                 primaryKey: true,
-                references: {
-                  model: 'curso',
-                  key: 'idCurso'
-                },
-                onDelete: 'CASCADE',
-                onUpdate: 'CASCADE'
               },
               nome: {
                 type: Sequelize.STRING,

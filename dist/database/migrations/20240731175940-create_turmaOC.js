@@ -29,7 +29,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_idCurso_turmaoc',
       references: {
-        table: 'curso',
+        table: 'course',
         field: 'idCurso'
       },
       onDelete: 'cascade',

@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('curso', {
+    return queryInterface.createTable('course', {
       idCurso: {
         type: Sequelize.BIGINT,
         autoIncrement: true,
@@ -16,7 +16,7 @@ module.exports = {
         unique: true
       },
       idioma: {
-        type: Sequelize.ENUM('ingles', 'portuges', 'alemao', 'frances', 'italiano', 'espanhol', 'japones'),
+        type: Sequelize.ENUM('ingles', 'portugues', 'alemao', 'frances', 'italiano', 'espanhol', 'japones'),
         allowNull: false
       },
       categoria: {
