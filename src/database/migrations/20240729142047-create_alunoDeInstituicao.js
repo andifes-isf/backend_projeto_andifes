@@ -3,11 +3,11 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('alunoisfdeinstituicao', {
+    await queryInterface.createTable('aluno_isf_instituicao', {
       nDocumento: {
         type: Sequelize.STRING,
         allowNull: false,
-        primaryKey: true
+        unique: true
       },
       cargo: Sequelize.INTEGER,
       areaAtuacao: {
@@ -17,11 +17,11 @@ module.exports = {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
+        primaryKey: true
       }
     })
 
-    await queryInterface.addConstraint('alunoisfdeinstituicao', {
+    await queryInterface.addConstraint('aluno_isf_instituicao', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_alunodeinstituicao',

@@ -6,14 +6,7 @@ class AlunoIsF extends Model {
             {
                 login: {
                     type: Sequelize.STRING,
-                    primaryKey: true,
-                    references: {
-                        model: 'usuarios',
-                        key: 'login',
-                        name: 'fk_login_alunoisf'
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
+                    primaryKey: true
                 },
                 deInstituicao: Sequelize.BOOLEAN
             },

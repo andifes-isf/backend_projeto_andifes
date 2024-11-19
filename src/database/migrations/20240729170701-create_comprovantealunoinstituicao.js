@@ -29,7 +29,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_login_comprovante_aluno_instituicao',
       references: {
-        table: 'alunoisfdeinstituicao',
+        table: 'aluno_isf_instituicao',
         field: 'login'
       },
       onDelete: 'cascade',

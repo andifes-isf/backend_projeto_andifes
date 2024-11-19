@@ -57,6 +57,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('alunoisfdeinstituicao', null, {})
+    await queryInterface.bulkDelete('aluno_isf_instituicao', null, {})
   }
 };

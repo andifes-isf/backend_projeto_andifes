@@ -56,7 +56,7 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
     // Endpoints
 
     async post(req, res) {
-        const existingStudent = await alunoDeinstituicaoController.verifyExistingObject(_alunodeinstituicao2.default, req.body.nDocumento, _messages_pt2.default.EXISTING_INSTITUTION_STUDENT)
+        const existingStudent = await alunoDeinstituicaoController.verifyExistingObject(_alunodeinstituicao2.default, req.body.login, _messages_pt2.default.EXISTING_INSTITUTION_STUDENT)
         
         if (existingStudent) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({

@@ -6,7 +6,7 @@ class AlunoDeInstituicao extends _sequelize.Model {
             {
                 nDocumento: {
                     type: _sequelize2.default.STRING,
-                    primaryKey: true,
+                    unique: true
                 },
                 cargo: {
                     type: _sequelize2.default.INTEGER,
@@ -17,19 +17,13 @@ class AlunoDeInstituicao extends _sequelize.Model {
                 },
                 login: {
                     type: _sequelize2.default.STRING,
-                    allowNull: false,
-                    references: {
-                        model: 'aluno_isf',
-                        key: 'login',
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
+                    primaryKey: true,
                 }
             },
             {                
                 sequelize,
                 timestamps: false,
-                tableName: 'alunoisfdeinstituicao',
+                tableName: 'aluno_isf_instituicao',
                 indexes: [{
                     name: 'primary_key',
                     unique: true,

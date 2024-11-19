@@ -56,7 +56,7 @@ class alunoDeinstituicaoController extends alunoIsFController {
     // Endpoints
 
     async post(req, res) {
-        const existingStudent = await alunoDeinstituicaoController.verifyExistingObject(AlunoDeInstituicao, req.body.nDocumento, MESSAGES.EXISTING_INSTITUTION_STUDENT)
+        const existingStudent = await alunoDeinstituicaoController.verifyExistingObject(AlunoDeInstituicao, req.body.login, MESSAGES.EXISTING_INSTITUTION_STUDENT)
         
         if (existingStudent) {
             return res.status(httpStatus.BAD_REQUEST).json({
