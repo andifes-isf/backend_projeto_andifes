@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('instituicaoensino', {
+    return queryInterface.createTable('instituicao_ensino', {
       idInstituicao: {
         type: Sequelize.BIGINT,
         autoIncrement: true,

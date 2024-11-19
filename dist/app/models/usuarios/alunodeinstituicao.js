@@ -45,7 +45,7 @@ class AlunoDeInstituicao extends _sequelize.Model {
         })
 
         this.belongsToMany(models.InstituicaoEnsino, {
-            through: 'comprovantealunoinstituicao',
+            through: 'comprovante_aluno_instituicao',
             foreignKey: 'login',
             sourceKey: 'login',
             timestamps: false,

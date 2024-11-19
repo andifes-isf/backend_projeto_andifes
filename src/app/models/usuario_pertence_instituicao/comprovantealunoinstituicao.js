@@ -7,7 +7,7 @@ class ComprovanteAlunoInstituicao extends Model {
                 idInstituicao: {
                     type: Sequelize.BIGINT,
                     references: {
-                      model: 'instituicaoensino',
+                      model: 'instituicao_ensino',
                       key: 'idInstituicao',
                       name: 'fk_comprovante_instituicao'
                     },
@@ -54,7 +54,7 @@ class ComprovanteAlunoInstituicao extends Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'comprovantealunoinstituicao',
+                tableName: 'comprovante_aluno_instituicao',
                 indexes: [{
                     name: 'primary_key',
                     unique: true,

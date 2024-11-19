@@ -19,7 +19,7 @@ class InstituicaoEnsino extends _sequelize.Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'instituicaoensino',
+                tableName: 'instituicao_ensino',
                 indexes: [{
                     name: 'primary_key',
                     unique: true,
@@ -37,7 +37,7 @@ class InstituicaoEnsino extends _sequelize.Model {
 
     static associate(models) {
         this.belongsToMany(models.AlunoDeInstituicao, {
-            through: 'comprovantealunoinstituicao',
+            through: 'comprovante_aluno_instituicao',
             foreignKey: 'idInstituicao',
             targetKey: 'login',
             timestamps: false

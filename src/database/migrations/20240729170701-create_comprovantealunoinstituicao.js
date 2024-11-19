@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('comprovantealunoinstituicao', {
+    await queryInterface.createTable('comprovante_aluno_instituicao', {
       idInstituicao: {
         type: Sequelize.BIGINT,
         primaryKey: true,
@@ -24,10 +24,10 @@ module.exports = {
       }
     })
 
-    await queryInterface.addConstraint('comprovantealunoinstituicao', {
+    await queryInterface.addConstraint('comprovante_aluno_instituicao', {
       fields: ['login'],
       type: 'foreign key',
-      name: 'fk_login_comprovante_aluno_instituicao',
+      name: 'fk_login_comprovantealunoinstituicao',
       references: {
         table: 'aluno_isf_instituicao',
         field: 'login'
@@ -36,12 +36,12 @@ module.exports = {
       onUpdate: 'cascade'
     })
 
-    await queryInterface.addConstraint('comprovantealunoinstituicao', {
+    await queryInterface.addConstraint('comprovante_aluno_instituicao', {
       fields: ['idInstituicao'],
       type: 'foreign key',
       name: 'fk_idInstituicao_comprovantealunoinstituicao',
       references: {
-        table: 'instituicaoensino',
+        table: 'instituicao_ensino',
         field: 'idInstituicao'
       },
       onDelete: 'cascade',

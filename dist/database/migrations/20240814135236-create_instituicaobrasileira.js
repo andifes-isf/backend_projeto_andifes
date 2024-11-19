@@ -23,7 +23,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_idInstituicao_instituicaoensinobrasileira',
       references: {
-        table: 'instituicaoensino',
+        table: 'instituicao_ensino',
         field: 'idInstituicao'
       },
       onDelete: 'cascade',
