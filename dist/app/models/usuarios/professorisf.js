@@ -51,7 +51,7 @@ class ProfessorIsF extends _sequelize.Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'professorisf',
+                tableName: 'professor_isf',
                 indexes: [{
                     name: "primary",
                     unique: true,

@@ -7,26 +7,12 @@ class ProfessorIsFMinistraTurmaOC extends Model {
                 login: {
                     type: Sequelize.STRING,
                     allowNull: false,
-                    primaryKey: true,
-                    references: {
-                      model: 'professorisf',
-                      key: 'login',
-                      name: 'fk_login_professorisf_ministra_turmaoc'
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
+                    primaryKey: true
                 },
                 idTurma: {
                     type: Sequelize.BIGINT,
                     allowNull: false,
-                    primaryKey: true,
-                    references: {
-                        model: 'turmaoc',
-                        key: 'idTurma',
-                        name: 'fk_idTurma_professorisf_ministra_turmaoc'
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
+                    primaryKey: true
                 },
                 inicio: {
                     type: Sequelize.DATEONLY,

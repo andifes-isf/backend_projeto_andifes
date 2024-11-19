@@ -7,14 +7,7 @@ class AlunoGraduacao extends _sequelize.Model {
                 login: {
                     type: _sequelize2.default.STRING,
                     allowNull: false,
-                    primaryKey: true,
-                    references: {
-                      model: 'professorisf',
-                      key: 'login',
-                      name: 'fk_login_alunograduacao'
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
+                    primaryKey: true
                 }
             },
             {
