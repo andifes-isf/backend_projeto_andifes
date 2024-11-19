@@ -81,7 +81,7 @@ class ProfessorIsF extends _sequelize.Model {
         })
 
         this.belongsToMany(models.TurmaOC, {
-            through: 'professorisfministraturmaoc',
+            through: 'isfteacher_ministre_occlass',
             foreignKey: 'login',
             sourceKey: 'login',
             timestamps: false

@@ -41,7 +41,7 @@ class ProfessorIsFMinistraTurmaOC extends Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'professorisfministraturmaoc',
+                tableName: 'isfteacher_ministre_occlass',
                 indexes: [{
                     name: 'primary_key',
                     unique: true,

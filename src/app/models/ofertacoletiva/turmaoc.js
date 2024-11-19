@@ -57,7 +57,7 @@ class TurmaOC extends Model {
             {
               sequelize,
               timestamps: false,
-              tableName: 'turmaoc',
+              tableName: 'co_class',
               indexes: [
                   {
                   name: 'primary',
@@ -82,14 +82,14 @@ class TurmaOC extends Model {
       })
 
       this.belongsToMany(models.ProfessorIsF, {
-        through: 'professorisfministraturmaoc',
+        through: 'isfteacher_ministre_occlass',
         foreignKey: 'idTurma',
         targetKey: 'login',
         timestamps: false
       })
 
       this.belongsToMany(models.AlunoIsF, {
-        through: 'alunoisfparticipaturmaoc',
+        through: 'isfstudent_in_occlass',
         foreignKey: 'idTurma',
         sourceKey: 'idTurma',
         timestamps: false

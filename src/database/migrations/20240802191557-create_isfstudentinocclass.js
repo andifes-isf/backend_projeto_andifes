@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('alunoisfparticipaturmaoc', {
+    await queryInterface.createTable('isfstudent_in_occlass', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -21,7 +21,7 @@ module.exports = {
       termino: Sequelize.DATEONLY
     })
 
-    await queryInterface.addConstraint('alunoisfparticipaturmaoc', {
+    await queryInterface.addConstraint('isfstudent_in_occlass', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_alunoisfparticipaturmaoc',
@@ -33,12 +33,12 @@ module.exports = {
       onUpdate: 'cascade'
     })
 
-    await queryInterface.addConstraint('alunoisfparticipaturmaoc', {
+    await queryInterface.addConstraint('isfstudent_in_occlass', {
       fields: ['idTurma'],
       type: 'foreign key',
       name: 'fk_idTurma_alunoisfparticipaturmaoc',
       references: {
-        table: 'turmaoc',
+        table: 'co_class',
         field: 'idTurma'
       },
       onDelete: 'cascade',

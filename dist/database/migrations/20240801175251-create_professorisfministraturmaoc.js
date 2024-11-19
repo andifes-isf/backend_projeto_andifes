@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('professorisfministraturmaoc', {
+    await queryInterface.createTable('isfteacher_ministre_occlass', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -22,7 +22,7 @@ module.exports = {
       termino: Sequelize.DATEONLY
     })
 
-    await queryInterface.addConstraint('professorisfministraturmaoc', {
+    await queryInterface.addConstraint('isfteacher_ministre_occlass', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_professorisfministraturmaoc',
@@ -34,12 +34,12 @@ module.exports = {
       onUpdate: 'cascade'
     })
 
-    await queryInterface.addConstraint('professorisfministraturmaoc', {
+    await queryInterface.addConstraint('isfteacher_ministre_occlass', {
       fields: ['idTurma'],
       type: 'foreign key',
       name: 'fk_idTurma_professorisfministraturmaoc',
       references: {
-        table: 'turmaoc',
+        table: 'co_class',
         field: 'idTurma'
       },
       onDelete: 'cascade',
