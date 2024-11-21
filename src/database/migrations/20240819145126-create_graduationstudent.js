@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('alunograduacao', {
+    await queryInterface.createTable('graduation_student', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -11,7 +11,7 @@ module.exports = {
       }
     })
 
-    await queryInterface.addConstraint('alunograduacao', {
+    await queryInterface.addConstraint('graduation_student', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_alunograduacao',
