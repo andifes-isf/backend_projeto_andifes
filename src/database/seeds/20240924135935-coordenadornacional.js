@@ -24,6 +24,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('coordenadornacional', null, {})
+    await queryInterface.bulkDelete('national_coordinator', null, {})
   }
 };
