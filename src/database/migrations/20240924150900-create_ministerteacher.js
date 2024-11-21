@@ -3,14 +3,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('docenteministrante', {
+    await queryInterface.createTable('minister_teacher', {
       login: {
         type: Sequelize.STRING,
         primaryKey: true
       },
     })
 
-    await queryInterface.addConstraint('docenteministrante', {
+    await queryInterface.addConstraint('minister_teacher', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_docenteministrante',
@@ -25,6 +25,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('docenteministrante')
+    return queryInterface.dropTable('minister_teacher')
   }
 };
