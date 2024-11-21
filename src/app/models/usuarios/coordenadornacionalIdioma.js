@@ -23,7 +23,7 @@ class CoordenadorNacionalIdioma extends Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'coordenadornacionalidioma',
+                tableName: 'language_national_coordinator',
                 indexes: [{
                     name: "primary_key",
                     unique: true,

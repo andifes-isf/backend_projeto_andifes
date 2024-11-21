@@ -26,6 +26,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('coordenadornacionalidioma', null, {})
+    await queryInterface.bulkDelete('language_national_coordinator', null, {})
   }
 };
