@@ -8,39 +8,39 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const alunosDeInstituicao = [
       {
-        nDocumento: 'DocumentoArata',
-        cargo: 1,
-        areaAtuacao: 'engenharia/tecnologia',
+        register_number: 'DocumentoArata',
+        position: 1,
+        activity_area: 'engenharia/tecnologia',
         login: 'Arata'
       },
       {
-        nDocumento: 'DocumentoBalla',
-        cargo: 1,
-        areaAtuacao: 'engenharia/tecnologia',
+        register_number: 'DocumentoBalla',
+        position: 1,
+        activity_area: 'engenharia/tecnologia',
         login: 'Balla'
       },
       {
-        nDocumento: 'DocumentoBruno',
-        cargo: 1,
-        areaAtuacao: 'engenharia/tecnologia',
+        register_number: 'DocumentoBruno',
+        position: 1,
+        activity_area: 'engenharia/tecnologia',
         login: 'Bruno'
       },
       {
-        nDocumento: 'DocumentoPortix',
-        cargo: 1,
-        areaAtuacao: 'engenharia/tecnologia',
+        register_number: 'DocumentoPortix',
+        position: 1,
+        activity_area: 'engenharia/tecnologia',
         login: 'Portix'
       },
       {
-        nDocumento: 'DocumentoGuto',
-        cargo: 1,
-        areaAtuacao: 'engenharia/tecnologia',
+        register_number: 'DocumentoGuto',
+        position: 1,
+        activity_area: 'engenharia/tecnologia',
         login: 'Guto'
       },
       {
-        nDocumento: 'DocumentoGaby',
-        cargo: 1,
-        areaAtuacao: 'engenharia/tecnologia',
+        register_number: 'DocumentoGaby',
+        position: 1,
+        activity_area: 'engenharia/tecnologia',
         login: 'Gaby'
       }
     ]

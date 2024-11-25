@@ -24,6 +24,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('alunograduacao', null, {})
+    await queryInterface.bulkDelete('graduation_student', null, {})
   }
 };

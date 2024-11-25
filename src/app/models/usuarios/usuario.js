@@ -15,7 +15,7 @@ class Usuario extends Model {
                 DDI: Sequelize.INTEGER,
                 DDD: Sequelize.INTEGER,
                 phone: Sequelize.INTEGER,
-                ethnicty: Sequelize.ENUM('amarelo', 'branco', 'indigena', 'pardo', 'preto', 'quilombola'),
+                ethnicity: Sequelize.ENUM('amarelo', 'branco', 'indigena', 'pardo', 'preto', 'quilombola'),
                 gender: Sequelize.ENUM('feminino', 'masculino', 'nao binario', 'outros'),
                 active: Sequelize.BOOLEAN,
                 email: Sequelize.STRING,

@@ -8,10 +8,10 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const alunosEstrangeiro = [
       {
-        paisOrigem: "Japão",
-        tipo: "RG",
-        comprovante: 'Comprovante do Victin',
-        codigo: "Codigo do Victin",
+        home_country: "Japão",
+        type: "RG",
+        register: 'Comprovante do Victin',
+        code: "Codigo do Victin",
         login: 'Victin'
       }
     ]

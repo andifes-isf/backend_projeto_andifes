@@ -9,31 +9,31 @@ module.exports = {
     const alunosIsF = [
       {
         login: 'Arata',
-        deInstituicao: 1
+        from_institution: 1
       },
       {
         login: 'Balla',
-        deInstituicao: 1
+        from_institution: 1
       },
       {
         login: 'Bruno',
-        deInstituicao: 1
+        from_institution: 1
       },
       {
         login: 'Portix',
-        deInstituicao: 1
+        from_institution: 1
       },
       {
         login: 'Guto',
-        deInstituicao: 1
+        from_institution: 1
       },
       {
         login: 'Gaby',
-        deInstituicao: 1
+        from_institution: 1
       },
       {
         login: 'Victin',
-        deInstituicao: 0
+        from_institution: 0
       },
     ]
 

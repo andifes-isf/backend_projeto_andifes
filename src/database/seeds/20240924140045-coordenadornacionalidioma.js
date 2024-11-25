@@ -9,11 +9,11 @@ module.exports = {
     const coordenadores = [
       {
         login: "Juvenas",
-        idioma: "ingles"
+        language: "ingles"
       },
       {
         login: "Yumi",
-        idioma: "japones"
+        language: "japones"
       }
     ]
 

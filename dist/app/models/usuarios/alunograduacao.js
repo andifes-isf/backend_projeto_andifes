@@ -13,7 +13,7 @@ class AlunoGraduacao extends _sequelize.Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'alunograduacao',
+                tableName: 'graduation_student',
                 indexes: [{
                     name: "primary",
                     unique: true,
