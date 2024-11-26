@@ -8,6 +8,9 @@ var _CustomError = require('../../utils/response/CustomError/CustomError'); var 
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
+// Repository
+var _UserRepository = require('../../repositories/usuarios/UserRepository'); var _UserRepository2 = _interopRequireDefault(_UserRepository);
+
 class usuarioController {
     // AUXILIAR FUNCTIONS
 
@@ -24,10 +27,12 @@ class usuarioController {
         }
     }
 
-    static async verifyExistingObject(model, key, message) {
-        const existingObject = await model.findByPk(key)
+    static async verifyExistingObject(repository, key, message) {
+        const existingObject = await repository.findByPk(key)
+        console.log(existingObject)
 
         if (existingObject) {
+
             return new (0, _CustomError2.default)(
                 message + key,
                 _ErrorType2.default.DUPLICATE_ENTRY
@@ -54,7 +59,7 @@ class usuarioController {
     }
 
     static async postUser(req, _, type) {
-        const existingUser = await usuarioController.verifyExistingObject(_usuario2.default, req.body.login, _messages_pt2.default.EXISTING_USER)
+        const existingUser = await usuarioController.verifyExistingObject(_UserRepository2.default, req.body.login, _messages_pt2.default.EXISTING_USER)
 
         if(existingUser) {
             return {
@@ -63,7 +68,7 @@ class usuarioController {
             }
         }
 
-        const user = await _usuario2.default.create({
+        const user = await _UserRepository2.default.create({
             login: req.body.login,
             name: req.body.name,
             surname: req.body.surname,
@@ -137,7 +142,6 @@ class usuarioController {
         const notification = await usuarioController.verifyExistingNotification(user, req.params.idNotificacao, req.loginUsuario)
 
         if (notification instanceof _CustomError2.default) {
-            console.log('ASDF')
             return res.status(_httpStatus2.default.SUCCESS).json({
                 error: true,
                 message: notification.message,

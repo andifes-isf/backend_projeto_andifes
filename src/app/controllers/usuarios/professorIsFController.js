@@ -6,6 +6,9 @@ import InstituicaoEnsino from "../../models/instituicao/instituicaoensino";
 import proeficienciaProfessorIsF from '../../models/proeficiencia/proeficienciaprofessorisf'
 import usuarioController from "./usuarioController";
 
+// Repositories
+import IsFTeacherRepository from "../../repositories/usuarios/IsFTeacherRepository";
+
 // Utils
 import { Op } from 'sequelize'
 import UserTypes from '../../utils/userType/userTypes'
@@ -19,7 +22,7 @@ class ProfessorIsFController extends usuarioController {
     // Auxiliar Functions
 
     static async postIsFTeacher(req, res, specialization_student) {
-        const existingTeacher = await ProfessorIsFController.verifyExistingObject(ProfessorIsF, req.body.login, MESSAGES.EXISTING_ISF_TEACHER)
+        const existingTeacher = await ProfessorIsFController.verifyExistingObject(IsFTeacherRepository, req.body.login, MESSAGES.EXISTING_ISF_TEACHER)
 
         if (existingTeacher) {
             return {
@@ -37,7 +40,7 @@ class ProfessorIsFController extends usuarioController {
             }
         }
 
-        const teacher = await ProfessorIsF.create({
+        const teacher = await IsFTeacherRepository.create({
             login: req.body.login,
             poca: req.body.poca,
             start: req.body.start,

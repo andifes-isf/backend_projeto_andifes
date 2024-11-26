@@ -8,6 +8,9 @@ import CustomError from '../../utils/response/CustomError/CustomError'
 import ErrorType from '../../utils/response/ErrorType/ErrorType'
 import httpStatus from '../../utils/response/httpStatus/httpStatus'
 
+// Repository
+import UserRepository from '../../repositories/usuarios/UserRepository'
+
 class usuarioController {
     // AUXILIAR FUNCTIONS
 
@@ -24,10 +27,12 @@ class usuarioController {
         }
     }
 
-    static async verifyExistingObject(model, key, message) {
-        const existingObject = await model.findByPk(key)
+    static async verifyExistingObject(repository, key, message) {
+        const existingObject = await repository.findByPk(key)
+        console.log(existingObject)
 
         if (existingObject) {
+
             return new CustomError(
                 message + key,
                 ErrorType.DUPLICATE_ENTRY
@@ -54,7 +59,7 @@ class usuarioController {
     }
 
     static async postUser(req, _, type) {
-        const existingUser = await usuarioController.verifyExistingObject(Usuario, req.body.login, MESSAGES.EXISTING_USER)
+        const existingUser = await usuarioController.verifyExistingObject(UserRepository, req.body.login, MESSAGES.EXISTING_USER)
 
         if(existingUser) {
             return {
@@ -63,7 +68,7 @@ class usuarioController {
             }
         }
 
-        const user = await Usuario.create({
+        const user = await UserRepository.create({
             login: req.body.login,
             name: req.body.name,
             surname: req.body.surname,
@@ -137,7 +142,6 @@ class usuarioController {
         const notification = await usuarioController.verifyExistingNotification(user, req.params.idNotificacao, req.loginUsuario)
 
         if (notification instanceof CustomError) {
-            console.log('ASDF')
             return res.status(httpStatus.SUCCESS).json({
                 error: true,
                 message: notification.message,

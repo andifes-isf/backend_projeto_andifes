@@ -14,6 +14,9 @@ var _disciplinaespecializacao = require('../../models/curso_especializacao/disci
 var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
 var _notificacao = require('../../models/utils/notificacao'); var _notificacao2 = _interopRequireDefault(_notificacao);
 
+// Repositories
+var _SpecializationStudentRepository = require('../../repositories/usuarios/SpecializationStudentRepository'); var _SpecializationStudentRepository2 = _interopRequireDefault(_SpecializationStudentRepository);
+
 // Utils
 var _notificationType = require('../../utils/notificationType/notificationType'); var _notificationType2 = _interopRequireDefault(_notificationType);
 var _languageFactory = require('../../utils/languages/languageFactory'); var _languageFactory2 = _interopRequireDefault(_languageFactory);
@@ -162,7 +165,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     // Endpoints
     
     async post(req, res) {
-        const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingObject(_cursistaespecializacao2.default, req.body.login, _messages_pt2.default.EXISTING_SPECIALIZATION_STUDENT)
+        const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingObject(_SpecializationStudentRepository2.default, req.body.login, _messages_pt2.default.EXISTING_SPECIALIZATION_STUDENT)
         
         if (existingSpecializationStudent) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
@@ -182,7 +185,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
         
-        const specializationStudent = await _cursistaespecializacao2.default.create({
+        const specializationStudent = await _SpecializationStudentRepository2.default.create({
             login: req.body.login
         })
 

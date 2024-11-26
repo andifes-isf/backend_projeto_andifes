@@ -6,6 +6,9 @@ var _instituicaoensino = require('../../models/instituicao/instituicaoensino'); 
 var _proeficienciaprofessorisf = require('../../models/proeficiencia/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
+// Repositories
+var _IsFTeacherRepository = require('../../repositories/usuarios/IsFTeacherRepository'); var _IsFTeacherRepository2 = _interopRequireDefault(_IsFTeacherRepository);
+
 // Utils
 
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
@@ -19,7 +22,7 @@ class ProfessorIsFController extends _usuarioController2.default {
     // Auxiliar Functions
 
     static async postIsFTeacher(req, res, specialization_student) {
-        const existingTeacher = await ProfessorIsFController.verifyExistingObject(_professorisf2.default, req.body.login, _messages_pt2.default.EXISTING_ISF_TEACHER)
+        const existingTeacher = await ProfessorIsFController.verifyExistingObject(_IsFTeacherRepository2.default, req.body.login, _messages_pt2.default.EXISTING_ISF_TEACHER)
 
         if (existingTeacher) {
             return {
@@ -37,7 +40,7 @@ class ProfessorIsFController extends _usuarioController2.default {
             }
         }
 
-        const teacher = await _professorisf2.default.create({
+        const teacher = await _IsFTeacherRepository2.default.create({
             login: req.body.login,
             poca: req.body.poca,
             start: req.body.start,

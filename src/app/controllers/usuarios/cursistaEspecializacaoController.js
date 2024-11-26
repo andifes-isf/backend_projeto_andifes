@@ -14,6 +14,9 @@ import DisciplinaEspecializacao from '../../models/curso_especializacao/discipli
 import ProfessorIsFController from './professorIsFController'
 import Notificacao from "../../models/utils/notificacao";
 
+// Repositories
+import SpecializationStudentRepository from "../../repositories/usuarios/SpecializationStudentRepository";
+
 // Utils
 import notificationType from '../../utils/notificationType/notificationType'
 import LanguageFactory from "../../utils/languages/languageFactory";
@@ -162,7 +165,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
     // Endpoints
     
     async post(req, res) {
-        const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingObject(CursistaEspecializacao, req.body.login, MESSAGES.EXISTING_SPECIALIZATION_STUDENT)
+        const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingObject(SpecializationStudentRepository, req.body.login, MESSAGES.EXISTING_SPECIALIZATION_STUDENT)
         
         if (existingSpecializationStudent) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -182,7 +185,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
         
-        const specializationStudent = await CursistaEspecializacao.create({
+        const specializationStudent = await SpecializationStudentRepository.create({
             login: req.body.login
         })
 
