@@ -12,8 +12,7 @@ module.exports = {
       },
       idCurso: {
         type: Sequelize.BIGINT,
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
       },
       nVagas: {
         type: Sequelize.INTEGER,
@@ -22,6 +21,12 @@ module.exports = {
       nInscritos: Sequelize.INTEGER,
       nConcluintes: Sequelize.INTEGER,
       nReprovados: Sequelize.INTEGER,
+    })
+
+    await queryInterface.addConstraint('turmaoc', {
+      fields: ['idTurma', 'idCurso'],
+      type: 'unique',
+      name: 'unique_idTurma_idCurso'
     })
 
     await queryInterface.addConstraint('turmaoc', {
