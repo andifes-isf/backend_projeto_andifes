@@ -16,9 +16,14 @@ module.exports = {
       inicio: {
         type: Sequelize.DATEONLY,
         allowNull: false,
-        primaryKey: true
       },
       termino: Sequelize.DATEONLY
+    })
+
+    await queryInterface.addConstraint('professorisf', {
+      fields: ['login', 'inicio'],
+      type: 'unique',
+      name: 'unique_login_inicio_professorisf'
     })
 
     await queryInterface.addConstraint('professorisf', {
