@@ -11,13 +11,11 @@ module.exports = {
       },
       edital: {
         type: Sequelize.CHAR(4),
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
       },
       nome: {
         type: Sequelize.STRING,
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
       },
       mesOferta: {
         type: Sequelize.ENUM('janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')
@@ -42,6 +40,12 @@ module.exports = {
       numeroReprovados: {
         type: Sequelize.INTEGER
       }
+    })
+
+    await queryInterface.addConstraint('turmadisciplinaespecializacao', {
+      fields: ['disciplina', 'edital', 'nome'],
+      type: 'unique',
+      name: 'unique_disciplina_edital_nome_turmadisciplinaespecializacao'
     })
 
     await queryInterface.addIndex('turmadisciplinaespecializacao', ['nome'], {
