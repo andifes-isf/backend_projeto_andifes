@@ -19,9 +19,14 @@ module.exports = {
       },
       categoria: {
         type: Sequelize.STRING,
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
       }
+    })
+
+    await queryInterface.addConstraint('disciplinaespecializacao', {
+      fields: ['nome', 'categoria'],
+      type: 'unique',
+      name: 'unique_nome_categoria_disciplinaespecializacao'
     })
   },
 
