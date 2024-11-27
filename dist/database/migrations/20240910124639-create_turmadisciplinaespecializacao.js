@@ -6,13 +6,11 @@ module.exports = {
     await queryInterface.createTable('turmadisciplinaespecializacao', {
       disciplina: {
         type: Sequelize.STRING,
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
       },
       edital: {
         type: Sequelize.CHAR(4),
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
       },
       nome: {
         type: Sequelize.STRING,
@@ -42,6 +40,12 @@ module.exports = {
       numeroReprovados: {
         type: Sequelize.INTEGER
       }
+    })
+
+    await queryInterface.addConstraint('turmadisciplinaespecializacao', {
+      fields: ['disciplina', 'edital', 'nome'],
+      type: 'unique',
+      name: 'unique_disciplina_edital_nome_turmadisciplinaespecializacao'
     })
 
     await queryInterface.addIndex('turmadisciplinaespecializacao', ['nome'], {

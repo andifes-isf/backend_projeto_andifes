@@ -804,7 +804,7 @@ module.exports = {
     try {  
       await DisciplinaEspecializacao.bulkCreate(disciplinas, { individualHooks: true })
     } catch (error) {
-      throw error
+      console.log(error)
     }
 
   },

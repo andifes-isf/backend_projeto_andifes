@@ -6,7 +6,6 @@ module.exports = {
     await queryInterface.createTable('materialcursista', {
       login: {
         type: Sequelize.STRING,
-        primaryKey: true
       },
       idioma: {
         type: Sequelize.ENUM('ingles', 'portuges', 'alemao', 'frances', 'italiano', 'espanhol', 'japones'),
@@ -29,6 +28,12 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       }
+    })
+
+    await queryInterface.addConstraint('materialcursista', {
+      fields: ['login', 'nome'],
+      type: 'unique',
+      name: 'unique_login_nome_materialcursista'
     })
   },
 
