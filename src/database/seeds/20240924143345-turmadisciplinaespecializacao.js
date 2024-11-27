@@ -34,7 +34,7 @@ module.exports = {
       {
         disciplina: "INTERNACIONALIZAÇÃO, POLÍTICA LINGUÍSTICA E REDE ISF",
         edital: 2023,
-        nome: "Nucleo1_agosto",
+        nome: "Nucleo12_agosto",
         mesOferta: "agosto",
         numeroVagas: 50,
         numeroMinimoAlunos: 5,
@@ -70,7 +70,7 @@ module.exports = {
       {
         disciplina: "CERTIFICAÇÕES INTERNACIONAIS EM LÍNGUA JAPONESA",
         edital: 2023,
-        nome: "japones2_junho",
+        nome: "japones3_junho",
         mesOferta: "junho",
         numeroVagas: 50,
         numeroMinimoAlunos: 5,

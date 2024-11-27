@@ -722,13 +722,13 @@ module.exports = {
         categoria: "ingles"
       },
       {
-        nome: "ENSINO DE PORTUGUÊS PARA FALANTES DE ESPANHOL",
+        nome: "ENSINO DE PORTUGUÊS PARA FALANTES DE ESPANHOL - espanhol",
         descricao: "Descricao",
         eixoTematico: "METODOLOGIAS DE ENSINO DE LÍNGUAS ESTRANGEIRAS",
         categoria: "espanhol"
       },
       {
-        nome: "ENSINO DE PORTUGUÊS PARA FALANTES DE ESPANHOL",
+        nome: "ENSINO DE PORTUGUÊS PARA FALANTES DE ESPANHOL - portugues",
         descricao: "Descricao",
         eixoTematico: "METODOLOGIAS DE ENSINO DE LÍNGUAS ESTRANGEIRAS",
         categoria: "português"

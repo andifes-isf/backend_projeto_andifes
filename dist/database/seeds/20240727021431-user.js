@@ -281,7 +281,11 @@ module.exports = {
       },
     ]
 
-    await _usuario2.default.bulkCreate(usuarios, { individualHooks: true })
+    try {
+      await _usuario2.default.bulkCreate(usuarios, { individualHooks: true })
+    } catch (error) {
+      console.log(error)
+    }
 
   },
 
