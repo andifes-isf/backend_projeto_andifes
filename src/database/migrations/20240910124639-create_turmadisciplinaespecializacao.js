@@ -6,8 +6,7 @@ module.exports = {
     await queryInterface.createTable('turmadisciplinaespecializacao', {
       disciplina: {
         type: Sequelize.STRING,
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
       },
       edital: {
         type: Sequelize.CHAR(4),
@@ -15,7 +14,8 @@ module.exports = {
       },
       nome: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
       },
       mesOferta: {
         type: Sequelize.ENUM('janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')
