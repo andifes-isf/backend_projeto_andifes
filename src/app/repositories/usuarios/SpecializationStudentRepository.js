@@ -6,6 +6,25 @@ class SpecializationStudentRepository {
         return await SpecializationStudent.findByPk(pk)
     }
 
+    async findAll() {
+        return await SpecializationStudent.findAll({
+            include: [
+                {
+                    model: ProfessorIsF,
+                    attributes: {
+                        exclude: ['login'],
+                    },
+                    include: [{
+                        model: Usuario,
+                        attributes: {
+                            exclude: ['login', 'senha_encriptada', 'ativo']
+                        }
+                    }]
+                }
+            ]
+        })
+    }
+
     async create(data) {
         return await SpecializationStudent.create(data)
     }

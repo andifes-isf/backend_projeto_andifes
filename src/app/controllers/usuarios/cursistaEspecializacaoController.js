@@ -1,34 +1,28 @@
-import { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize"
 
-// Modelscursistacursaturmaespecializacao";
-import CursistaEspecializacao from "../../models/usuarios/cursistaespecializacao";
+// Modelscursistacursaturmaespecializacao"
 import InteresseNaDisciplina from '../../models/curso_especializacao/InteresseNaDisciplina'
-import RelatorioPratico from "../../models/curso_especializacao/relatorio_pratico";
-import ProfessorIsF from "../../models/usuarios/professorisf";
-import Usuario from "../../models/usuarios/usuario";
-import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
-import OuvidoriaCursoEspecializacao from "../../models/curso_especializacao/ouvidoria_curso_especializacao";
-import DisciplinaEspecializacao from '../../models/curso_especializacao/disciplinaespecializacao'
+import OuvidoriaCursoEspecializacao from "../../models/curso_especializacao/ouvidoria_curso_especializacao"
 
 // Controllers
 import ProfessorIsFController from './professorIsFController'
 
 // Repositories
-import SpecializationStudentRepository from "../../repositories/usuarios/SpecializationStudentRepository"
 import PracticalReportRepository from "../../repositories/specialization_course/PracticalReportRepository"
 import NotificationRepository from "../../repositories/utils/NotificationRepository"
+import SpecializationStudentRepository from "../../repositories/usuarios/SpecializationStudentRepository"
+import SpecializationDisciplineClassRepository from "../../repositories/specialization_course/SpecializationDisciplineClassRepository"
+import SpecializationDisciplineRepository from "../../repositories/specialization_course/SpecializationDisciplineRepository"
 
 // Utils
 import notificationType from '../../utils/notificationType/notificationType'
-import LanguageFactory from "../../utils/languages/languageFactory";
+import LanguageFactory from "../../utils/languages/languageFactory"
 import UserTypes from '../../utils/userType/userTypes'
-import ReferencedModel from "../../utils/referencedModel/referencedModel";
+import ReferencedModel from "../../utils/referencedModel/referencedModel"
 import MESSAGES from '../../utils/response/messages/messages_pt'
-import CustomError from "../../utils/response/CustomError/CustomError";
-import ErrorType from "../../utils/response/ErrorType/ErrorType";
-import httpStatus from "../../utils/response/httpStatus/httpStatus";
-import SpecializationDisciplineClassRepository from "../../repositories/specialization_course/SpecializationDisciplineClassRepository";
-import SpecializationDisciplineRepository from "../../repositories/specialization_course/SpecializationDisciplineRepository";
+import CustomError from "../../utils/response/CustomError/CustomError"
+import ErrorType from "../../utils/response/ErrorType/ErrorType"
+import httpStatus from "../../utils/response/httpStatus/httpStatus"
 
 class CursistaEspecializacaoController extends ProfessorIsFController {
     // Auxiliar Functions
@@ -142,7 +136,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             } else if (result.value.error === true) {
                 fail.push([result.value.errorInfo.message, result.value.errorInfo.name])
             } else {
-                unexpectedError.push(`Erro inesperado:`, result.reason);
+                unexpectedError.push(`Erro inesperado:`, result.reason)
             }
         })
 
@@ -183,22 +177,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
     }
 
     async get(_, res){
-        const specializationStudents = await CursistaEspecializacao.findAll({
-            include: [
-                {
-                    model: ProfessorIsF,
-                    attributes: {
-                        exclude: ['login'],
-                    },
-                    include: [{
-                        model: Usuario,
-                        attributes: {
-                            exclude: ['login', 'senha_encriptada', 'ativo']
-                        }
-                    }]
-                }
-            ]
-        })
+        const specializationStudents = await SpecializationStudentRepository.findAll()
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
@@ -268,7 +247,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }       
 
-        const specializationStudent = await CursistaEspecializacao.findByPk(req.loginUsuario)
+        const specializationStudent = await SpecializationStudentRepository.findByPk(req.loginUsuario)
 
         const myMaterials = await specializationStudent.getMaterial()
 
@@ -291,7 +270,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
 
-        const specializationStudent = await CursistaEspecializacao.findByPk(req.loginUsuario)
+        const specializationStudent = await SpecializationStudentRepository.findByPk(req.loginUsuario)
 
         const materials = await specializationStudent.getMaterial({
             where: {
@@ -395,7 +374,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
 
-        const specializationStudent = await CursistaEspecializacao.findByPk(req.loginUsuario)
+        const specializationStudent = await SpecializationStudentRepository.findByPk(req.loginUsuario)
 
         const myClasses = await specializationStudent.getTurma()
 
