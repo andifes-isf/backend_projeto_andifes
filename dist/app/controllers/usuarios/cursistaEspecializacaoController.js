@@ -12,10 +12,11 @@ var _disciplinaespecializacao = require('../../models/curso_especializacao/disci
 
 // Controllers
 var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
-var _notificacao = require('../../models/utils/notificacao'); var _notificacao2 = _interopRequireDefault(_notificacao);
 
 // Repositories
 var _SpecializationStudentRepository = require('../../repositories/usuarios/SpecializationStudentRepository'); var _SpecializationStudentRepository2 = _interopRequireDefault(_SpecializationStudentRepository);
+var _PracticalReportRepository = require('../../repositories/specialization_course/PracticalReportRepository'); var _PracticalReportRepository2 = _interopRequireDefault(_PracticalReportRepository);
+var _NotificationRepository = require('../../repositories/utils/NotificationRepository'); var _NotificationRepository2 = _interopRequireDefault(_NotificationRepository);
 
 // Utils
 var _notificationType = require('../../utils/notificationType/notificationType'); var _notificationType2 = _interopRequireDefault(_notificationType);
@@ -26,19 +27,15 @@ var _messages_pt = require('../../utils/response/messages/messages_pt'); var _me
 var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
+var _SpecializationDisciplineClassRepository = require('../../repositories/specialization_course/SpecializationDisciplineClassRepository'); var _SpecializationDisciplineClassRepository2 = _interopRequireDefault(_SpecializationDisciplineClassRepository);
+var _SpecializationDisciplineRepository = require('../../repositories/specialization_course/SpecializationDisciplineRepository'); var _SpecializationDisciplineRepository2 = _interopRequireDefault(_SpecializationDisciplineRepository);
 
 class CursistaEspecializacaoController extends _professorIsFController2.default {
     // Auxiliar Functions
     static async getEntities(login){
-        const specializationStudent = await _cursistaespecializacao2.default.findByPk(login)
-        const advisor = await specializationStudent.getOrientador({
-            through: {
-                where: {
-                    status: "ativo"
-                }
-            }
-        })
-
+        const specializationStudent = await _SpecializationStudentRepository2.default.findByPk(login)
+        const advisor = await _SpecializationStudentRepository2.default.getAdvisor(specializationStudent)
+        
         return [ specializationStudent, advisor[0] ]
 
         // como cursista.getOrientador() retorna um array, e nesse caso um array de um único elemento, estou retornando somente esse elemento
@@ -50,17 +47,17 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     }
 
     static async createReport(specializationStudent, advisor, material){
-        const { idioma, name, level, description, workload, portfolio_link, category } = material
+        const { language, name, level, description, workload, portfolio_link, category } = material
 
-        if(CursistaEspecializacaoController.verifyLanguage(idioma) == null) {
+        if(CursistaEspecializacaoController.verifyLanguage(language) == null) {
             return new (0, _CustomError2.default)(
                 _messages_pt2.default.LANGUAGE_NOT_FOUND,
                 _ErrorType2.default.NOT_FOUND
             )            
         }
 
-        return await specializationStudent.createMaterial({
-            idioma: idioma,
+        return await _SpecializationStudentRepository2.default.createReport(specializationStudent, {
+            idioma: language,
             nome: name,
             nivel: level,
             descricao: description,
@@ -72,12 +69,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     }
 
     static async verifyExistingReport(login, name) {
-        const existinReport = await _relatorio_pratico2.default.findOne({
-            where: {
-                nome: name,
-                login: login
-            }
-        })
+        const existinReport = await _PracticalReportRepository2.default.findOne(login, name)
 
         if (existinReport) {
             return new (0, _CustomError2.default)(
@@ -88,11 +80,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     }
 
     static async inserirInteresse(discipline, year, specializationStudent){
-        const existingDiscipline = await _disciplinaespecializacao2.default.findOne({
-            where: {
-                nome: discipline.nomeDisciplina
-            }
-        })
+        const existingDiscipline = await _SpecializationDisciplineRepository2.default.findOne(discipline.nomeDisciplina)
 
         if (!existingDiscipline) {
             return new (0, _CustomError2.default)(
@@ -149,7 +137,6 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
         let unexpectedError = []
 
         results.forEach((result) => {
-            console.log(result)
             if (result.value.error === false) {
                 success.push(_messages_pt2.default.NEW_SPECIALIZATIONSTUDENT_DISCIPLINE_INTEREST + result.value.discipline)
             } else if (result.value.error === true) {
@@ -232,10 +219,8 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
 
-        const [specializationStudent, advisor] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
-
         const existingReport = await CursistaEspecializacaoController.verifyExistingReport(req.loginUsuario, req.body.name)
-
+        
         if(existingReport){
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
                 error: true,
@@ -243,10 +228,20 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
                 errorName: existingReport.name
             })
         }
-
+        
+        const [specializationStudent, advisor] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
+        
         const report = await CursistaEspecializacaoController.createReport(specializationStudent, advisor, req.body)
         
-        await _notificacao2.default.create({
+        if(report instanceof _CustomError2.default) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: report.message,
+                errorName: report.name
+            })
+        }
+
+        await _NotificationRepository2.default.create({
             login: advisor.login,
             mensagem: `${req.loginUsuario} ` + _messages_pt2.default.NEW_MATERIAL,
             tipo: _notificationType2.default.PENDENCIA,
@@ -325,13 +320,9 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
 
         const [specializationStudent, advisor] = await CursistaEspecializacaoController.getEntities(req.loginUsuario)
 
-        const material = await specializationStudent.getMaterial({
-            where: {
-                nome: req.params.nome
-            }
-        })
+        const material = await _SpecializationStudentRepository2.default.getMaterial(specializationStudent, req.params.nome)
 
-        if (!material) {
+        if (material.length === 0) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
                 error: true,
                 message: _messages_pt2.default.PRACTICAL_REPORT_NOT_FOUND + req.params.nome,
@@ -363,12 +354,8 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
 
-        const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
-        const classObject = await _turmadisciplinaespecializacao2.default.findOne({
-            where: {
-                nome: req.params.nome_turma
-            }
-        })
+        const specializationStudent = await _SpecializationStudentRepository2.default.findByPk(req.loginUsuario)
+        const classObject = await _SpecializationDisciplineClassRepository2.default.findByPk(req.params.nome_turma)
 
         if(classObject == null) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
@@ -378,7 +365,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
 
-        if(await specializationStudent.hasTurma(classObject)){
+        if(await _SpecializationStudentRepository2.default.isInClass(specializationStudent, classObject)){
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
                 error: true,
                 message: _messages_pt2.default.EXISTING_CLASS_SPECIALIZATIONSTUDENT_RELATIONSHIP,
@@ -386,8 +373,8 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
 
-        await specializationStudent.addTurma(classObject)
-        const classes = await specializationStudent.getTurma()
+        await _SpecializationStudentRepository2.default.addClass(classObject)
+        const classes = await _SpecializationStudentRepository2.default.getClasses()
 
         return res.status(_httpStatus2.default.CREATED).json({
             error: false,
@@ -431,7 +418,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
 
-        const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+        const specializationStudent = await _SpecializationStudentRepository2.default.findByPk(req.loginUsuario)
         const data = req.body
 
         const status = await CursistaEspecializacaoController.inserirDisciplinas(data, specializationStudent)

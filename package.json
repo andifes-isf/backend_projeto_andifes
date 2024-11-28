@@ -14,7 +14,7 @@
     "seed-create": "sequelize seed:create --name",
     "seed-undo": "yarn build && sequelize db:seed:undo:all --config dist/config/database.js --seeders-path dist/database/seeds",
     "dev:debug": "nodemon --inspect src/server",
-    "test": "cross-env NODE_ENV=test jest dis"
+    "test": "cls && yarn build && cross-env NODE_ENV=test jest dis"
   },
   "keywords": [],
   "author": "",

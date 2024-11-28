@@ -29,7 +29,6 @@ class usuarioController {
 
     static async verifyExistingObject(repository, key, message) {
         const existingObject = await repository.findByPk(key)
-        console.log(existingObject)
 
         if (existingObject) {
 

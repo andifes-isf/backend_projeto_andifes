@@ -12,10 +12,11 @@ import DisciplinaEspecializacao from '../../models/curso_especializacao/discipli
 
 // Controllers
 import ProfessorIsFController from './professorIsFController'
-import Notificacao from "../../models/utils/notificacao";
 
 // Repositories
-import SpecializationStudentRepository from "../../repositories/usuarios/SpecializationStudentRepository";
+import SpecializationStudentRepository from "../../repositories/usuarios/SpecializationStudentRepository"
+import PracticalReportRepository from "../../repositories/specialization_course/PracticalReportRepository"
+import NotificationRepository from "../../repositories/utils/NotificationRepository"
 
 // Utils
 import notificationType from '../../utils/notificationType/notificationType'
@@ -26,19 +27,15 @@ import MESSAGES from '../../utils/response/messages/messages_pt'
 import CustomError from "../../utils/response/CustomError/CustomError";
 import ErrorType from "../../utils/response/ErrorType/ErrorType";
 import httpStatus from "../../utils/response/httpStatus/httpStatus";
+import SpecializationDisciplineClassRepository from "../../repositories/specialization_course/SpecializationDisciplineClassRepository";
+import SpecializationDisciplineRepository from "../../repositories/specialization_course/SpecializationDisciplineRepository";
 
 class CursistaEspecializacaoController extends ProfessorIsFController {
     // Auxiliar Functions
     static async getEntities(login){
-        const specializationStudent = await CursistaEspecializacao.findByPk(login)
-        const advisor = await specializationStudent.getOrientador({
-            through: {
-                where: {
-                    status: "ativo"
-                }
-            }
-        })
-
+        const specializationStudent = await SpecializationStudentRepository.findByPk(login)
+        const advisor = await SpecializationStudentRepository.getAdvisor(specializationStudent)
+        
         return [ specializationStudent, advisor[0] ]
 
         // como cursista.getOrientador() retorna um array, e nesse caso um array de um único elemento, estou retornando somente esse elemento
@@ -50,17 +47,17 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
     }
 
     static async createReport(specializationStudent, advisor, material){
-        const { idioma, name, level, description, workload, portfolio_link, category } = material
+        const { language, name, level, description, workload, portfolio_link, category } = material
 
-        if(CursistaEspecializacaoController.verifyLanguage(idioma) == null) {
+        if(CursistaEspecializacaoController.verifyLanguage(language) == null) {
             return new CustomError(
                 MESSAGES.LANGUAGE_NOT_FOUND,
                 ErrorType.NOT_FOUND
             )            
         }
 
-        return await specializationStudent.createMaterial({
-            idioma: idioma,
+        return await SpecializationStudentRepository.createReport(specializationStudent, {
+            idioma: language,
             nome: name,
             nivel: level,
             descricao: description,
@@ -72,12 +69,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
     }
 
     static async verifyExistingReport(login, name) {
-        const existinReport = await RelatorioPratico.findOne({
-            where: {
-                nome: name,
-                login: login
-            }
-        })
+        const existinReport = await PracticalReportRepository.findOne(login, name)
 
         if (existinReport) {
             return new CustomError(
@@ -88,11 +80,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
     }
 
     static async inserirInteresse(discipline, year, specializationStudent){
-        const existingDiscipline = await DisciplinaEspecializacao.findOne({
-            where: {
-                nome: discipline.nomeDisciplina
-            }
-        })
+        const existingDiscipline = await SpecializationDisciplineRepository.findOne(discipline.nomeDisciplina)
 
         if (!existingDiscipline) {
             return new CustomError(
@@ -149,7 +137,6 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
         let unexpectedError = []
 
         results.forEach((result) => {
-            console.log(result)
             if (result.value.error === false) {
                 success.push(MESSAGES.NEW_SPECIALIZATIONSTUDENT_DISCIPLINE_INTEREST + result.value.discipline)
             } else if (result.value.error === true) {
@@ -232,10 +219,8 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
 
-        const [specializationStudent, advisor] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
-
         const existingReport = await CursistaEspecializacaoController.verifyExistingReport(req.loginUsuario, req.body.name)
-
+        
         if(existingReport){
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
@@ -243,10 +228,20 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
                 errorName: existingReport.name
             })
         }
-
+        
+        const [specializationStudent, advisor] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
+        
         const report = await CursistaEspecializacaoController.createReport(specializationStudent, advisor, req.body)
         
-        await Notificacao.create({
+        if(report instanceof CustomError) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: report.message,
+                errorName: report.name
+            })
+        }
+
+        await NotificationRepository.create({
             login: advisor.login,
             mensagem: `${req.loginUsuario} ` + MESSAGES.NEW_MATERIAL,
             tipo: notificationType.PENDENCIA,
@@ -325,13 +320,9 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
 
         const [specializationStudent, advisor] = await CursistaEspecializacaoController.getEntities(req.loginUsuario)
 
-        const material = await specializationStudent.getMaterial({
-            where: {
-                nome: req.params.nome
-            }
-        })
+        const material = await SpecializationStudentRepository.getMaterial(specializationStudent, req.params.nome)
 
-        if (!material) {
+        if (material.length === 0) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
                 message: MESSAGES.PRACTICAL_REPORT_NOT_FOUND + req.params.nome,
@@ -363,12 +354,8 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
 
-        const specializationStudent = await CursistaEspecializacao.findByPk(req.loginUsuario)
-        const classObject = await TurmaDisciplinaEspecializacao.findOne({
-            where: {
-                nome: req.params.nome_turma
-            }
-        })
+        const specializationStudent = await SpecializationStudentRepository.findByPk(req.loginUsuario)
+        const classObject = await SpecializationDisciplineClassRepository.findByPk(req.params.nome_turma)
 
         if(classObject == null) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -378,7 +365,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
 
-        if(await specializationStudent.hasTurma(classObject)){
+        if(await SpecializationStudentRepository.isInClass(specializationStudent, classObject)){
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
                 message: MESSAGES.EXISTING_CLASS_SPECIALIZATIONSTUDENT_RELATIONSHIP,
@@ -386,8 +373,8 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
 
-        await specializationStudent.addTurma(classObject)
-        const classes = await specializationStudent.getTurma()
+        await SpecializationStudentRepository.addClass(classObject)
+        const classes = await SpecializationStudentRepository.getClasses()
 
         return res.status(httpStatus.CREATED).json({
             error: false,
@@ -431,7 +418,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
 
-        const specializationStudent = await CursistaEspecializacao.findByPk(req.loginUsuario)
+        const specializationStudent = await SpecializationStudentRepository.findByPk(req.loginUsuario)
         const data = req.body
 
         const status = await CursistaEspecializacaoController.inserirDisciplinas(data, specializationStudent)

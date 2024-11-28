@@ -21,10 +21,10 @@ export default async(req, res, next) => {
     const [, token] = authorization.split(' ')
 
     try {
-        const{ login, tipo } = await promisify(jwt.verify)(token, authConfig.secret)
+        const{ login, type } = await promisify(jwt.verify)(token, authConfig.secret)
 
         req.loginUsuario = login
-        req.tipoUsuario = tipo
+        req.tipoUsuario = type
     } catch (error) {
         return res.status(httpStatus.UNAUTHORIZED).json({
             error: true,

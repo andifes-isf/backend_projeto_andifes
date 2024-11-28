@@ -21,10 +21,10 @@ exports. default = async(req, res, next) => {
     const [, token] = authorization.split(' ')
 
     try {
-        const{ login, tipo } = await _util.promisify.call(void 0, _jsonwebtoken2.default.verify)(token, _auth2.default.secret)
+        const{ login, type } = await _util.promisify.call(void 0, _jsonwebtoken2.default.verify)(token, _auth2.default.secret)
 
         req.loginUsuario = login
-        req.tipoUsuario = tipo
+        req.tipoUsuario = type
     } catch (error) {
         return res.status(_httpStatus2.default.UNAUTHORIZED).json({
             error: true,
