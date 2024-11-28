@@ -19,7 +19,7 @@ class InstituicaoEnsino extends Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'instituicaoensino',
+                tableName: 'instituicao_ensino',
                 indexes: [{
                     name: 'primary_key',
                     unique: true,
@@ -37,17 +37,25 @@ class InstituicaoEnsino extends Model {
 
     static associate(models) {
         this.belongsToMany(models.AlunoDeInstituicao, {
-            through: 'comprovantealunoinstituicao',
+            through: 'comprovante_aluno_instituicao',
             foreignKey: 'idInstituicao',
             targetKey: 'login',
             timestamps: false
         })
 
         this.belongsToMany(models.ProfessorIsF, {
-            through: 'comprovanteprofessorinstituicao',
+            through: 'teacher_institution_register',
             foreignKey: 'idInstituicao',
             sourceKey: 'idInstituicao',
             timestamps: false
+        })
+
+        this.hasOne(models.InstituicaoEnsinoBrasileira, {
+            foreignKey: 'idInstituicao'
+        })
+
+        this.hasOne(models.InstituicaoEnsinoEstrangeira, {
+            foreignKey: 'idInstituicao'
         })
     }
 

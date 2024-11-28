@@ -10,26 +10,26 @@ module.exports = {
       {
         login: "Carlos",
         poca: "Certificado POCA do Carlos",
-        inicio: "2024-01-20",
-        cursista: 0
+        start: "2024-01-20",
+        specialization_student: 0
       },
       {
         login: "Pietro",
         poca: "Certificado POCA do Pietro",
-        inicio: "2024-01-20",
-        cursista: 0
+        start: "2024-01-20",
+        specialization_student: 0
       },
       {
         login: "Pedro",
         poca: "Certificado POCA do Pedro",
-        inicio: "2024-01-20",
-        cursista: 1
+        start: "2024-01-20",
+        specialization_student: 1
       },
       {
         login: "Kactus",
         poca: "Certificado POCA da Kaory",
-        inicio: "2024-01-20",
-        cursista: 1
+        start: "2024-01-20",
+        specialization_student: 1
       },
     ]
 
@@ -38,6 +38,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('professorisf', null, {})
+    await queryInterface.bulkDelete('isf_teacher', null, {})
   }
 };

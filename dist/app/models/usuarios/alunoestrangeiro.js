@@ -7,27 +7,22 @@ class AlunoEstrangeiro extends _sequelize.Model {
               login: {
                 type: _sequelize2.default.STRING,
                 allowNull: false,
-                references: {
-                    model: 'alunoisf',
-                    key: 'login',
-                },
-                onDelete: 'CASCADE',
-                onUpdate: 'CASCADE'
+                primaryKey: true,
               },
-              paisOrigem: {
+              home_country: {
                 type: _sequelize2.default.STRING,
                 allowNull: false,
                 primaryKey: true,
               },
-              comprovante: {
+              register: {
                 type: _sequelize2.default.STRING,
                 allowNull: false
               },
-              tipo: {
+              type: {
                 type: _sequelize2.default.STRING,
                 allowNull: false
               },
-              codigo: {
+              code: {
                 type: _sequelize2.default.STRING,
                 allowNull: false
               },
@@ -35,7 +30,7 @@ class AlunoEstrangeiro extends _sequelize.Model {
             {                
                 sequelize,
                 timestamps: false,
-                tableName: 'alunoisfestrangeiro',
+                tableName: 'isfstudent_foreign',
                 indexes: [{
                     name: 'primary_key',
                     unique: true,

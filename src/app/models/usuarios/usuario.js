@@ -7,26 +7,27 @@ class Usuario extends Model {
             {
                 login: {
                     type: Sequelize.STRING,
+                    allowNull: false,
                     primaryKey: true
-                },
-                nome: Sequelize.STRING,
-                sobrenome: Sequelize.STRING,
+                  },
+                name: Sequelize.STRING,
+                surname: Sequelize.STRING,
                 DDI: Sequelize.INTEGER,
                 DDD: Sequelize.INTEGER,
-                telefone: Sequelize.INTEGER,
-                etnia: Sequelize.ENUM('branco', 'pardo', 'preto', 'amarelo', 'indigena'),
-                genero: Sequelize.ENUM('masculino', 'feminino', 'nao binario'),
-                ativo: Sequelize.BOOLEAN,
-                nomeEmail: Sequelize.STRING,
-                dominio: Sequelize.ENUM('gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'),
-                senha: Sequelize.VIRTUAL,
-                senha_encriptada: Sequelize.STRING,
-                tipo: Sequelize.ENUM('alunoisf', 'professorisf', 'cursista', 'coordenadornacional', 'coordenadornacionalidioma', 'docenteorientador', 'docenteministrante'),
+                phone: Sequelize.INTEGER,
+                ethnicity: Sequelize.ENUM('amarelo', 'branco', 'indigena', 'pardo', 'preto', 'quilombola'),
+                gender: Sequelize.ENUM('feminino', 'masculino', 'nao binario', 'outros'),
+                active: Sequelize.BOOLEAN,
+                email: Sequelize.STRING,
+                email_domain: Sequelize.ENUM('gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'),
+                password: Sequelize.VIRTUAL,
+                encrypted_password: Sequelize.STRING,
+                type: Sequelize.ENUM('alunoisf', 'professorisf', 'cursista', 'coordenadornacional', 'coordenadornacionalidioma', 'docenteorientador', 'docenteministrante')
             },
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'usuario',
+                tableName: 'user',
                 indexes: [{
                     name: "primary_key",
                     unique: true,
@@ -37,16 +38,16 @@ class Usuario extends Model {
                 }, {
                     name: 'unique_telefone',
                     unique: true,
-                    fields: ['DDI', 'DDD', 'telefone'],
+                    fields: ['DDI', 'DDD', 'phone'],
                 }]
             }
         )
 
         // Hooks
-        this.addHook('beforeSave', async (usuario) => {
-            if(usuario.senha) {
+        this.addHook('beforeSave', async (user) => {
+            if(user.password) {
                 const salt = await bcrypt.genSalt(12)
-                usuario.senha_encriptada = await bcrypt.hash(usuario.senha, salt)
+                user.encrypted_password = await bcrypt.hash(user.password, salt)
             }
         })
 

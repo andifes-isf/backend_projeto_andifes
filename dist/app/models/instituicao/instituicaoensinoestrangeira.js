@@ -36,6 +36,13 @@ class InstituicaoEnsinoEstrangeira extends _sequelize.Model {
         return this
 
     }
+
+    static associate(models) {
+        this.belongsTo(models.InstituicaoEnsino, {
+            foreignKey: 'idInstituicao'
+        })
+    }
+
 }
 
 exports. default = InstituicaoEnsinoEstrangeira

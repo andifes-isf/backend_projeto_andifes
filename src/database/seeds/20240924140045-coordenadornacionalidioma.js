@@ -9,11 +9,11 @@ module.exports = {
     const coordenadores = [
       {
         login: "Juvenas",
-        idioma: "ingles"
+        language: "ingles"
       },
       {
         login: "Yumi",
-        idioma: "japones"
+        language: "japones"
       }
     ]
 
@@ -26,6 +26,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('coordenadornacionalidioma', null, {})
+    await queryInterface.bulkDelete('language_national_coordinator', null, {})
   }
 };

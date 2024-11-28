@@ -52,7 +52,7 @@ class Curso extends _sequelize.Model {
               {
                 sequelize,
                 timestamps: false,
-                tableName: 'curso',
+                tableName: 'course',
                 indexes: [
                   {
                     name: 'primary',

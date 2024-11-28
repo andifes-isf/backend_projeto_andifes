@@ -6,204 +6,298 @@ import InstituicaoEnsino from "../../models/instituicao/instituicaoensino";
 import proeficienciaProfessorIsF from '../../models/proeficiencia/proeficienciaprofessorisf'
 import usuarioController from "./usuarioController";
 
+// Repositories
+import IsFTeacherRepository from "../../repositories/usuarios/IsFTeacherRepository";
+
 // Utils
+import { Op } from 'sequelize'
 import UserTypes from '../../utils/userType/userTypes'
-import MESSAGES from '../../utils/messages/messages_pt'
+import MESSAGES from '../../utils/response/messages/messages_pt'
+import CustomError from "../../utils/response/CustomError/CustomError";
+import httpStatus from "../../utils/response/httpStatus/httpStatus";
+import ErrorType from "../../utils/response/ErrorType/ErrorType";
 
-class ProfessorIsFController {
-    async post(req, res, cursista) {
-        try {
-            await usuarioController.post(req, res, cursista ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
-    
-            const existingTeacher = await ProfessorIsF.findOne({
-                where: {
-                    login: req.body.login,
-                    inicio: req.body.inicio
-                }
-            })
-    
-            if(existingTeacher) {
-                return 0
+
+class ProfessorIsFController extends usuarioController {
+    // Auxiliar Functions
+
+    static async postIsFTeacher(req, res, specialization_student) {
+        const existingTeacher = await ProfessorIsFController.verifyExistingObject(IsFTeacherRepository, req.body.login, MESSAGES.EXISTING_ISF_TEACHER)
+
+        if (existingTeacher) {
+            return {
+                error: true,
+                teacher: existingTeacher
             }
+        }
+        
+        const { error, user} = await usuarioController.postUser(req, res, specialization_student ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
 
-            return await ProfessorIsF.create({
-                login: req.body.login,
-                poca: req.body.poca,
-                inicio: req.body.inicio,
-                fim: req.body.fim,
-                cursista: cursista
-            })
-        } catch (error) {
-            throw new Error(error)
+        if (error) {
+            return {
+                error: true,
+                teacher: user
+            }
         }
 
+        const teacher = await IsFTeacherRepository.create({
+            login: req.body.login,
+            poca: req.body.poca,
+            start: req.body.start,
+            end: req.body.end,
+            specialization_student: specialization_student
+        })
+
+        return {
+            error: false,
+            teacher: teacher
+        }
     }
 
-    async get(_, res){
-        try {
-            const teachers = await ProfessorIsF.findAll({
-                include: [
-                    {
-                        model: Usuario,
-                        attributes: {
-                            include: [
-                                [Sequelize.fn('CONCAT_WS', ' ', Sequelize.col('Usuario.nome'), Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
-                                [Sequelize.fn('CONCAT_WS', '@', Sequelize.col('nomeEmail'), Sequelize.col('dominio')), 'email']
-                            ],
-                            exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
-                        }
-                    },
-                    {
-                        model: InstituicaoEnsino,
-                        attributes: {
-                            exclude: ['idInstituicao']
-                        },
-                        through: {
-                            attributes: ['inicio']
-                        },
-                    }
-                ],
-                logging: console.log
-            })
-            
-            return res.status(200).json(teachers)
-            
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
+    static async verifyExistingProeficiency(login, language, level) {
+        const existingProeficiency = await proeficienciaProfessorIsF.findOne({
+            where: {
+                login: login,
+                idioma: language,
+                nivel: level
+            }
+        })
 
+        if(existingProeficiency) {
+            return new CustomError(
+                MESSAGES.EXISTING_PROEFICIENCY + language + " " +  level,
+                ErrorType.DUPLICATE_ENTRY
+            )
+        }
+    }
+
+    static async verifyExistingRegistration(login, institutionId, begin) {
+        const existingRegistrantion = await ComprovanteProfessorInstituicao.findOne({
+            where: {
+                login: login,
+                idInstituicao: institutionId,
+                inicio: begin
+            }
+        })
+
+        if(existingRegistrantion) {
+            return new CustomError(
+                MESSAGES.EXISTING_INSTITUTION_USER_RELATIONSHIP + institutionId,
+                ErrorType.DUPLICATE_ENTRY
+            )
+        }
+    }
+
+    static async closeRegistration(login) {
+        const registration = await ComprovanteProfessorInstituicao.findOne({
+            where: {
+                login: login,
+                termino: {
+                    [Op.is]: null
+                }
+            }
+        })
+
+        registration.termino = new Date().toISOString().split("T")[0]
+        registration.save()
+    }
+
+    // Endpoints
+
+    async get(_, res){
+        const teachers = await ProfessorIsF.findAll({
+            include: [
+                {
+                    model: Usuario,
+                    attributes: {
+                        include: [
+                            [Sequelize.fn('CONCAT_WS', ' ', Sequelize.col('Usuario.nome'), Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
+                            [Sequelize.fn('CONCAT_WS', '@', Sequelize.col('nomeEmail'), Sequelize.col('dominio')), 'email']
+                        ],
+                        exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
+                    }
+                },
+                {
+                    model: InstituicaoEnsino,
+                    attributes: {
+                        exclude: ['idInstituicao']
+                    },
+                    through: {
+                        attributes: ['inicio']
+                    },
+                }
+            ],
+            logging: console.log
+        })
+        
+        return res.status(httpStatus.SUCCESS).json({
+            error: false,
+            teachers
+        })
     }
 
     async postProeficiencia(req, res) {
-        try {
-            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
-    
-            const existingProeficiency = await proeficienciaProfessorIsF.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idioma: req.body.idioma,
-                    nivel: req.body.nivel
-                }
+        const userType = req.tipoUsuario
+
+        const authorizationError = ProfessorIsFController.verifyUserType([UserTypes.ISF_TEACHER, UserTypes.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-    
-            if(existingProeficiency) {
-                return res.status(422).json({
-                    error: `${existingProeficiency.nivel} em ${existingProeficiency.idioma} ` + MESSAGES.ALREADY_IN_SYSTEM
-                })
-            }
-    
-            const proeficiency = await proeficienciaProfessorIsF.create({
-                login: req.loginUsuario,
-                nivel: req.body.nivel,
-                idioma: req.body.idioma,
-                comprovante: req.body.comprovante
-            })
-    
-            return res.status(201).json(proeficiency)   
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const userLogin = req.loginUsuario
+        const { language, level, document } = req.body
+
+        const existingProeficiencyError = await ProfessorIsFController.verifyExistingProeficiency(userLogin, language, level)
+
+        if(existingProeficiencyError) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: existingProeficiencyError.message,
+                errorName: existingProeficiencyError.name
+            })
+        }
+
+        const proeficiency = await proeficienciaProfessorIsF.create({
+            login: userLogin,
+            nivel: level,
+            idioma: language,
+            comprovante: document
+        })
+
+        return res.status(httpStatus.CREATED).json({
+            error: false,
+            proeficiency
+        })  
     }
 
     async getMinhaProeficiencia(req, res) {
-        try {
-            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const proeficiencies = await proeficienciaProfessorIsF.findAll({
-                where: {
-                    login: req.loginUsuario
-                }
+        const authorizationError = ProfessorIsFController.verifyUserType([UserTypes.ISF_TEACHER, UserTypes.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(proeficiencies)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const proeficiencies = await proeficienciaProfessorIsF.findAll({
+            where: {
+                login: req.loginUsuario
+            }
+        })
+
+        return res.status(httpStatus.SUCCESS).json({
+            error: false,
+            proeficiencies
+        })
     }
 
-    async postInstituicao(req, res) {  
-        try {
-            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
-    
-            const existingDocument = await ComprovanteProfessorInstituicao.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idInstituicao: req.body.idInstituicao,
-                    inicio: req.body.inicio
-                }
+    async postInstituicao(req, res) { 
+        const userType = req.tipoUsuario
+
+        const authorizationError = ProfessorIsFController.verifyUserType([UserTypes.ISF_TEACHER, UserTypes.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-    
-            if(existingDocument) {
-                return res.status(409).json({
-                    error: `${existingDocument.comprovante} ` + MESSAGES.ALREADY_IN_SYSTEM
-                })
-            }
-            
-            const document = await ComprovanteProfessorInstituicao.create({
-                idInstituicao: req.body.idInstituicao,
-                login: req.loginUsuario,
-                inicio: req.body.inicio,
-                termino: req.body.termino || null,
-                comprovante: req.body.comprovante
-            })
-    
-            return res.status(201).json(document)    
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const existingInstitution = await ProfessorIsFController.verifyExistingObject(InstituicaoEnsino, req.params.idInstituicao, MESSAGES.EXISTING_INSTITUTION)
+
+        if(!existingInstitution) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: MESSAGES.INSTITUTION_NOT_FOUNDED + req.params.idInstituicao,
+                errorName: ErrorType.NOT_FOUND
+            })
+        }
+
+        const existingRegistration = await ProfessorIsFController.verifyExistingRegistration(req.loginUsuario, req.params.idInstituicao, req.body.inicio)
+
+        if (existingRegistration) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: existingRegistration.message,
+                errorName: existingRegistration.name
+            })
+        }
+
+        await ProfessorIsFController.closeRegistration(req.loginUsuario, req.params.idInstituicao)
+
+        const registration = await ComprovanteProfessorInstituicao.create({
+            idInstituicao: req.params.idInstituicao,
+            login: req.loginUsuario,
+            inicio: req.body.inicio,
+            termino: req.body.termino || null,
+            comprovante: req.body.comprovante
+        })
+
+        return res.status(httpStatus.CREATED).json({
+            error: false,
+            registration
+        })    
     }
 
     async getMinhasInstituicoes(req, res){
-        try {
-            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const documents = await ComprovanteProfessorInstituicao.findAll({
-                where: {
-                    login: req.loginUsuario
-                }
+        const authorizationError = ProfessorIsFController.verifyUserType([UserTypes.ISF_TEACHER, UserTypes.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(documents)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const registrations = await ComprovanteProfessorInstituicao.findAll({
+            where: {
+                login: req.loginUsuario
+            }
+        })
+
+        return res.status(httpStatus.SUCCESS).json({
+            error: false,
+            registrations
+        })
     }
 
     async getInstituicaoAtual(req, res){
-        try {
-            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const document = await ComprovanteProfessorInstituicao.findOne({
-                where: {
-                    login: req.loginUsuario
-                }
+        const authorizationError = ProfessorIsFController.verifyUserType([UserTypes.ISF_TEACHER, UserTypes.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(document)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const registration = await ComprovanteProfessorInstituicao.findOne({
+            where: {
+                login: req.loginUsuario,
+                termino: {
+                    [Op.is]: null
+                }
+            }
+        })
+
+        return res.status(httpStatus.SUCCESS).json(registration)
     }
 }
 
-export default new ProfessorIsFController()
+export default ProfessorIsFController

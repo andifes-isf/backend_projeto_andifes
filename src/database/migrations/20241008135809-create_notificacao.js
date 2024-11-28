@@ -52,7 +52,7 @@ module.exports = {
         type: 'foreign key',
         name: 'fk_login_notificacao',
         references: {
-          table: 'usuario',
+          table: 'user',
           field: 'login'
         },
         onDelete: 'cascade',

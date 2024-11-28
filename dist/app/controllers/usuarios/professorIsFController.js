@@ -6,204 +6,298 @@ var _instituicaoensino = require('../../models/instituicao/instituicaoensino'); 
 var _proeficienciaprofessorisf = require('../../models/proeficiencia/proeficienciaprofessorisf'); var _proeficienciaprofessorisf2 = _interopRequireDefault(_proeficienciaprofessorisf);
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
+// Repositories
+var _IsFTeacherRepository = require('../../repositories/usuarios/IsFTeacherRepository'); var _IsFTeacherRepository2 = _interopRequireDefault(_IsFTeacherRepository);
+
 // Utils
+
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
-var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
+var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
+var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 
-class ProfessorIsFController {
-    async post(req, res, cursista) {
-        try {
-            await _usuarioController2.default.post(req, res, cursista ? _userTypes2.default.CURSISTA : _userTypes2.default.ISF_TEACHER)
-    
-            const existingTeacher = await _professorisf2.default.findOne({
-                where: {
-                    login: req.body.login,
-                    inicio: req.body.inicio
-                }
-            })
-    
-            if(existingTeacher) {
-                return 0
+
+class ProfessorIsFController extends _usuarioController2.default {
+    // Auxiliar Functions
+
+    static async postIsFTeacher(req, res, specialization_student) {
+        const existingTeacher = await ProfessorIsFController.verifyExistingObject(_IsFTeacherRepository2.default, req.body.login, _messages_pt2.default.EXISTING_ISF_TEACHER)
+
+        if (existingTeacher) {
+            return {
+                error: true,
+                teacher: existingTeacher
             }
+        }
+        
+        const { error, user} = await _usuarioController2.default.postUser(req, res, specialization_student ? _userTypes2.default.CURSISTA : _userTypes2.default.ISF_TEACHER)
 
-            return await _professorisf2.default.create({
-                login: req.body.login,
-                poca: req.body.poca,
-                inicio: req.body.inicio,
-                fim: req.body.fim,
-                cursista: cursista
-            })
-        } catch (error) {
-            throw new Error(error)
+        if (error) {
+            return {
+                error: true,
+                teacher: user
+            }
         }
 
+        const teacher = await _IsFTeacherRepository2.default.create({
+            login: req.body.login,
+            poca: req.body.poca,
+            start: req.body.start,
+            end: req.body.end,
+            specialization_student: specialization_student
+        })
+
+        return {
+            error: false,
+            teacher: teacher
+        }
     }
 
-    async get(_, res){
-        try {
-            const teachers = await _professorisf2.default.findAll({
-                include: [
-                    {
-                        model: _usuario2.default,
-                        attributes: {
-                            include: [
-                                [_sequelize.Sequelize.fn('CONCAT_WS', ' ', _sequelize.Sequelize.col('Usuario.nome'), _sequelize.Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
-                                [_sequelize.Sequelize.fn('CONCAT_WS', '@', _sequelize.Sequelize.col('nomeEmail'), _sequelize.Sequelize.col('dominio')), 'email']
-                            ],
-                            exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
-                        }
-                    },
-                    {
-                        model: _instituicaoensino2.default,
-                        attributes: {
-                            exclude: ['idInstituicao']
-                        },
-                        through: {
-                            attributes: ['inicio']
-                        },
-                    }
-                ],
-                logging: console.log
-            })
-            
-            return res.status(200).json(teachers)
-            
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
+    static async verifyExistingProeficiency(login, language, level) {
+        const existingProeficiency = await _proeficienciaprofessorisf2.default.findOne({
+            where: {
+                login: login,
+                idioma: language,
+                nivel: level
+            }
+        })
 
+        if(existingProeficiency) {
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.EXISTING_PROEFICIENCY + language + " " +  level,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
+        }
+    }
+
+    static async verifyExistingRegistration(login, institutionId, begin) {
+        const existingRegistrantion = await _comprovanteprofessorinstituicao2.default.findOne({
+            where: {
+                login: login,
+                idInstituicao: institutionId,
+                inicio: begin
+            }
+        })
+
+        if(existingRegistrantion) {
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.EXISTING_INSTITUTION_USER_RELATIONSHIP + institutionId,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
+        }
+    }
+
+    static async closeRegistration(login) {
+        const registration = await _comprovanteprofessorinstituicao2.default.findOne({
+            where: {
+                login: login,
+                termino: {
+                    [_sequelize.Op.is]: null
+                }
+            }
+        })
+
+        registration.termino = new Date().toISOString().split("T")[0]
+        registration.save()
+    }
+
+    // Endpoints
+
+    async get(_, res){
+        const teachers = await _professorisf2.default.findAll({
+            include: [
+                {
+                    model: _usuario2.default,
+                    attributes: {
+                        include: [
+                            [_sequelize.Sequelize.fn('CONCAT_WS', ' ', _sequelize.Sequelize.col('Usuario.nome'), _sequelize.Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
+                            [_sequelize.Sequelize.fn('CONCAT_WS', '@', _sequelize.Sequelize.col('nomeEmail'), _sequelize.Sequelize.col('dominio')), 'email']
+                        ],
+                        exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
+                    }
+                },
+                {
+                    model: _instituicaoensino2.default,
+                    attributes: {
+                        exclude: ['idInstituicao']
+                    },
+                    through: {
+                        attributes: ['inicio']
+                    },
+                }
+            ],
+            logging: console.log
+        })
+        
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            teachers
+        })
     }
 
     async postProeficiencia(req, res) {
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
-    
-            const existingProeficiency = await _proeficienciaprofessorisf2.default.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idioma: req.body.idioma,
-                    nivel: req.body.nivel
-                }
+        const userType = req.tipoUsuario
+
+        const authorizationError = ProfessorIsFController.verifyUserType([_userTypes2.default.ISF_TEACHER, _userTypes2.default.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-    
-            if(existingProeficiency) {
-                return res.status(422).json({
-                    error: `${existingProeficiency.nivel} em ${existingProeficiency.idioma} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
-                })
-            }
-    
-            const proeficiency = await _proeficienciaprofessorisf2.default.create({
-                login: req.loginUsuario,
-                nivel: req.body.nivel,
-                idioma: req.body.idioma,
-                comprovante: req.body.comprovante
-            })
-    
-            return res.status(201).json(proeficiency)   
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
+
+        const userLogin = req.loginUsuario
+        const { language, level, document } = req.body
+
+        const existingProeficiencyError = await ProfessorIsFController.verifyExistingProeficiency(userLogin, language, level)
+
+        if(existingProeficiencyError) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingProeficiencyError.message,
+                errorName: existingProeficiencyError.name
+            })
+        }
+
+        const proeficiency = await _proeficienciaprofessorisf2.default.create({
+            login: userLogin,
+            nivel: level,
+            idioma: language,
+            comprovante: document
+        })
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            proeficiency
+        })  
     }
 
     async getMinhaProeficiencia(req, res) {
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const proeficiencies = await _proeficienciaprofessorisf2.default.findAll({
-                where: {
-                    login: req.loginUsuario
-                }
+        const authorizationError = ProfessorIsFController.verifyUserType([_userTypes2.default.ISF_TEACHER, _userTypes2.default.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(proeficiencies)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
+
+        const proeficiencies = await _proeficienciaprofessorisf2.default.findAll({
+            where: {
+                login: req.loginUsuario
+            }
+        })
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            proeficiencies
+        })
     }
 
-    async postInstituicao(req, res) {  
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
-    
-            const existingDocument = await _comprovanteprofessorinstituicao2.default.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idInstituicao: req.body.idInstituicao,
-                    inicio: req.body.inicio
-                }
+    async postInstituicao(req, res) { 
+        const userType = req.tipoUsuario
+
+        const authorizationError = ProfessorIsFController.verifyUserType([_userTypes2.default.ISF_TEACHER, _userTypes2.default.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-    
-            if(existingDocument) {
-                return res.status(409).json({
-                    error: `${existingDocument.comprovante} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
-                })
-            }
-            
-            const document = await _comprovanteprofessorinstituicao2.default.create({
-                idInstituicao: req.body.idInstituicao,
-                login: req.loginUsuario,
-                inicio: req.body.inicio,
-                termino: req.body.termino || null,
-                comprovante: req.body.comprovante
-            })
-    
-            return res.status(201).json(document)    
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
+
+        const existingInstitution = await ProfessorIsFController.verifyExistingObject(_instituicaoensino2.default, req.params.idInstituicao, _messages_pt2.default.EXISTING_INSTITUTION)
+
+        if(!existingInstitution) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: _messages_pt2.default.INSTITUTION_NOT_FOUNDED + req.params.idInstituicao,
+                errorName: _ErrorType2.default.NOT_FOUND
+            })
+        }
+
+        const existingRegistration = await ProfessorIsFController.verifyExistingRegistration(req.loginUsuario, req.params.idInstituicao, req.body.inicio)
+
+        if (existingRegistration) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingRegistration.message,
+                errorName: existingRegistration.name
+            })
+        }
+
+        await ProfessorIsFController.closeRegistration(req.loginUsuario, req.params.idInstituicao)
+
+        const registration = await _comprovanteprofessorinstituicao2.default.create({
+            idInstituicao: req.params.idInstituicao,
+            login: req.loginUsuario,
+            inicio: req.body.inicio,
+            termino: req.body.termino || null,
+            comprovante: req.body.comprovante
+        })
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            registration
+        })    
     }
 
     async getMinhasInstituicoes(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const documents = await _comprovanteprofessorinstituicao2.default.findAll({
-                where: {
-                    login: req.loginUsuario
-                }
+        const authorizationError = ProfessorIsFController.verifyUserType([_userTypes2.default.ISF_TEACHER, _userTypes2.default.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(documents)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
+
+        const registrations = await _comprovanteprofessorinstituicao2.default.findAll({
+            where: {
+                login: req.loginUsuario
+            }
+        })
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            registrations
+        })
     }
 
     async getInstituicaoAtual(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.ISF_TEACHER || req.tipoUsuario === _userTypes2.default.CURSISTA)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const document = await _comprovanteprofessorinstituicao2.default.findOne({
-                where: {
-                    login: req.loginUsuario
-                }
+        const authorizationError = ProfessorIsFController.verifyUserType([_userTypes2.default.ISF_TEACHER, _userTypes2.default.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(document)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
+
+        const registration = await _comprovanteprofessorinstituicao2.default.findOne({
+            where: {
+                login: req.loginUsuario,
+                termino: {
+                    [_sequelize.Op.is]: null
+                }
+            }
+        })
+
+        return res.status(_httpStatus2.default.SUCCESS).json(registration)
     }
 }
 
-exports. default = new ProfessorIsFController()
+exports. default = ProfessorIsFController

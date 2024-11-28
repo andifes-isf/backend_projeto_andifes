@@ -2,12 +2,14 @@
 var _auth = require('../../middlewares/auth'); var _auth2 = _interopRequireDefault(_auth);
 var _alunoIsFController = require('../../controllers/usuarios/alunoIsFController'); var _alunoIsFController2 = _interopRequireDefault(_alunoIsFController);
 
+const controller = new (0, _alunoIsFController2.default)()
+
 const router = new (0, _express.Router)()
 
-router.get('/', _alunoIsFController2.default.get)
+router.get('/', controller.get)
 
-router.post('/adicionar_proeficiencia', _auth2.default, _alunoIsFController2.default.postProeficiencia)
+router.post('/adicionar_proeficiencia', _auth2.default, controller.postProeficiencia)
 
-router.get('/visualizar_minha_proeficiencia', _auth2.default, _alunoIsFController2.default.getMinhaProeficiencia)
+router.get('/visualizar_minha_proeficiencia', _auth2.default, controller.getMinhaProeficiencia)
 
 exports. default = router

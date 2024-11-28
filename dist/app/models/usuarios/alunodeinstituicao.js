@@ -4,32 +4,26 @@ class AlunoDeInstituicao extends _sequelize.Model {
     static init (sequelize) {
         super.init(
             {
-                nDocumento: {
+                register_number: {
                     type: _sequelize2.default.STRING,
-                    primaryKey: true,
+                    unique: true
                 },
-                cargo: {
+                position: {
                     type: _sequelize2.default.INTEGER,
                 },
-                areaAtuacao: {
+                activity_area: {
                     type: _sequelize2.default.ENUM('ciencias exatas e da terra','ciencias biologicas','engenharia/tecnologia','ciencias da saude','ciencias agrarias','ciencias sociais','ciencias humanas','linguistica','letras e artes', 'prefiro nao dizer'),
                     allowNull: false
                 },
                 login: {
                     type: _sequelize2.default.STRING,
-                    allowNull: false,
-                    references: {
-                        model: 'alunoisf',
-                        key: 'login',
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
+                    primaryKey: true,
                 }
             },
             {                
                 sequelize,
                 timestamps: false,
-                tableName: 'alunoisfdeinstituicao',
+                tableName: 'isfstudent_institution',
                 indexes: [{
                     name: 'primary_key',
                     unique: true,
@@ -48,14 +42,15 @@ class AlunoDeInstituicao extends _sequelize.Model {
     static associate(models) {
         this.belongsTo(models.AlunoIsF, {
             foreignKey: 'login'
-        });
+        })
 
         this.belongsToMany(models.InstituicaoEnsino, {
-            through: 'comprovantealunoinstituicao',
+            through: 'comprovante_aluno_instituicao',
             foreignKey: 'login',
             sourceKey: 'login',
-            timestamps: false
-        });
+            timestamps: false,
+            as: "institution"
+        })
     }
 
 }

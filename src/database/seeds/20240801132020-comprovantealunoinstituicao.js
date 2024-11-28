@@ -50,6 +50,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('comprovantealunoinstituicao', null, {})
+    await queryInterface.bulkDelete('comprovante_aluno_instituicao', null, {})
   }
 };

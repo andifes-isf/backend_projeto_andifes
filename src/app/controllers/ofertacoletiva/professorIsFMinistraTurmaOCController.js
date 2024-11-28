@@ -6,107 +6,82 @@ import Curso from '../../models/ofertacoletiva/curso'
 
 // Utils
 import nivelFactory from '../../utils/niveis/nivelFactory'
-import MESSAGES from "../../utils/messages/messages_pt"
+import MESSAGES from "../../utils/response/messages/messages_pt"
 import UserTypes from '../../utils/userType/userTypes'
+import httpStatus from "../../utils/response/httpStatus/httpStatus"
+import CustomError from "../../utils/response/CustomError/CustomError"
 
 class ProfessorIsFMinistraTurmaOCController {
-    async post(req, res) {
-        try {
-            if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
-                return res.status(403).json({
-                    error: 'Acesso negado'
-                })
-            }
-            
-            // Verifica se o professor já está ministrando a turma
-            const professorNaTurma = await ProfessorIsFMinistraTurmaOC.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idTurma: req.body.idTurma
-                }
-            })
+    static async verifyExistingClass(classId) {
+        const classObject = await TurmaOC.findByPk(classId)
 
-            if(professorNaTurma){
-                return res.status(409).json({
-                    msg: "Professor ja ministrando a turma"
-                })
-            }
-
-            // Precisa verificar se um Docente Orientador pode associar um orientando a uma turma
-            const turma = await TurmaOC.findOne({
-                where: {
-                    idTurma: req.body.idTurma
-                }
-            })
-
-            if(!turma){
-                return res.status(422).json({
-                    msg: "Turma nao encontrada"
-                })
-            }
-
-            const curso = await Curso.findOne({
-                where: {
-                    idCurso: turma.idCurso
-                }
-            })
-            
-            const proeficienciaProfessor = await ProeficienciaProfessorIsf.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idioma: curso.idioma
-                }
-            })
-    
-            const nivelProeficiencia = nivelFactory.createInstanceOfNivel(curso.idioma)
-            const diferencaEntreNivel = nivelProeficiencia.distanciaEntreNiveis(proeficienciaProfessor ? proeficienciaProfessor.nivel : 'nenhum', curso.nivel)
-            console.log(proeficienciaProfessor)
-            // console.log(proeficienciaProfessor.nivel)
-            console.log(curso.nivel)
-            console.log(diferencaEntreNivel)
-            if(diferencaEntreNivel < 0) {
-                return res.status(422).json({
-                    msg: `${req.loginUsuario} possui proeficiencia abaixo da proeficiencia do curso (${curso.nivel})`
-                })
-            }
-
-
-            const relacaoExistente = await ProfessorIsFMinistraTurmaOC.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idTurma: req.body.idTurma,
-                    inicio: req.body.inicio
-                }
-            })
-    
-            if(relacaoExistente) {
-                return res.status(409).json({
-                    msg: "Relacao ProfessorIsF e TurmaOC ja cadastrada"
-                })
-            }
-                    
-            const relacao = await ProfessorIsFMinistraTurmaOC.create({
-                login: req.loginUsuario,
-                idTurma: req.body.idTurma,
-                inicio: req.body.inicio,
-                termino: req.body.termino,
-            })
-            
-            return res.status(201).json(relacao)
-        } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        if (!classObject) {
+            throw new CustomError(`Turma ${classId} ` + MESSAGES.NOT_FOUND, httpStatus.BAD_REQUEST)
         }
 
+        return classObject
     }
 
-    async get(_, res) {
-        try {
-            const relacoes = await ProfessorIsFMinistraTurmaOC.findAll()
+    static async verifyTeacherMinisteringClass(login, classId) {
+        const teacherMinisteringClass = await ProfessorIsFMinistraTurmaOC.findOne({
+            where: {
+                login: login,
+                idTurma: classId
+            }
+        })
 
-            return res.status(200).json(relacoes)
-        } catch (error) {
-            return res.status(500).json("Ocorreu um erro interno no servidor: " + error)
+        if(teacherMinisteringClass){
+            throw new CustomError(`${login} ` + MESSAGES.ALREADY_MINISTERING_CLASS, httpStatus.BAD_REQUEST)
         }
+    }
+
+    static async verifyTeacherProeficiency(course, proeficiency) {
+        const proeficiencyLevel = nivelFactory.createInstanceOfNivel(course.idioma)
+
+        const levelDifference = proeficiencyLevel.distanciaEntreNiveis(proeficiency ? proeficiency.nivel : 'nenhum', course.nivel)
+
+        if(levelDifference < 0) {
+            throw new CustomError(MESSAGES.USER_WITHOUT_PROEFICIENCY_LEVEL, httpStatus.BAD_REQUEST)
+        }
+    }
+
+    async post(req, res) {
+        if(!(req.tipoUsuario === UserTypes.ISF_TEACHER || req.tipoUsuario === UserTypes.CURSISTA)){
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: MESSAGES.ACCESS_DENIED
+            })
+        }
+        
+        const classObejct = await ProfessorIsFMinistraTurmaOCController.verifyExistingClass(req.params.idTurma)
+
+        await ProfessorIsFMinistraTurmaOCController.verifyTeacherMinisteringClass(req.loginUsuario, req.params.idTurma)
+
+        // Precisa verificar se um Docente Orientador pode associar um orientando a uma turma
+        
+        const course = await Curso.findOne({
+            where: {
+                idCurso: classObejct.idCurso
+            }
+        })
+        
+        const teacherProeficiency = await ProeficienciaProfessorIsf.findOne({
+            where: {
+                login: req.loginUsuario,
+                idioma: course.idioma
+            }
+        })
+        
+        await ProfessorIsFMinistraTurmaOCController.verifyTeacherProeficiency(course, teacherProeficiency)
+                
+        const relation = await ProfessorIsFMinistraTurmaOC.create({
+            login: req.loginUsuario,
+            idTurma: req.params.idTurma,
+            inicio: req.body.inicio,
+            termino: req.body.termino,
+        })
+        
+        return res.status(httpStatus.CREATED).json(relation)
+
     }
 }
 

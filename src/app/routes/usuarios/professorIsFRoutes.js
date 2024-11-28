@@ -1,19 +1,20 @@
 import { Router } from "express"
-import professorIsFController from "../../controllers/usuarios/professorIsFController"
 import AuthMiddleware from '../../middlewares/auth'
+import ProfessorIsFController from "../../controllers/usuarios/professorIsFController"
 
+const controller = new ProfessorIsFController()
 const router = new Router()
 
-router.get('/', professorIsFController.get)
+router.get('/', controller.get)
 
-router.post('/adicionar_proeficiencia', AuthMiddleware, professorIsFController.postProeficiencia)
+router.post('/adicionar_proeficiencia', AuthMiddleware, controller.postProeficiencia)
 
-router.get('/visualizar_minha_proeficiencia', AuthMiddleware, professorIsFController.getMinhaProeficiencia)
+router.get('/visualizar_minha_proeficiencia', AuthMiddleware, controller.getMinhaProeficiencia)
 
-router.post('/adicionar_instituicao', AuthMiddleware, professorIsFController.postInstituicao)
+router.post('/adicionar_instituicao/:idInstituicao', AuthMiddleware, controller.postInstituicao)
 
-router.get('/visualizar_minhas_instituicoes', AuthMiddleware, professorIsFController.getMinhasInstituicoes)
+router.get('/visualizar_minhas_instituicoes', AuthMiddleware, controller.getMinhasInstituicoes)
 
-router.get('/visualizar_instituicao_atual', AuthMiddleware, professorIsFController.getInstituicaoAtual)
+router.get('/visualizar_instituicao_atual', AuthMiddleware, controller.getInstituicaoAtual)
 
 export default router

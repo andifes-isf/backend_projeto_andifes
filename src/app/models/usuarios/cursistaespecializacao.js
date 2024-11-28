@@ -7,20 +7,33 @@ class CursistaEspecializacao extends Model {
                 login: {
                     type: Sequelize.STRING,
                     allowNull: false,
-                    primaryKey: true,
-                    references: {
-                      model: 'professorisf',
-                      key: 'login',
-                      name: 'fk_login_cursistaespecializacao'
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
-                }
+                    primaryKey: true
+                },
+                practical_hours: {
+                    type: Sequelize.INTEGER,
+                    defaultValue: 0
+                },
+                nc_hours: {
+                    type: Sequelize.INTEGER,
+                    defaultValue: 0
+                },
+                ccti_hours: {
+                    type: Sequelize.INTEGER,
+                    defaultValue: 0
+                },
+                ccip_hours: {
+                    type: Sequelize.INTEGER,
+                    defaultValue: 0
+                },
+                cci_hours: {
+                    type: Sequelize.INTEGER,
+                    defaultValue: 0
+                },
             },
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'cursistaespecializacao',
+                tableName: 'specialization_student',
                 indexes: [{
                     name: "primary",
                     unique: true,
@@ -66,6 +79,11 @@ class CursistaEspecializacao extends Model {
         this.hasMany(models.InteresseNaDisciplina, {
             foreignKey: 'login',
             as: 'interesse'
+        })
+
+        this.hasOne(models.OuvidoriaCursoEspecializacao, {
+            foreignKey: 'login',
+            as: 'reclamation'
         })
     }
 }

@@ -4,8 +4,6 @@ var _auth = require('../../middlewares/auth'); var _auth2 = _interopRequireDefau
 
 const router = new (0, _express.Router)()
 
-router.post('/', _auth2.default, _professorIsFMinistraTurmaOCController2.default.post)
-
-router.get('/', _professorIsFMinistraTurmaOCController2.default.get)
+router.post('/:idTurma', _auth2.default, _professorIsFMinistraTurmaOCController2.default.post)
 
 exports. default = router

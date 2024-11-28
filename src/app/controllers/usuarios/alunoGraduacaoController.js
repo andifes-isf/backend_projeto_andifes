@@ -1,65 +1,64 @@
-import { Sequelize } from "sequelize";
+// Models
 import AlunoGraduacao from "../../models/usuarios/alunograduacao";
 import Usuario from "../../models/usuarios/usuario";
 import ProfessorIsF from "../../models/usuarios/professorisf";
 import ProfessorIsFController from './professorIsFController'
-import MESSAGES from "../../utils/messages/messages_pt";
 
-class AlunoGraduacaoController {
+// Utils
+import MESSAGES from "../../utils/response/messages/messages_pt";
+import CustomError from "../../utils/response/CustomError/CustomError";
+import ErrorType from "../../utils/response/ErrorType/ErrorType";
+import httpStatus from "../../utils/response/httpStatus/httpStatus";
+
+class AlunoGraduacaoController extends ProfessorIsFController{
     async post(req, res) {
-        try {    
-            await ProfessorIsFController.post(req, res, 0)
-            
-            const existingGraduationStudent = await AlunoGraduacao.findOne({
-                where: {
-                    login: req.body.login
-                }
+        const existingGraduationStudent = await AlunoGraduacaoController.verifyExistingObject(AlunoGraduacao, req.body.login, MESSAGES.EXISTING_GRADUATION_STUDENT)
+
+        if (existingGraduationStudent) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: existingGraduationStudent.message,
+                errorName: existingGraduationStudent.name
             })
-    
-            if(existingGraduationStudent) {
-                return res.status(409).json({
-                    error: `${existingGraduationStudent.login} ` + MESSAGES.ALREADY_IN_SYSTEM
-                })
-            }
-            
-            const graduationStudent = await AlunoGraduacao.create({
-                login: req.body.login
-            })
-    
-            return res.status(201).json(graduationStudent)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const { error, teacher } = await AlunoGraduacaoController.postIsFTeacher(req, res, 0)
+        
+        if (error) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: teacher.message,
+                errorName: teacher.name
+            })
+        }
+
+        const graduationStudent = await AlunoGraduacao.create({
+            login: req.body.login
+        })
+
+        return res.status(httpStatus.CREATED).json({
+            error: false,
+            graduationStudent
+        })
 
     }
 
     async get(_, res){
-        try {
-            const graduationStudents = await AlunoGraduacao.findAll({
-                include: [
-                    {
-                        model: ProfessorIsF,
-                        attributes: {
-                            exclude: ['login'],
-                        },
-                        include: [{
-                            model: Usuario,
-                            attributes: {
-                                exclude: ['login', 'senha_encriptada', 'ativo', 'tipo']
-                            }
-                        }]
+        const graduationStudents = await AlunoGraduacao.findAll({
+            include: [
+                {
+                    model: ProfessorIsF,
+                    where: {
+                        cursista: false
                     }
-                ],
-                logging: console.log
-            })
-            
-            return res.status(200).json(graduationStudents)
-            
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
-
+                }
+            ]
+        })
+        
+        return res.status(httpStatus.SUCCESS).json({
+            error: false,
+            graduationStudents
+        })
     }
 }
 

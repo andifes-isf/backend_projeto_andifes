@@ -19,7 +19,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_login_ministranteministraturmaespecializacao',
       references: {
-        table: 'docenteministrante',
+        table: 'minister_teacher',
         field: 'login'
       },
       onDelete: 'cascade',

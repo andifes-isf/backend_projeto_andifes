@@ -6,16 +6,9 @@ class CoordenadorNacionalIdioma extends Model {
             {
                 login: {
                     type: Sequelize.STRING,
-                    primaryKey: true,
-                    references: {
-                        model: 'usuarios',
-                        key: 'login',
-                        name: 'fk_login_coordenadornacional'
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
+                    primaryKey: true
                 },
-                idioma: {
+                language: {
                     type: Sequelize.ENUM('ingles', 'portuges', 'alemao', 'frances', 'italiano', 'espanhol', 'japones'),
                     allowNull: false
                 },
@@ -23,7 +16,7 @@ class CoordenadorNacionalIdioma extends Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'coordenadornacionalidioma',
+                tableName: 'language_national_coordinator',
                 indexes: [{
                     name: "primary_key",
                     unique: true,

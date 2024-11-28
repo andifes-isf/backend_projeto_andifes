@@ -6,21 +6,14 @@ class AlunoIsF extends _sequelize.Model {
             {
                 login: {
                     type: _sequelize2.default.STRING,
-                    primaryKey: true,
-                    references: {
-                        model: 'usuarios',
-                        key: 'login',
-                        name: 'fk_login_alunoisf'
-                    },
-                    onDelete: 'CASCADE',
-                    onUpdate: 'CASCADE'
+                    primaryKey: true
                 },
-                deInstituicao: _sequelize2.default.BOOLEAN
+                from_institution: _sequelize2.default.BOOLEAN
             },
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'alunoisf',
+                tableName: 'isf_student',
                 indexes: [{
                     name: "primary_key",
                     unique: true,
@@ -50,7 +43,7 @@ class AlunoIsF extends _sequelize.Model {
         })
 
         this.belongsToMany(models.TurmaOC, {
-            through: 'alunoisfparticipaturmaoc',
+            through: 'isfstudent_in_occlass',
             foreignKey: 'login', 
             targetKey: 'idTurma', 
             timestamps: false

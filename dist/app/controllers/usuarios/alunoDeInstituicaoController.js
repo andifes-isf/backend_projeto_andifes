@@ -10,151 +10,223 @@ var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _intero
 // Controller
 var _alunoIsFController = require('./alunoIsFController'); var _alunoIsFController2 = _interopRequireDefault(_alunoIsFController);
 
-var _messages_pt = require('../../utils/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+// Utils
+var _sequelize = require('sequelize');
+var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
+var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
+var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
+var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 
-class alunoDeinstituicaoController {
-    async post(req, res) {
-        try {
-            await _alunoIsFController2.default.post(req, res, 1)
-            
-            const existingStudent = await _alunodeinstituicao2.default.findOne({
-                where: {
-                    login: req.body.login
-                }
-            })
-    
-            if(existingStudent) {
-                return res.status(409).json({
-                    error: `${existingStudent.login} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
-                })
+class alunoDeinstituicaoController extends _alunoIsFController2.default {
+    // Auxiliar Functions
+
+    static async verifyExistingRegistration(login, institutionId, begin) {
+        const existingRegistrantion = await _comprovantealunoinstituicao2.default.findOne({
+            where: {
+                login: login,
+                idInstituicao: institutionId,
+                inicio: begin
             }
-    
-            const aluno = await _alunodeinstituicao2.default.create({
-                nDocumento: req.body.nDocumento,
-                cargo: req.body.cargo,
-                areaAtuacao: req.body.areaAtuacao,
-                login: req.body.login
-            })
+        })
+
+        if(existingRegistrantion) {
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.EXISTING_INSTITUTION_USER_RELATIONSHIP + institutionId,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
+        }
+    }
+
+    static async closeRegistration(login) {
+        const registration = await _comprovantealunoinstituicao2.default.findOne({
+            where: {
+                login: login,
+                termino: {
+                    [_sequelize.Op.is]: null
+                }
+            }
+        })
+
+        registration.termino = new Date().toISOString().split("T")[0]
+        registration.save()
+    }
+
+
+    // Endpoints
+
+    async post(req, res) {
+        const existingStudent = await alunoDeinstituicaoController.verifyExistingObject(_alunodeinstituicao2.default, req.body.login, _messages_pt2.default.EXISTING_INSTITUTION_STUDENT)
         
-            return res.status(201).json(aluno)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
+        if (existingStudent) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingStudent.message,
+                errorName: existingStudent.name
+            })
         }
 
+        const { error, student } = await _alunoIsFController2.default.postIsFStudent(req, res, 1)
+
+        if (error) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: student.message,
+                errorName: student.name
+            })
+        }
+
+        const institutionStudent = await _alunodeinstituicao2.default.create({
+            register_number: req.body.register_number,
+            position: req.body.position,
+            activity_area: req.body.activity_area,
+            login: req.body.login
+        })
+    
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            institutionStudent
+        })
     }
 
     async get(_, res) {
-        try {
-            const students = await _alunodeinstituicao2.default.findAll({
-                include: [
-                    {
-                        model: _alunoisf2.default,
+        const students = await _alunodeinstituicao2.default.findAll({
+            include: [
+                {
+                    model: _alunoisf2.default,
+                    attributes: {
+                        exclude: ['login']
+                    },
+                    include: [{
+                        model: _usuario2.default,
                         attributes: {
-                            exclude: ['login']
-                        },
-                        include: [{
-                            model: _usuario2.default,
-                            attributes: {
-                                exclude: ['login', 'senha_encriptada', 'ativo', 'tipo']
-                            }
-                        }]
-                    },    
-                    {
-                        model: _instituicaoensino2.default,
+                            exclude: ['login', 'senha_encriptada', 'ativo', 'tipo']
+                        }
+                    }]
+                },    
+                {
+                    model: _instituicaoensino2.default,
+                    as: "institution",
+                    attributes: {
+                        exclude: ['idInstituicao']
+                    },
+                    through: {
                         attributes: {
-                            exclude: ['idInstituicao']
-                        },
-                        through: {
-                            attributes: {
-                                exclude: ['login', 'idInstituicao'],
-                                include: ['inicio']
-                            }
+                            exclude: ['login', 'idInstituicao'],
+                            include: ['inicio']
                         }
                     }
-                ]
-            })
+                }
+            ]
+        })
 
-            return res.status(200).json(students)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            students
+        })
     }
 
     async postInstituicao(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.ISF_STUDENT)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const existingRegistrantion = await _comprovantealunoinstituicao2.default.findOne({
-                where: {
-                    login: req.loginUsuario,
-                    idInstituicao: req.body.idInstituicao,
-                    inicio: req.body.inicio
-                }
+        const authorizationError = _alunoIsFController2.default.verifyUserType([_userTypes2.default.ISF_STUDENT], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-    
-            if(existingRegistrantion) {
-                return res.status(409).json({
-                    error: `${existingRegistrantion.comprovante} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
-                })
-            }
-            
-            const comprovante = await _comprovantealunoinstituicao2.default.create({
-                idInstituicao: req.body.idInstituicao,
-                login: req.loginUsuario,
-                inicio: req.body.inicio,
-                termino: req.body.termino || null,
-                comprovante: req.body.comprovante
-            })
-    
-            return res.status(201).json(comprovante)    
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
+
+        // Seria bom ver como mudar para que fosse passado o nome, ou sigla, da instituição, ao invés do Id dela
+
+        const existingInstitution = await alunoDeinstituicaoController.verifyExistingObject(_instituicaoensino2.default, req.params.idInstituicao, _messages_pt2.default.EXISTING_INSTITUTION)
+
+        if (!existingInstitution) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingInstitution.message,
+                errorName: existingInstitution.name
+            })
+        }
+
+        const existingRegistration = await alunoDeinstituicaoController.verifyExistingRegistration(req.loginUsuario, req.params.idInstituicao, req.body.inicio)
+
+        if (existingRegistration) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingRegistration.message,
+                errorName: existingRegistration.name
+            })
+        }
+
+        await alunoDeinstituicaoController.closeRegistration(req.loginUsuario, req.params.idInstituicao)
+        
+        const registration = await _comprovantealunoinstituicao2.default.create({
+            idInstituicao: req.params.idInstituicao,
+            login: req.loginUsuario,
+            inicio: req.body.inicio,
+            comprovante: req.body.comprovante
+        })
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            registration
+        })  
     }
 
     async getMinhasInstituicoes(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.ISF_STUDENT)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const registrations = await _comprovantealunoinstituicao2.default.findAll({
-                where: {
-                    login: req.loginUsuario
-                }
+        const authorizationError = _alunoIsFController2.default.verifyUserType([_userTypes2.default.ISF_STUDENT], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(registrations)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
+
+        const registrations = await _comprovantealunoinstituicao2.default.findAll({
+            where: {
+                login: req.loginUsuario
+            }
+        })
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            registrations
+        })
     }
 
     async getInstituicaoAtual(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.ISF_STUDENT)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const registration = await _comprovantealunoinstituicao2.default.findOne({
-                where: {
-                    login: req.loginUsuario
-                }
+        const authorizationError = _alunoIsFController2.default.verifyUserType([_userTypes2.default.ISF_STUDENT], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(registration)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
+
+        const registration = await _comprovantealunoinstituicao2.default.findOne({
+            where: {
+                login: req.loginUsuario,
+                termino: {
+                    [_sequelize.Op.is]: null
+                }
+            }
+        })
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            registration
+        })
     }
 }
 

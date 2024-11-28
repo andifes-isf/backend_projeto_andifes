@@ -4,6 +4,6 @@ import AuthMiddleware from '../../middlewares/auth'
 
 const router = new Router()
 
-router.post('/', AuthMiddleware, AlunoIsFParticipaTurmaOCController.post)
+router.post('/:idTurma', AuthMiddleware, AlunoIsFParticipaTurmaOCController.post)
 
 export default router

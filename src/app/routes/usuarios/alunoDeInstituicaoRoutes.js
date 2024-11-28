@@ -8,7 +8,7 @@ router.post('/', alunoDeInstituicaoController.post)
 
 router.get('/', alunoDeInstituicaoController.get)
 
-router.post('/adicionar_instituicao', AuthMiddleware, alunoDeInstituicaoController.postInstituicao)
+router.post('/adicionar_instituicao/:idInstituicao', AuthMiddleware, alunoDeInstituicaoController.postInstituicao)
 
 router.get('/visualizar_minhas_instituicoes', AuthMiddleware, alunoDeInstituicaoController.getMinhasInstituicoes)
 

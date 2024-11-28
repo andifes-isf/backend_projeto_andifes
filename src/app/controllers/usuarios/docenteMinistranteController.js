@@ -10,7 +10,7 @@ import UsuarioController from './usuarioController'
 
 // Utils
 import UserTypes from '../../utils/userType/userTypes'
-import MESSAGES from '../../utils/messages/messages_pt'
+import MESSAGES from '../../utils/response/messages/messages_pt'
 
 class coordenadorNacionalIdiomaController {
     async post(req, res) {

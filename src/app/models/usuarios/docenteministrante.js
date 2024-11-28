@@ -12,7 +12,7 @@ class DocenteMinistrante extends Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'docenteministrante',
+                tableName: 'minister_teacher',
                 indexes: [{
                     name: "primary_key",
                     unique: true,

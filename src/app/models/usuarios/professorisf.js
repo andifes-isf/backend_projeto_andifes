@@ -20,7 +20,7 @@ class ProfessorIsF extends Model {
                     type: Sequelize.TEXT,
                     allowNull: false
                 },
-                inicio: {
+                start: {
                     type: Sequelize.DATEONLY,
                     allowNull: false,
                     primaryKey: true,
@@ -33,7 +33,7 @@ class ProfessorIsF extends Model {
                         }
                     }
                 },
-                termino: {
+                end: {
                     type: Sequelize.DATEONLY,
                     validate: {
                         isBeforeBegin(value) {
@@ -43,7 +43,7 @@ class ProfessorIsF extends Model {
                         }
                     }
                 },
-                cursista: {
+                specialization_student: {
                     type: Sequelize.BOOLEAN,
                     allowNull: false
                 }
@@ -51,7 +51,7 @@ class ProfessorIsF extends Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'professorisf',
+                tableName: 'isf_teacher',
                 indexes: [{
                     name: "primary",
                     unique: true,
@@ -81,14 +81,14 @@ class ProfessorIsF extends Model {
         })
 
         this.belongsToMany(models.TurmaOC, {
-            through: 'professorisfministraturmaoc',
+            through: 'isfteacher_ministre_occlass',
             foreignKey: 'login',
             sourceKey: 'login',
             timestamps: false
         })
 
         this.belongsToMany(models.InstituicaoEnsino, {
-            through: 'comprovanteprofessorinstituicao', 
+            through: 'teacher_institution_register', 
             foreignKey: 'login',
             targetKey: 'idInstituicao',
             timestamps: false

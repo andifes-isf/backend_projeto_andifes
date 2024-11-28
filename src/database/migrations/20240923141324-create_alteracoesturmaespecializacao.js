@@ -41,7 +41,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_login_alteracaoturmaespecializacao',
       references: {
-        table: 'coordenadornacionalidioma',
+        table: 'language_national_coordinator',
         field: 'login'
       },
       onDelete: 'cascade',

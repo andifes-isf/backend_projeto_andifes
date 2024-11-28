@@ -4,8 +4,6 @@ import AuthMiddleware from '../../middlewares/auth'
 
 const router = new Router()
 
-router.post('/', AuthMiddleware, professorIsFMinistraTurmaOC.post)
-
-router.get('/', professorIsFMinistraTurmaOC.get)
+router.post('/:idTurma', AuthMiddleware, professorIsFMinistraTurmaOC.post)
 
 export default router

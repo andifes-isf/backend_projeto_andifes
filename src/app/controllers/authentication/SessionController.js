@@ -1,47 +1,43 @@
 import jwt from 'jsonwebtoken'
 import * as Yup from 'yup'
 import bcrypt from 'bcrypt'
-import Usuario from '../../models/usuarios/usuario'
+import UserRepository from '../../repositories/usuarios/UserRepository'
 import authConfig from '../../../config/auth'
-import MESSAGES from '../../utils/messages/messages_pt'
+import MESSAGES from '../../utils/response/messages/messages_pt'
 
 class SessionController {
     async store(req, res) {
         // Consistencia se o dado (constraint) confere na base
         let {
             login,
-            senha
+            password
         } = req.body
 
-        const usuario = await Usuario.findOne({
-            where: {
-                login
-            }
-        })
+        const user = await UserRepository.findByPk(login)
 
-        if(!usuario) {
+        if(!user) {
             return res.status(401).json({
                 error: MESSAGES.USER_NOT_FOUNDED
             })
         }
 
         // Consistencia se a senha confere no Model
-        if(!(await bcrypt.compare(senha, usuario.senha_encriptada))) {
+        if(!(await bcrypt.compare(password, user.encrypted_password))) {
             return res.status(401).json({
                 msg: MESSAGES.INVALID_PASSWORD
             })
         }
 
-        const { tipo } = usuario
+        const { type } = user
 
         return res.json({
-            usuario: {
+            user: {
                 login,
-                tipo
+                type
             },
             token: jwt.sign({
                 login,
-                tipo
+                type
             }, authConfig.secret, {
                 expiresIn: authConfig.expiresIn
             })

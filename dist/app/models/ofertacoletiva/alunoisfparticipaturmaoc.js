@@ -23,7 +23,7 @@ class AlunoIsFParticipaTurmaOC extends _sequelize.Model {
             {
                 sequelize,
                 timestamps: false,
-                tableName: 'alunoisfparticipaturmaoc',
+                tableName: 'isfstudent_in_occlass',
                 indexes: [{
                     name: 'primary_key',
                     unique: true,

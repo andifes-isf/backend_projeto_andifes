@@ -1,46 +1,30 @@
 import * as Yup from 'yup'
+
+// Models
 import InstituicaoEnsinoEstrangeira from '../../models/instituicao/instituicaoensinoestrangeira'
 import instituicaoEnsinoController from './instituicaoEnsinoController'
-import MESSAGES from '../../utils/messages/messages_pt'
+
+// Utils
+import MESSAGES from '../../utils/response/messages/messages_pt'
+import httpStatus from '../../utils/response/httpStatus/httpStatus'
+import CustomError from '../../utils/response/CustomError/CustomError'
 
 class instituicaoEnsinoEstrangeiraController {
     async post(req, res){
-        try {
-            await instituicaoEnsinoController.post(req, res, 0)
+        const institution = await instituicaoEnsinoController.post(req, res, 0)
 
-            const existingInstitution = await InstituicaoEnsinoEstrangeira.findOne({
-                where: {
-                    pais: req.body.pais,
-                    sigla: req.body.sigla
-                }
-            })
-    
-            if(existingInstitution) {
-                return res.status(409).json({
-                    error: `${existingInstitution.sigla} ` +  MESSAGES.ALREADY_IN_SYSTEM
-                })
-            }
-    
-            const institution = await InstituicaoEnsinoEstrangeira.create({
-                pais: req.body.pais,
-                idInstituicao: req.body.idInstituicao,
-                sigla: req.body.sigla
-            })
-    
-            return res.status(201).json(institution)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
+        const foreignInstitution = await institution.createInstituicaoEnsinoEstrangeira({
+            pais: req.body.pais,
+            sigla: req.body.sigla
+        })
+
+        return res.status(httpStatus.CREATED).json(foreignInstitution)
     }
 
     async get(_, res) {
-        try {
-            const institutions = await InstituicaoEnsinoEstrangeira.findAll()
+        const institutions = await InstituicaoEnsinoEstrangeira.findAll()
 
-            return res.status(200).json(institutions)
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
+        return res.status(httpStatus.SUCCESS).json(institutions)
     }
 }
 

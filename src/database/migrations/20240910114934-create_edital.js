@@ -31,7 +31,7 @@ module.exports = {
       type: 'foreign key',
       name: 'fk_criador_editalcursoespecializacao',
       references: {
-        table: 'coordenadornacional',
+        table: 'national_coordinator',
         field: 'login'
       },
       onDelete: 'cascade',
