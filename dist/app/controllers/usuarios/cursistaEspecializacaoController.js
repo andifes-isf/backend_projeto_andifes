@@ -1,22 +1,18 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _sequelize = require('sequelize');
 
-// Modelscursistacursaturmaespecializacao";
-var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
+// Modelscursistacursaturmaespecializacao"
 var _InteresseNaDisciplina = require('../../models/curso_especializacao/InteresseNaDisciplina'); var _InteresseNaDisciplina2 = _interopRequireDefault(_InteresseNaDisciplina);
-var _relatorio_pratico = require('../../models/curso_especializacao/relatorio_pratico'); var _relatorio_pratico2 = _interopRequireDefault(_relatorio_pratico);
-var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
-var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
-var _turmadisciplinaespecializacao = require('../../models/curso_especializacao/turmadisciplinaespecializacao'); var _turmadisciplinaespecializacao2 = _interopRequireDefault(_turmadisciplinaespecializacao);
 var _ouvidoria_curso_especializacao = require('../../models/curso_especializacao/ouvidoria_curso_especializacao'); var _ouvidoria_curso_especializacao2 = _interopRequireDefault(_ouvidoria_curso_especializacao);
-var _disciplinaespecializacao = require('../../models/curso_especializacao/disciplinaespecializacao'); var _disciplinaespecializacao2 = _interopRequireDefault(_disciplinaespecializacao);
 
 // Controllers
 var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
 
 // Repositories
-var _SpecializationStudentRepository = require('../../repositories/usuarios/SpecializationStudentRepository'); var _SpecializationStudentRepository2 = _interopRequireDefault(_SpecializationStudentRepository);
 var _PracticalReportRepository = require('../../repositories/specialization_course/PracticalReportRepository'); var _PracticalReportRepository2 = _interopRequireDefault(_PracticalReportRepository);
 var _NotificationRepository = require('../../repositories/utils/NotificationRepository'); var _NotificationRepository2 = _interopRequireDefault(_NotificationRepository);
+var _SpecializationStudentRepository = require('../../repositories/usuarios/SpecializationStudentRepository'); var _SpecializationStudentRepository2 = _interopRequireDefault(_SpecializationStudentRepository);
+var _SpecializationDisciplineClassRepository = require('../../repositories/specialization_course/SpecializationDisciplineClassRepository'); var _SpecializationDisciplineClassRepository2 = _interopRequireDefault(_SpecializationDisciplineClassRepository);
+var _SpecializationDisciplineRepository = require('../../repositories/specialization_course/SpecializationDisciplineRepository'); var _SpecializationDisciplineRepository2 = _interopRequireDefault(_SpecializationDisciplineRepository);
 
 // Utils
 var _notificationType = require('../../utils/notificationType/notificationType'); var _notificationType2 = _interopRequireDefault(_notificationType);
@@ -27,8 +23,6 @@ var _messages_pt = require('../../utils/response/messages/messages_pt'); var _me
 var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
-var _SpecializationDisciplineClassRepository = require('../../repositories/specialization_course/SpecializationDisciplineClassRepository'); var _SpecializationDisciplineClassRepository2 = _interopRequireDefault(_SpecializationDisciplineClassRepository);
-var _SpecializationDisciplineRepository = require('../../repositories/specialization_course/SpecializationDisciplineRepository'); var _SpecializationDisciplineRepository2 = _interopRequireDefault(_SpecializationDisciplineRepository);
 
 class CursistaEspecializacaoController extends _professorIsFController2.default {
     // Auxiliar Functions
@@ -142,7 +136,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             } else if (result.value.error === true) {
                 fail.push([result.value.errorInfo.message, result.value.errorInfo.name])
             } else {
-                unexpectedError.push(`Erro inesperado:`, result.reason);
+                unexpectedError.push(`Erro inesperado:`, result.reason)
             }
         })
 
@@ -183,22 +177,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     }
 
     async get(_, res){
-        const specializationStudents = await _cursistaespecializacao2.default.findAll({
-            include: [
-                {
-                    model: _professorisf2.default,
-                    attributes: {
-                        exclude: ['login'],
-                    },
-                    include: [{
-                        model: _usuario2.default,
-                        attributes: {
-                            exclude: ['login', 'senha_encriptada', 'ativo']
-                        }
-                    }]
-                }
-            ]
-        })
+        const specializationStudents = await _SpecializationStudentRepository2.default.findAll()
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
@@ -268,7 +247,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }       
 
-        const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+        const specializationStudent = await _SpecializationStudentRepository2.default.findByPk(req.loginUsuario)
 
         const myMaterials = await specializationStudent.getMaterial()
 
@@ -291,7 +270,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
 
-        const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+        const specializationStudent = await _SpecializationStudentRepository2.default.findByPk(req.loginUsuario)
 
         const materials = await specializationStudent.getMaterial({
             where: {
@@ -373,8 +352,8 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
 
-        await _SpecializationStudentRepository2.default.addClass(classObject)
-        const classes = await _SpecializationStudentRepository2.default.getClasses()
+        await _SpecializationStudentRepository2.default.addClass(specializationStudent, classObject)
+        const classes = await _SpecializationStudentRepository2.default.getClasses(specializationStudent)
 
         return res.status(_httpStatus2.default.CREATED).json({
             error: false,
@@ -395,7 +374,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
 
-        const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.loginUsuario)
+        const specializationStudent = await _SpecializationStudentRepository2.default.findByPk(req.loginUsuario)
 
         const myClasses = await specializationStudent.getTurma()
 

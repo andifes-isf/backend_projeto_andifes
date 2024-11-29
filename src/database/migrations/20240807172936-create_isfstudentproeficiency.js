@@ -24,12 +24,6 @@ module.exports = {
     })
 
     await queryInterface.addConstraint('isfstudent_proeficiency', {
-      fields: ['login', 'inicio'],
-      type: 'unique',
-      name: 'unique_login_inicio_professorisf'
-    })
-
-    await queryInterface.addConstraint('isfstudent_proeficiency', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_proeficienciaalunoisf',

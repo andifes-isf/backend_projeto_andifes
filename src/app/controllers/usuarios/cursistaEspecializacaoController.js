@@ -352,8 +352,8 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
 
-        await SpecializationStudentRepository.addClass(classObject)
-        const classes = await SpecializationStudentRepository.getClasses()
+        await SpecializationStudentRepository.addClass(specializationStudent, classObject)
+        const classes = await SpecializationStudentRepository.getClasses(specializationStudent)
 
         return res.status(httpStatus.CREATED).json({
             error: false,

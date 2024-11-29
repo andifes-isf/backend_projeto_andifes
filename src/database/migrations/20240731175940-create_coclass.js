@@ -31,7 +31,7 @@ module.exports = {
       nReprovados: Sequelize.INTEGER,
     })
 
-    await queryInterface.addConstraint('turmaoc', {
+    await queryInterface.addConstraint('co_class', {
       fields: ['idTurma', 'idCurso'],
       type: 'unique',
       name: 'unique_idTurma_idCurso'

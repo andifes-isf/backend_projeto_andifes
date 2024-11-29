@@ -1,5 +1,6 @@
 import SpecializationStudent from '../../models/usuarios/cursistaespecializacao'
-
+import IsFTeacher from '../../models/usuarios/professorisf'
+import User from '../../models/usuarios/usuario'
 
 class SpecializationStudentRepository {
     async findByPk(pk) {
@@ -10,12 +11,12 @@ class SpecializationStudentRepository {
         return await SpecializationStudent.findAll({
             include: [
                 {
-                    model: ProfessorIsF,
+                    model: IsFTeacher,
                     attributes: {
                         exclude: ['login'],
                     },
                     include: [{
-                        model: Usuario,
+                        model: User,
                         attributes: {
                             exclude: ['login', 'senha_encriptada', 'ativo']
                         }

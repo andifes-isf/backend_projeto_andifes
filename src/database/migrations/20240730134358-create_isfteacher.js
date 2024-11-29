@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('professorisf', {
+    await queryInterface.createTable('isf_teacher', {
       login: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -13,20 +13,30 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false
       },
-      inicio: {
+      start: {
         type: Sequelize.DATEONLY,
         allowNull: false,
         primaryKey: true
       },
-      termino: Sequelize.DATEONLY
+      end: Sequelize.DATEONLY,
+      specialization_student: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      }
     })
 
-    await queryInterface.addConstraint('professorisf', {
+    await queryInterface.addConstraint('isf_teacher', {
+      fields: ['login', 'start'],
+      type: 'unique',
+      name: 'unique_login_start_professorisf'
+    })
+
+    await queryInterface.addConstraint('isf_teacher', {
       fields: ['login'],
       type: 'foreign key',
       name: 'fk_login_professorisf',
       references: {
-        table: 'usuario',
+        table: 'user',
         field: 'login'
       },
       onDelete: 'cascade',

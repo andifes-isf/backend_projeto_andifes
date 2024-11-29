@@ -159,6 +159,6 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('co_class', null, {})
-    await queryInterface.sequelize.query('ALTER TABLE turmaoc AUTO_INCREMENT = 1')
+    await queryInterface.sequelize.query('ALTER TABLE co_class AUTO_INCREMENT = 1')
   }
 };
