@@ -23,6 +23,7 @@ import MESSAGES from '../../utils/response/messages/messages_pt'
 import CustomError from "../../utils/response/CustomError/CustomError"
 import ErrorType from "../../utils/response/ErrorType/ErrorType"
 import httpStatus from "../../utils/response/httpStatus/httpStatus"
+import CursistaEspecializacao from "../../models/usuarios/cursistaespecializacao"
 
 class CursistaEspecializacaoController extends ProfessorIsFController {
     // Auxiliar Functions
@@ -145,6 +146,50 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
 
     // Endpoints
     
+    /**
+    *
+    * @param {string} req.body.login
+    * @param {string} req.body.namestudent
+    * @param {string} req.body.surname
+    * @param {int} req.body.DDI
+    * @param {int} req.body.DDD
+    * @param {int} req.body.phone
+    * @param {int || string} req.body.ethnicity - The ethnicity of the user. Must be one of the following (int - "value"): 
+    * 1 - "amarelo"
+    * 2 - "branco"
+    * 3 - "indigena"
+    * 4 - "pardo"
+    * 5 - "preto"
+    * 6 - "quilombola"
+    * @param {int || string} req.body.gender - The gender of the user. Must be one of the following (int - "value"): 
+    * 1 - "feminino"
+    * 2 - "masculino"
+    * 3 - "nao binario"
+    * 4 - "outros"
+    * @param {string} req.body.email
+    * @param {int || string} req.body.email_domain - The email domain of the user's email. Must be one of the following (int - "value"):
+    * 1 - "gmail.com"
+    * 2 - "yahoo.com"
+    * 3 - "outlook.com"
+    * 4 - "hotmail.com"
+    * @param {string} req.body.password
+    * @param {string} req.body.poca - For now is just a string representing the user's POCA certificate 
+    * @param {date} req.body.start
+    * 
+    * 
+    * RETORNO
+    * @returns {object} httpStatus
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {CursistaEspecializacao} specializationStudent
+    * 
+    */
+
     async post(req, res) {
         const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingObject(SpecializationStudentRepository, req.body.login, MESSAGES.EXISTING_SPECIALIZATION_STUDENT)
         
@@ -185,6 +230,13 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
         })
     }
     
+    /**
+     * 
+     * @param {*} req 
+     * @param {*} res 
+     * @returns 
+     */
+
     async postPracticalReport(req, res) {
         const userType = req.tipoUsuario
 
