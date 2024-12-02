@@ -1,9 +1,9 @@
-import SpecializationStudent from '../../models/usuarios/cursistaespecializacao'
+import SpecializationDiscipline from '../../models/curso_especializacao/disciplinaespecializacao'
 
 
 class SpecializationStudentRepository {
     async findOne(discipline_name) {
-        return await SpecializationStudent.findOne({
+        return await SpecializationDiscipline.findOne({
             where: {
                 nome: discipline_name
             }

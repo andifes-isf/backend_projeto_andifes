@@ -20,7 +20,7 @@ router.post('/class/:name', _auth2.default, _cursistaEspecializacaoController2.d
 
 router.get('/my_classes', _auth2.default, _cursistaEspecializacaoController2.default.getMinhasTurmas)
 
-router.post('/interest_in_disciplina', _auth2.default, _cursistaEspecializacaoController2.default.postInteresseNaDisciplina)
+router.post('/interest_in_discipline', _auth2.default, _cursistaEspecializacaoController2.default.postInteresseNaDisciplina)
 
 router.post('/feedback', _auth2.default, _cursistaEspecializacaoController2.default.postReclamation)
 

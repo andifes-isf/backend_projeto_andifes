@@ -8,7 +8,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       idioma: {
-        type: Sequelize.ENUM('ingles', 'portuges', 'alemao', 'frances', 'italiano', 'espanhol', 'japones'),
+        type: Sequelize.ENUM('ingles', 'portugues', 'alemao', 'frances', 'italiano', 'espanhol', 'japones'),
         allowNull: false
       },
       nome: {

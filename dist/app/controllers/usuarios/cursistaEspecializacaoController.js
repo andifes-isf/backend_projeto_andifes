@@ -23,13 +23,14 @@ var _messages_pt = require('../../utils/response/messages/messages_pt'); var _me
 var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
-var _cursistaespecializacao = require('../../models/usuarios/cursistaespecializacao'); var _cursistaespecializacao2 = _interopRequireDefault(_cursistaespecializacao);
 
 class CursistaEspecializacaoController extends _professorIsFController2.default {
     // Auxiliar Functions
     static async getEntities(login){
         const specializationStudent = await _SpecializationStudentRepository2.default.findByPk(login)
         const advisor = await _SpecializationStudentRepository2.default.getAdvisor(specializationStudent)
+
+        
         
         return [ specializationStudent, advisor[0] ]
 
@@ -75,11 +76,13 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     }
 
     static async inserirInteresse(discipline, year, specializationStudent){
-        const existingDiscipline = await _SpecializationDisciplineRepository2.default.findOne(discipline.nomeDisciplina)
+        const { name } = discipline
+
+        const existingDiscipline = await _SpecializationDisciplineRepository2.default.findOne(name)
 
         if (!existingDiscipline) {
             return new (0, _CustomError2.default)(
-                _messages_pt2.default.DISCIPLINE_NOT_FOUND + discipline.nomeDisciplina,
+                _messages_pt2.default.DISCIPLINE_NOT_FOUND + name,
                 _ErrorType2.default.NOT_FOUND
             )
         }
@@ -87,28 +90,28 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
         const existingInterest = await _InteresseNaDisciplina2.default.findOne({
             where: {
                 login: specializationStudent.login,
-                nomeDisciplina: discipline.nomeDisciplina,
+                nomeDisciplina: name,
                 ano: year
             }
         })
 
         if (existingInterest) {
             return new (0, _CustomError2.default)(
-                _messages_pt2.default.EXISTING_SPECIALIZATIONSTUDENT_DISCIPLINE_INTEREST + discipline.nomeDisciplina,
+                _messages_pt2.default.EXISTING_SPECIALIZATIONSTUDENT_DISCIPLINE_INTEREST + name,
                 _ErrorType2.default.DUPLICATE_ENTRY
             )
         }
 
         await specializationStudent.createInteresse({
             ano: year,
-            nomeDisciplina: discipline.nomeDisciplina,
-            preferencia: discipline.preferencia
+            nomeDisciplina: name,
+            preferencia: discipline.preference
         })
     }
 
     static async inserirDisciplinas(data, specializationStudent){
-        const disciplines = data.interesse
-        const year = data.ano
+        const disciplines = data.disciplines
+        const year = data.year
         
         const promises = disciplines.map(async (discipline) => {
             const insertInterest = await CursistaEspecializacaoController.inserirInteresse(discipline, year, specializationStudent)
@@ -122,7 +125,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
 
             return {
                 error: false,
-                discipline: discipline.nomeDisciplina
+                discipline: discipline.name
             }
         })
         
@@ -130,14 +133,15 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
         let success = []
         let fail = []
         let unexpectedError = []
-
+        
         results.forEach((result) => {
+            console.log(result.value.errorInfo)
             if (result.value.error === false) {
-                success.push(_messages_pt2.default.NEW_SPECIALIZATIONSTUDENT_DISCIPLINE_INTEREST + result.value.discipline)
+                success.push({message: _messages_pt2.default.NEW_SPECIALIZATIONSTUDENT_DISCIPLINE_INTEREST + result.value.discipline})
             } else if (result.value.error === true) {
-                fail.push([result.value.errorInfo.message, result.value.errorInfo.name])
+                fail.push([{message: result.value.errorInfo.message, name: result.value.errorInfo.name}])
             } else {
-                unexpectedError.push(`Erro inesperado:`, result.reason)
+                unexpectedError.push({message: `Erro inesperado:` + result.reason})
             }
         })
 
@@ -148,6 +152,8 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     
     /**
     *
+    * @route POST /specialization_student
+    * 
     * @param {string} req.body.login
     * @param {string} req.body.namestudent
     * @param {string} req.body.surname
@@ -178,7 +184,10 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     * 
     * 
     * RETORNO
-    * @returns {object} httpStatus
+    * @returns {int} httpStatus - The value might be:
+    * 201 - CREATED
+    * 400 - BAD_REQUEST
+    * 500 - INTERNAL_SERVER_ERROR
     * @returns {boolean} error
     * 
     * if return an error
@@ -186,10 +195,8 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     * @returns {string} errorName - error's name
     * 
     * if return successfully
-    * @returns {CursistaEspecializacao} specializationStudent
-    * 
+    * @returns {CursistaEspecializacao} data
     */
-
     async post(req, res) {
         const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingObject(_SpecializationStudentRepository2.default, req.body.login, _messages_pt2.default.EXISTING_SPECIALIZATION_STUDENT)
         
@@ -217,26 +224,78 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
 
         return res.status(_httpStatus2.default.CREATED).json({
             error: false,
-            specializationStudent
+            data: specializationStudent
         })
     }
 
+    /**
+     * 
+     * @route GET /specialization_student
+     * 
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 500 - INTERNAL_SERVER_ERROR
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {CursistaEspecializacao[]} data
+     */
     async get(_, res){
         const specializationStudents = await _SpecializationStudentRepository2.default.findAll()
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
-            specializationStudents
+            data: specializationStudents
         })
     }
     
     /**
      * 
-     * @param {*} req 
-     * @param {*} res 
-     * @returns 
+     * @route POST /specialization_student/practical_report
+     * @requires Authentication
+     * 
+     * @param {string} req.body.language - The language of the report. It must be one of the following:
+     * 1 - "ingles"
+     * 2 - "portugues",
+     * 3 - "alemao"
+     * 4 - "frances"
+     * 5 - "italiano"
+     * 6 - "espanhol"
+     * 7 - "japones"
+     * @param {string} req.body.name
+     * @param {char[2]} req.body.level - The level of the report
+     * - For japanese, it should be used N5 -> N1
+     * - For other languages, it should be used A1 -> C2
+     * @param {string} req.body.description
+     * @param {int} req.body.workload
+     * @param {portfolio_link} req.body.portfolio_link
+     * @param {string} req.body.category - The category of the report. It must be one of the following:
+     * 1 - "preparacao do curso"
+     * 2 - "preparacao material didatico"
+     * 3 - "preparacao de atividades"
+     * 4 - "preparacao de aulas"
+     * 5 - "preparacao de oficinas"
+     * 6 - "preparacao de testes de nivelamento"
+     * 
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 400 - BAD_REQUEST
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {RelatorioPratico} data
      */
-
     async postPracticalReport(req, res) {
         const userType = req.tipoUsuario
 
@@ -282,10 +341,28 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
 
         return res.status(_httpStatus2.default.CREATED).json({
             error: false,
-            report
+            data: report
         })
     }
 
+    /**
+     * @route GET /specialization_student/my_practical_report
+     * @requires Authentication
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {RelatorioPratico[]} data 
+     */
     async getMyMaterials(req, res){
         const userType = req.tipoUsuario
 
@@ -305,10 +382,29 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
-            myMaterials
+            data: myMaterials
         })
     }
 
+    /**
+     * 
+     * @route GET /specialization_student/practical_report_not_viewed
+     * @requires Authentication
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {RelatorioPratico[]} data - Only materials that the student didn't check after advisor analisys
+     */
     async getNotViewedMaterials(req, res){
         const userType = req.tipoUsuario
 
@@ -332,10 +428,29 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
-            materials
+            data: materials
         })
     }
 
+    /**
+     * 
+     * @route GET /specialization_student/practical_report/:name
+     * @requires Authentication
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {RelatorioPratico} data 
+     */
     async getMaterial(req, res){
         const userType = req.tipoUsuario
 
@@ -349,14 +464,14 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
 
-        const [specializationStudent, advisor] = await CursistaEspecializacaoController.getEntities(req.loginUsuario)
+        const specializationStudent = await _SpecializationStudentRepository2.default.findByPk(req.loginUsuario)
 
-        const material = await _SpecializationStudentRepository2.default.getMaterial(specializationStudent, req.params.nome)
+        const material = await _SpecializationStudentRepository2.default.getMaterial(specializationStudent, req.params.name)
 
         if (material.length === 0) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
                 error: true,
-                message: _messages_pt2.default.PRACTICAL_REPORT_NOT_FOUND + req.params.nome,
+                message: _messages_pt2.default.PRACTICAL_REPORT_NOT_FOUND + req.params.name,
                 errorName: _ErrorType2.default.NOT_FOUND
             })
         }
@@ -368,10 +483,31 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
-            material
+            data: material
         })
     }
 
+    /**
+     * 
+     * @route POST /specialization_student/class/:name
+     * @requires Authentication
+     * 
+     * @param {string} req.params.nome_turma - The class that the student will be part of
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 201 - CREATED
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {RelatorioPratico} data 
+     */
     async postCursaTurma(req, res){
         const userType = req.tipoUsuario
 
@@ -386,12 +522,12 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
         }
 
         const specializationStudent = await _SpecializationStudentRepository2.default.findByPk(req.loginUsuario)
-        const classObject = await _SpecializationDisciplineClassRepository2.default.findByPk(req.params.nome_turma)
+        const classObject = await _SpecializationDisciplineClassRepository2.default.findByPk(req.params.name)
 
         if(classObject == null) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
                 error: true,
-                message: _messages_pt2.default.CLASS_NOT_FOUND + req.params.nome_turma,
+                message: _messages_pt2.default.CLASS_NOT_FOUND + req.params.name,
                 errorName: _ErrorType2.default.NOT_FOUND
             })
         }
@@ -409,10 +545,29 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
 
         return res.status(_httpStatus2.default.CREATED).json({
             error: false,
-            classes
+            data: classes
         })
     }
 
+    /**
+     * 
+     * @route GET /specialization_student/my_classes
+     * @requires Authentication
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {RelatorioPratico} data 
+     */
     async getMinhasTurmas(req, res){
         const userType = req.tipoUsuario
 
@@ -432,10 +587,34 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
-            myClasses
+            data: myClasses
         })
     }
 
+    /**
+     * 
+     * @route POST /specialization_student/interest_in_discipline
+     * @requires Authentication
+     * 
+     * @param {int} req.body.year - The year of the request 
+     * @param {Object[]} req.body.disciplines - The list of the disciplines that the student is interested 
+     * @param {string} req.body.disciplines.name 
+     * @param {int} req.body.disciplines.preference - The higher the value, the greater the desire to join the class
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 201 - CREATED
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {RelatorioPratico} data 
+     */
     async postInteresseNaDisciplina(req, res){
         const userType = req.tipoUsuario
 
@@ -463,9 +642,37 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
         }
         return res.status(_httpStatus2.default.BAD_REQUEST).json({
             error: true,
-            status})
+            data: status})
     }
 
+    /**
+     * 
+     * @route POST /specialization_student/feedback
+     * @requires Authentication
+     * 
+     * @param {string} req.body.message_topic - The topic of the feedback. It value must be one of the follow: 
+     * 1 - "orientações"
+     * 2 - "aulas moodle"
+     * 3 - "horas práticas"
+     * 4 - "questões administrativas"
+     * 5 - "outros"
+     * @param {string} req.body.message
+     * @param {boolean} req.body.anonymous - Represents if an feedback is anonymous or not
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 201 - CREATED
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {RelatorioPratico} data  
+     */
     async postReclamation(req, res) {
         const userType = req.tipoUsuario
 
