@@ -607,13 +607,14 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
      * 401 - UNAUTHORIZED
      * 500 - INTERNAL_SERVER_ERROR
      * @returns {boolean} error
-     * 
-     * if return an error
-     * @returns {string} message - error's message
-     * @returns {string} errorName - error's name
-     * 
-     * if return successfully
-     * @returns {RelatorioPratico} data 
+     * @returns {object} data
+     * @returns {object[]} data.success
+     * @returns {string} data.success.message
+     * @returns {object[]} data.fail
+     * @returns {string} data.success.message - The error's message
+     * @returns {string} data.success.name - The error's name
+     * @returns {object[]} data.unexpectedError
+     * @returns {string} data.unexpectedError.message
      */
     async postInteresseNaDisciplina(req, res){
         const userType = req.tipoUsuario
