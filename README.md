@@ -52,26 +52,17 @@ Esse projeto tem como objetivo criar um sistema de gerenciamento para o programa
 ### Usuário
 - **GET /usuario**: Lista todos os usuários
 - **GET /usuario/meus_dados**: Retorna os dados do usuário logado
-#### AlunoIsF
-- **GET /aluno_isf**: Lista todos os AlunoIsF
-- **POST /alunoisf_participa_turmaoc**: Insere um aluno isf em uma turma. Para poder aderir a turma, o aluno precisa que o nível de sua proeficiência naquele idioma seja no máximo um nível acima do seu (Se o aluno é do nível B1, ele pode cursar o B2, mas não o C1)
-- **POST /proeficiência_alunoisf**: Insere um nível de idioma para o aluno isf
-##### AlunoDeInstituicao
-- **POST /aluno_estrangeiro**: Cria um novo AlunoEstrangeiro
-- **GET /aluno_estrangeiro**: Lista todos os AlunoEstrangeiro
-- **POST /comprovante_aluno_instituicao**: Relaciona o aluno isf com uma instituição de ensino
-##### AlunoEstrangeiro
-- **POST /aluno_deinstituicao**: Cria um novo AlunoDeInstituicao
-- **GET /aluno_deinstituicao**: Lista todos os AlunoDeInstituicao
-#### ProfessorIsF
-- **GET /professor_isf**: Lista todos os ProfessorIsF
-- **POST /comprovante_professor_instituicao**: Relaciona o professor com uma instituição de ensino
-- **POST /proeficiencia_professorisf**: Insere um nível de idioma para o professor isf
-- **POST /professorisf_ministra_turmaoc**: Insere o professor logado para ministrar uma turma. Para poder ministrar uma turma, o professor precisa que o nível de sua proeficiência naquele idioma seja igual ou superior ao do curso (se o professor é do nível C1, ele pode inistrar uma turma de nível C1, mas não uma de nível C2)
-- **GET /professorisf_ministra_turmaoc**: Lista todos os relacionamentos do professor logado
 ##### CursistaEspecialização
-- **POST /cursista_especialização**: Cria um novo CursistaEspecialização
-- **GET /cursista_especialização**: Lista todos os CursistaEspecialização
+- **POST /specialization_student**: Cria um novo CursistaEspecialização
+- **GET /specialization_student**: Lista todos os CursistaEspecialização
+- **POST /specialization_student/practical_report**: Adiciona um novo relatório prático para o cursista 
+- **GET /specialization_student/my_practical_report**: Lista todos relatórios práticos do cursista 
+- **GET /specialization_student/practical_report_not_viewed**: Lista todos relatórios práticos do cursista não visualizados após análise do orientador 
+- **GET /specialization_student/practical_report/:name**: Retorna o relatório prático, de nome "name", do cursista 
+- **POST /specialization_student/class/:name**: Adiciona o cursista na turma de nome "name"
+- **GET /specialization_student/my_classes**: Lista todas as turmas que o cursista faz parte
+- **POST /specialization_student/interes_in_discipline**: Insere na lista de interesse as disciplinas que o cursista está interessado
+- **POST /specialization_student/feedback**: Adiciona um feedback
 ### Instituição de Ensino
 - **POST /instituicao_ensino**: Cria um novo ProfessorIsF
 - **GET /instituicao_ensino**: Lista todos os ProfessorIsF
