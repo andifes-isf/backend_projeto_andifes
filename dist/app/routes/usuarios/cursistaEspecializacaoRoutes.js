@@ -18,7 +18,7 @@ router.get('/practical_report_not_viewed', _auth2.default, _cursistaEspecializac
 
 router.post('/class/:name', _auth2.default, _cursistaEspecializacaoController2.default.postCursaTurma)
 
-router.get('/class', _auth2.default, _cursistaEspecializacaoController2.default.getMinhasTurmas)
+router.get('/my_classes', _auth2.default, _cursistaEspecializacaoController2.default.getMinhasTurmas)
 
 router.post('/interest_in_disciplina', _auth2.default, _cursistaEspecializacaoController2.default.postInteresseNaDisciplina)
 

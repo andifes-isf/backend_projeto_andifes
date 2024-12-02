@@ -18,7 +18,7 @@ router.get('/practical_report_not_viewed', AuthMiddleware, cursistaEspecializaca
 
 router.post('/class/:name', AuthMiddleware, cursistaEspecializacaoController.postCursaTurma)
 
-router.get('/class', AuthMiddleware, cursistaEspecializacaoController.getMinhasTurmas)
+router.get('/my_classes', AuthMiddleware, cursistaEspecializacaoController.getMinhasTurmas)
 
 router.post('/interest_in_disciplina', AuthMiddleware, cursistaEspecializacaoController.postInteresseNaDisciplina)
 
