@@ -20,7 +20,7 @@ router.post('/class/:name', AuthMiddleware, cursistaEspecializacaoController.pos
 
 router.get('/my_classes', AuthMiddleware, cursistaEspecializacaoController.getMinhasTurmas)
 
-router.post('/interest_in_disciplina', AuthMiddleware, cursistaEspecializacaoController.postInteresseNaDisciplina)
+router.post('/interest_in_discipline', AuthMiddleware, cursistaEspecializacaoController.postInteresseNaDisciplina)
 
 router.post('/feedback', AuthMiddleware, cursistaEspecializacaoController.postReclamation)
 
