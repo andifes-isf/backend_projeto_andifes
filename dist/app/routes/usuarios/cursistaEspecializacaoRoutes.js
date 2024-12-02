@@ -8,20 +8,20 @@ router.post('/', _cursistaEspecializacaoController2.default.post)
 
 router.get('/', _cursistaEspecializacaoController2.default.get)
 
-router.post('/inserir_relatorio_pratico', _auth2.default, _cursistaEspecializacaoController2.default.postPracticalReport)
+router.post('/practical_report', _auth2.default, _cursistaEspecializacaoController2.default.postPracticalReport)
 
-router.get('/meus_materiais', _auth2.default, _cursistaEspecializacaoController2.default.getMyMaterials)
+router.get('/my_practical_reports', _auth2.default, _cursistaEspecializacaoController2.default.getMyMaterials)
 
-router.get('/material/:nome', _auth2.default, _cursistaEspecializacaoController2.default.getMaterial)
+router.get('/practical_report/:name', _auth2.default, _cursistaEspecializacaoController2.default.getMaterial)
 
-router.get('/materiais_nao_visualizados', _auth2.default, _cursistaEspecializacaoController2.default.getNotViewedMaterials)
+router.get('/practical_report_not_viewed', _auth2.default, _cursistaEspecializacaoController2.default.getNotViewedMaterials)
 
-router.post('/participar_turma/:nome_turma', _auth2.default, _cursistaEspecializacaoController2.default.postCursaTurma)
+router.post('/class/:name', _auth2.default, _cursistaEspecializacaoController2.default.postCursaTurma)
 
-router.get('/minhas_turmas', _auth2.default, _cursistaEspecializacaoController2.default.getMinhasTurmas)
+router.get('/class', _auth2.default, _cursistaEspecializacaoController2.default.getMinhasTurmas)
 
-router.post('/interesse_nas_disciplinas', _auth2.default, _cursistaEspecializacaoController2.default.postInteresseNaDisciplina)
+router.post('/interest_in_disciplina', _auth2.default, _cursistaEspecializacaoController2.default.postInteresseNaDisciplina)
 
-router.post('/reclamacao', _auth2.default, _cursistaEspecializacaoController2.default.postReclamation)
+router.post('/feedback', _auth2.default, _cursistaEspecializacaoController2.default.postReclamation)
 
 exports. default = router
