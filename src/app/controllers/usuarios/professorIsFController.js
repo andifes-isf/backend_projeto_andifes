@@ -1,21 +1,17 @@
-import { Sequelize } from "sequelize";
-import ProfessorIsF from "../../models/usuarios/professorisf";
-import Usuario from "../../models/usuarios/usuario";
-import ComprovanteProfessorInstituicao from '../../models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'
-import InstituicaoEnsino from "../../models/instituicao/instituicaoensino";
-import proeficienciaProfessorIsF from '../../models/proeficiencia/proeficienciaprofessorisf'
-import usuarioController from "./usuarioController";
+// Precisa, no futuro, trocar esse InstituicaoEnsino pelo InstitutionRepository
+
+import InstituicaoEnsino from "../../models/instituicao/instituicaoensino"
+import usuarioController from "./usuarioController"
 
 // Repositories
-import IsFTeacherRepository from "../../repositories/usuarios/IsFTeacherRepository";
+import IsFTeacherRepository from "../../repositories/usuarios/IsFTeacherRepository"
 
 // Utils
-import { Op } from 'sequelize'
 import UserTypes from '../../utils/userType/userTypes'
 import MESSAGES from '../../utils/response/messages/messages_pt'
-import CustomError from "../../utils/response/CustomError/CustomError";
-import httpStatus from "../../utils/response/httpStatus/httpStatus";
-import ErrorType from "../../utils/response/ErrorType/ErrorType";
+import CustomError from "../../utils/response/CustomError/CustomError"
+import httpStatus from "../../utils/response/httpStatus/httpStatus"
+import ErrorType from "../../utils/response/ErrorType/ErrorType"
 
 
 class ProfessorIsFController extends usuarioController {
@@ -31,7 +27,7 @@ class ProfessorIsFController extends usuarioController {
             }
         }
         
-        const { error, user} = await usuarioController.postUser(req, res, specialization_student ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
+        const { error, user} = await ProfessorIsFController.postUser(req, res, specialization_student ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
 
         if (error) {
             return {
@@ -55,13 +51,7 @@ class ProfessorIsFController extends usuarioController {
     }
 
     static async verifyExistingProeficiency(login, language, level) {
-        const existingProeficiency = await proeficienciaProfessorIsF.findOne({
-            where: {
-                login: login,
-                idioma: language,
-                nivel: level
-            }
-        })
+        const existingProeficiency = await IsFTeacherRepository.verifyExistingProeficiency(login, language, level)
 
         if(existingProeficiency) {
             return new CustomError(
@@ -71,88 +61,105 @@ class ProfessorIsFController extends usuarioController {
         }
     }
 
-    static async verifyExistingRegistration(login, institutionId, begin) {
-        const existingRegistrantion = await ComprovanteProfessorInstituicao.findOne({
-            where: {
-                login: login,
-                idInstituicao: institutionId,
-                inicio: begin
-            }
-        })
+    static async verifyExistingRegistration(data) {
+        const existingRegistrantion = await IsFTeacherRepository.findOneDocument(data)
 
         if(existingRegistrantion) {
             return new CustomError(
-                MESSAGES.EXISTING_INSTITUTION_USER_RELATIONSHIP + institutionId,
+                MESSAGES.EXISTING_INSTITUTION_USER_RELATIONSHIP + data.institutionId,
                 ErrorType.DUPLICATE_ENTRY
             )
         }
     }
 
     static async closeRegistration(login) {
-        const registration = await ComprovanteProfessorInstituicao.findOne({
-            where: {
-                login: login,
-                termino: {
-                    [Op.is]: null
-                }
-            }
-        })
+        const registration = await IsFTeacherRepository.findCurrentDocument(login)
 
-        registration.termino = new Date().toISOString().split("T")[0]
-        registration.save()
+        if (registration != null) {
+            registration.termino = new Date().toISOString().split("T")[0]
+            registration.save()
+        }
     }
 
     // Endpoints
 
+    /**
+    *
+    * @route GET /isf_teacher 
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 200 - SUCCESS
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {ProfessorIsF} data
+    */
     async get(_, res){
-        const teachers = await ProfessorIsF.findAll({
-            include: [
-                {
-                    model: Usuario,
-                    attributes: {
-                        include: [
-                            [Sequelize.fn('CONCAT_WS', ' ', Sequelize.col('Usuario.nome'), Sequelize.col('Usuario.sobrenome')), 'nomeCompleto'],
-                            [Sequelize.fn('CONCAT_WS', '@', Sequelize.col('nomeEmail'), Sequelize.col('dominio')), 'email']
-                        ],
-                        exclude: ['login', 'senha_encriptada', 'ativo', 'tipo', 'sobrenome', 'dominio', 'nomeEmail']
-                    }
-                },
-                {
-                    model: InstituicaoEnsino,
-                    attributes: {
-                        exclude: ['idInstituicao']
-                    },
-                    through: {
-                        attributes: ['inicio']
-                    },
-                }
-            ],
-            logging: console.log
-        })
-        
+        const teachers = await IsFTeacherRepository.findAll()
+
         return res.status(httpStatus.SUCCESS).json({
             error: false,
-            teachers
+            data: teachers
         })
     }
 
+    /**
+    *
+    * @requires Authentication
+    * @route POST /isf_teacher/proeficiency
+    * 
+    * @param {char[2]} level - The level of the proeficiency. 
+    * For japanese, it should be used N5 -> N1
+    * For other languages, it should be used A1 -> C2
+    * @param {string} language - Indicates the language of the proeficiency. It must be one of the follow:
+    * 1 - "ingles"
+    * 2 - "portugues",
+    * 3 - "alemao"
+    * 4 - "frances"
+    * 5 - "italiano"
+    * 6 - "espanhol"
+    * 7 - "japones"
+    * @param {string} document - Document that proves the proeficiency
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 201 - CREATED
+    * 400 - BAD_REQUEST
+    * 401 - UNAUTHORIZED
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {ProeficienciaProfessorIsF} data
+    */  
     async postProeficiencia(req, res) {
         const userType = req.tipoUsuario
-
+        
         const authorizationError = ProfessorIsFController.verifyUserType([UserTypes.ISF_TEACHER, UserTypes.CURSISTA], userType)
-
+        
         if (authorizationError) {
             return res.status(httpStatus.UNAUTHORIZED).json({
                 error: true,
                 message: authorizationError.message,
                 errorName: authorizationError.name
             })
-        }
+        } 
 
-        const userLogin = req.loginUsuario
+        const login = req.loginUsuario
+        
         const { language, level, document } = req.body
 
-        const existingProeficiencyError = await ProfessorIsFController.verifyExistingProeficiency(userLogin, language, level)
+        const existingProeficiencyError = await ProfessorIsFController.verifyExistingProeficiency(login, language, level)
 
         if(existingProeficiencyError) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -162,19 +169,33 @@ class ProfessorIsFController extends usuarioController {
             })
         }
 
-        const proeficiency = await proeficienciaProfessorIsF.create({
-            login: userLogin,
-            nivel: level,
-            idioma: language,
-            comprovante: document
-        })
+        const proeficiency = await IsFTeacherRepository.createProeficiency(login, level, language, document)
 
         return res.status(httpStatus.CREATED).json({
             error: false,
-            proeficiency
+            data: proeficiency
         })  
     }
 
+    /**
+    *
+    * @requires Authentication
+    * @route GET /isf_teacher/my_proeficiency
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 200 - SUCCESS
+    * 401 - UNAUTHORIZED
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {ProeficienciaProfessorIsF[]} data
+    */
     async getMinhaProeficiencia(req, res) {
         const userType = req.tipoUsuario
 
@@ -188,18 +209,38 @@ class ProfessorIsFController extends usuarioController {
             })
         }
 
-        const proeficiencies = await proeficienciaProfessorIsF.findAll({
-            where: {
-                login: req.loginUsuario
-            }
-        })
+        const proeficiencies = await IsFTeacherRepository.findAllProeficiencies(req.loginUsuario)
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
-            proeficiencies
+            data: proeficiencies
         })
     }
 
+    /**
+    *
+    * @requires Authentication
+    * @route POST /specialization_student/institution/:institutionId
+    * 
+    * @param {int} req.params.institutionId
+    * @param {date} req.body.start
+    * @param {string} req.body.document
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 201 - CREATED
+    * 400 - BAD_REQUEST
+    * 401 - UNAUTHORIZED
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {ComprovanteProfessorInstituicao} data
+    */
     async postInstituicao(req, res) { 
         const userType = req.tipoUsuario
 
@@ -213,17 +254,24 @@ class ProfessorIsFController extends usuarioController {
             })
         }
 
-        const existingInstitution = await ProfessorIsFController.verifyExistingObject(InstituicaoEnsino, req.params.idInstituicao, MESSAGES.EXISTING_INSTITUTION)
+        const data = {
+            institutionId: req.params.institutionId,
+            login: req.loginUsuario,
+            start: req.body.start,
+            document: req.body.document
+        }
+
+        const existingInstitution = await ProfessorIsFController.verifyExistingObject(InstituicaoEnsino, data.institutionId, MESSAGES.EXISTING_INSTITUTION)
 
         if(!existingInstitution) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
-                message: MESSAGES.INSTITUTION_NOT_FOUNDED + req.params.idInstituicao,
+                message: MESSAGES.INSTITUTION_NOT_FOUND + data.institutionId,
                 errorName: ErrorType.NOT_FOUND
             })
         }
 
-        const existingRegistration = await ProfessorIsFController.verifyExistingRegistration(req.loginUsuario, req.params.idInstituicao, req.body.inicio)
+        const existingRegistration = await ProfessorIsFController.verifyExistingRegistration(data)
 
         if (existingRegistration) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -233,22 +281,37 @@ class ProfessorIsFController extends usuarioController {
             })
         }
 
-        await ProfessorIsFController.closeRegistration(req.loginUsuario, req.params.idInstituicao)
+        await ProfessorIsFController.closeRegistration(data.login)
 
-        const registration = await ComprovanteProfessorInstituicao.create({
-            idInstituicao: req.params.idInstituicao,
-            login: req.loginUsuario,
-            inicio: req.body.inicio,
-            termino: req.body.termino || null,
-            comprovante: req.body.comprovante
-        })
+        const registration = await IsFTeacherRepository.joinInstitution(data)
 
         return res.status(httpStatus.CREATED).json({
             error: false,
-            registration
+            data: registration
         })    
     }
 
+    /**
+     *
+     * @requires Authentication
+     * @route GET /isf_teacher/my_institutions
+     *  
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ComprovanteProfessorInstituicao[]} data
+     * 
+     * @returns 
+     */
     async getMinhasInstituicoes(req, res){
         const userType = req.tipoUsuario
 
@@ -262,15 +325,11 @@ class ProfessorIsFController extends usuarioController {
             })
         }
 
-        const registrations = await ComprovanteProfessorInstituicao.findAll({
-            where: {
-                login: req.loginUsuario
-            }
-        })
+        const registrations = await IsFTeacherRepository.findAllDocuments(req.loginUsuario)
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
-            registrations
+            data: registrations
         })
     }
 
@@ -287,14 +346,7 @@ class ProfessorIsFController extends usuarioController {
             })
         }
 
-        const registration = await ComprovanteProfessorInstituicao.findOne({
-            where: {
-                login: req.loginUsuario,
-                termino: {
-                    [Op.is]: null
-                }
-            }
-        })
+        const registration = await IsFTeacherRepository.findCurrentDocument(req.loginUsuario)
 
         return res.status(httpStatus.SUCCESS).json(registration)
     }

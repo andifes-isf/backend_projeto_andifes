@@ -207,12 +207,12 @@ describe('SPECIALIZATION STUDENT', () => {
         expect(material[0].visualizado_pelo_cursista).toBeTruthy()
     })
 
-    it("postCursaTurma: Shoul return error if class does'nt exists", async () => {
+    it("postCursaTurma: Shoul return error if class doesn't exists", async () => {
         const req = {
             tipoUsuario: "cursista",
             loginUsuario: "Kactus",
             params: {
-                nome_turma: 'teste'
+                name: 'teste'
             }
         }
 
@@ -223,7 +223,7 @@ describe('SPECIALIZATION STUDENT', () => {
         expect(res.status).toHaveBeenCalledWith(httpStatus.BAD_REQUEST)
         expect(res.json).toHaveBeenCalledWith({
             error: true,
-            message: MESSAGES.CLASS_NOT_FOUND + req.params.nome_turma,
+            message: MESSAGES.CLASS_NOT_FOUND + req.params.name,
             errorName: ErrorType.NOT_FOUND
         })
     })
@@ -273,6 +273,8 @@ describe('SPECIALIZATION STUDENT', () => {
         const req = {
             
         }
+
+        // ver como utiliza o mock.fn.calls (retorna os parametros utilizados)
     })
 
 

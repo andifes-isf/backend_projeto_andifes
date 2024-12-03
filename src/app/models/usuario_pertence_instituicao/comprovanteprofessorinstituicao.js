@@ -27,6 +27,7 @@ class ComprovanteProfessorInstituicao extends Model {
         },
         termino: {
           type: Sequelize.DATEONLY,
+          allowNull: true,
           validate: {
               isAfterBegin(value) {
                   if(this.inicio > value) {

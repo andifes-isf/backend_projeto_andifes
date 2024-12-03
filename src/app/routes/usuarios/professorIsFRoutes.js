@@ -7,14 +7,14 @@ const router = new Router()
 
 router.get('/', controller.get)
 
-router.post('/adicionar_proeficiencia', AuthMiddleware, controller.postProeficiencia)
+router.post('/proeficiency', AuthMiddleware, controller.postProeficiencia)
 
-router.get('/visualizar_minha_proeficiencia', AuthMiddleware, controller.getMinhaProeficiencia)
+router.get('/my_proeficiency', AuthMiddleware, controller.getMinhaProeficiencia)
 
-router.post('/adicionar_instituicao/:idInstituicao', AuthMiddleware, controller.postInstituicao)
+router.post('/institution/:institutionId', AuthMiddleware, controller.postInstituicao)
 
-router.get('/visualizar_minhas_instituicoes', AuthMiddleware, controller.getMinhasInstituicoes)
+router.get('/my_institutions', AuthMiddleware, controller.getMinhasInstituicoes)
 
-router.get('/visualizar_instituicao_atual', AuthMiddleware, controller.getInstituicaoAtual)
+router.get('/current_institution', AuthMiddleware, controller.getInstituicaoAtual)
 
 export default router

@@ -7,14 +7,14 @@ const router = new (0, _express.Router)()
 
 router.get('/', controller.get)
 
-router.post('/adicionar_proeficiencia', _auth2.default, controller.postProeficiencia)
+router.post('/proeficiency', _auth2.default, controller.postProeficiencia)
 
-router.get('/visualizar_minha_proeficiencia', _auth2.default, controller.getMinhaProeficiencia)
+router.get('/my_proeficiency', _auth2.default, controller.getMinhaProeficiencia)
 
-router.post('/adicionar_instituicao/:idInstituicao', _auth2.default, controller.postInstituicao)
+router.post('/institution/:institutionId', _auth2.default, controller.postInstituicao)
 
-router.get('/visualizar_minhas_instituicoes', _auth2.default, controller.getMinhasInstituicoes)
+router.get('/my_institutions', _auth2.default, controller.getMinhasInstituicoes)
 
-router.get('/visualizar_instituicao_atual', _auth2.default, controller.getInstituicaoAtual)
+router.get('/current_institution', _auth2.default, controller.getInstituicaoAtual)
 
 exports. default = router

@@ -69,7 +69,7 @@ router.use('/coordenador_nacional', coordenadorNacionalRoutes)
 router.use('/specialization_student', cursistaEspecializacaoRoutes)
 router.use('/docente_ministrante', docenteMinistranteRoutes)
 router.use('/docente_orientador', docenteOrientadorRoutes)
-router.use('/professor_isf', professorIsFRoutes)
+router.use('/isf_teacher', professorIsFRoutes)
 router.use('/usuario', usuarioRoutes)
 
 export default router
