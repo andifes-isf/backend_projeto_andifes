@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import * as Yup from 'yup'
 import bcrypt from 'bcrypt'
-import UserRepository from '../../repositories/usuarios/UserRepository'
+import UserRepository from '../../repositories/user/UserRepository'
 import authConfig from '../../../config/auth'
 import MESSAGES from '../../utils/response/messages/messages_pt'
 

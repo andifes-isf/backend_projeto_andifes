@@ -10,7 +10,7 @@ import ProfessorIsFController from './professorIsFController'
 // Repositories
 import PracticalReportRepository from "../../repositories/specialization_course/PracticalReportRepository"
 import NotificationRepository from "../../repositories/utils/NotificationRepository"
-import SpecializationStudentRepository from "../../repositories/usuarios/SpecializationStudentRepository"
+import SpecializationStudentRepository from "../../repositories/user/SpecializationStudentRepository"
 import SpecializationDisciplineClassRepository from "../../repositories/specialization_course/SpecializationDisciplineClassRepository"
 import SpecializationDisciplineRepository from "../../repositories/specialization_course/SpecializationDisciplineRepository"
 

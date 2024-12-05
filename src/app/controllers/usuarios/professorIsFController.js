@@ -1,10 +1,10 @@
 // Precisa, no futuro, trocar esse InstituicaoEnsino pelo InstitutionRepository
 
-import InstituicaoEnsino from "../../models/instituicao/instituicaoensino"
 import usuarioController from "./usuarioController"
 
 // Repositories
-import IsFTeacherRepository from "../../repositories/usuarios/IsFTeacherRepository"
+import IsFTeacherRepository from "../../repositories/user/IsFTeacherRepository"
+import InstitutionRepository from "../../repositories/institution/InstitutionRepository"
 
 // Utils
 import UserTypes from '../../utils/userType/userTypes'
@@ -77,7 +77,7 @@ class ProfessorIsFController extends usuarioController {
 
         if (registration != null) {
             registration.termino = new Date().toISOString().split("T")[0]
-            registration.save()
+            InstitutionRepository.save(registration)
         }
     }
 
@@ -261,18 +261,19 @@ class ProfessorIsFController extends usuarioController {
             document: req.body.document
         }
 
-        const existingInstitution = await ProfessorIsFController.verifyExistingObject(InstituicaoEnsino, data.institutionId, MESSAGES.EXISTING_INSTITUTION)
+        const nonExistingInstitution = await ProfessorIsFController.verifyNonExistingObject(InstitutionRepository, data.institutionId, MESSAGES.EXISTING_INSTITUTION)
 
-        if(!existingInstitution) {
+        if(nonExistingInstitution) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
                 message: MESSAGES.INSTITUTION_NOT_FOUND + data.institutionId,
                 errorName: ErrorType.NOT_FOUND
             })
         }
-
+        
+        
         const existingRegistration = await ProfessorIsFController.verifyExistingRegistration(data)
-
+        
         if (existingRegistration) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
@@ -280,9 +281,8 @@ class ProfessorIsFController extends usuarioController {
                 errorName: existingRegistration.name
             })
         }
-
+        
         await ProfessorIsFController.closeRegistration(data.login)
-
         const registration = await IsFTeacherRepository.joinInstitution(data)
 
         return res.status(httpStatus.CREATED).json({
@@ -333,9 +333,30 @@ class ProfessorIsFController extends usuarioController {
         })
     }
 
+    /**
+     *
+     * @requires Authentication
+     * @route GET /isf_teacher/current_institution
+     *  
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ComprovanteProfessorInstituicao} data
+     * 
+     * @returns 
+     */
     async getInstituicaoAtual(req, res){
         const userType = req.tipoUsuario
-
+        
         const authorizationError = ProfessorIsFController.verifyUserType([UserTypes.ISF_TEACHER, UserTypes.CURSISTA], userType)
 
         if (authorizationError) {
@@ -348,7 +369,10 @@ class ProfessorIsFController extends usuarioController {
 
         const registration = await IsFTeacherRepository.findCurrentDocument(req.loginUsuario)
 
-        return res.status(httpStatus.SUCCESS).json(registration)
+        return res.status(httpStatus.SUCCESS).json({
+            error: false,
+            data: registration
+        })
     }
 }
 

@@ -9,7 +9,7 @@ var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _Error
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
 // Repository
-var _UserRepository = require('../../repositories/usuarios/UserRepository'); var _UserRepository2 = _interopRequireDefault(_UserRepository);
+var _UserRepository = require('../../repositories/user/UserRepository'); var _UserRepository2 = _interopRequireDefault(_UserRepository);
 
 class usuarioController {
     // AUXILIAR FUNCTIONS
@@ -23,6 +23,17 @@ class usuarioController {
             return new (0, _CustomError2.default)(
                 _messages_pt2.default.ACCESS_DENIED,
                 _ErrorType2.default.UNAUTHORIZED_ACCESS
+            )
+        }
+    }
+
+    static async verifyNonExistingObject(repository, key, message) {
+        const existingObject = await repository.findByPk(key)
+
+        if (existingObject == null) {
+            return new (0, _CustomError2.default)(
+                message + key,
+                _ErrorType2.default.NOT_FOUND
             )
         }
     }

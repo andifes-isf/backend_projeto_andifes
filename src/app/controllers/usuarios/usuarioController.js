@@ -9,7 +9,7 @@ import ErrorType from '../../utils/response/ErrorType/ErrorType'
 import httpStatus from '../../utils/response/httpStatus/httpStatus'
 
 // Repository
-import UserRepository from '../../repositories/usuarios/UserRepository'
+import UserRepository from '../../repositories/user/UserRepository'
 
 class usuarioController {
     // AUXILIAR FUNCTIONS
@@ -23,6 +23,17 @@ class usuarioController {
             return new CustomError(
                 MESSAGES.ACCESS_DENIED,
                 ErrorType.UNAUTHORIZED_ACCESS
+            )
+        }
+    }
+
+    static async verifyNonExistingObject(repository, key, message) {
+        const existingObject = await repository.findByPk(key)
+
+        if (existingObject == null) {
+            return new CustomError(
+                message + key,
+                ErrorType.NOT_FOUND
             )
         }
     }

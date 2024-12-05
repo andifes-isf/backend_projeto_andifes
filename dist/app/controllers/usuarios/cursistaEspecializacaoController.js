@@ -10,7 +10,7 @@ var _professorIsFController = require('./professorIsFController'); var _professo
 // Repositories
 var _PracticalReportRepository = require('../../repositories/specialization_course/PracticalReportRepository'); var _PracticalReportRepository2 = _interopRequireDefault(_PracticalReportRepository);
 var _NotificationRepository = require('../../repositories/utils/NotificationRepository'); var _NotificationRepository2 = _interopRequireDefault(_NotificationRepository);
-var _SpecializationStudentRepository = require('../../repositories/usuarios/SpecializationStudentRepository'); var _SpecializationStudentRepository2 = _interopRequireDefault(_SpecializationStudentRepository);
+var _SpecializationStudentRepository = require('../../repositories/user/SpecializationStudentRepository'); var _SpecializationStudentRepository2 = _interopRequireDefault(_SpecializationStudentRepository);
 var _SpecializationDisciplineClassRepository = require('../../repositories/specialization_course/SpecializationDisciplineClassRepository'); var _SpecializationDisciplineClassRepository2 = _interopRequireDefault(_SpecializationDisciplineClassRepository);
 var _SpecializationDisciplineRepository = require('../../repositories/specialization_course/SpecializationDisciplineRepository'); var _SpecializationDisciplineRepository2 = _interopRequireDefault(_SpecializationDisciplineRepository);
 

@@ -1,10 +1,10 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }// Precisa, no futuro, trocar esse InstituicaoEnsino pelo InstitutionRepository
 
-var _instituicaoensino = require('../../models/instituicao/instituicaoensino'); var _instituicaoensino2 = _interopRequireDefault(_instituicaoensino);
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
 // Repositories
-var _IsFTeacherRepository = require('../../repositories/usuarios/IsFTeacherRepository'); var _IsFTeacherRepository2 = _interopRequireDefault(_IsFTeacherRepository);
+var _IsFTeacherRepository = require('../../repositories/user/IsFTeacherRepository'); var _IsFTeacherRepository2 = _interopRequireDefault(_IsFTeacherRepository);
+var _InstitutionRepository = require('../../repositories/institution/InstitutionRepository'); var _InstitutionRepository2 = _interopRequireDefault(_InstitutionRepository);
 
 // Utils
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
@@ -77,7 +77,7 @@ class ProfessorIsFController extends _usuarioController2.default {
 
         if (registration != null) {
             registration.termino = new Date().toISOString().split("T")[0]
-            registration.save()
+            _InstitutionRepository2.default.save(registration)
         }
     }
 
@@ -261,18 +261,19 @@ class ProfessorIsFController extends _usuarioController2.default {
             document: req.body.document
         }
 
-        const existingInstitution = await ProfessorIsFController.verifyExistingObject(_instituicaoensino2.default, data.institutionId, _messages_pt2.default.EXISTING_INSTITUTION)
+        const nonExistingInstitution = await ProfessorIsFController.verifyNonExistingObject(_InstitutionRepository2.default, data.institutionId, _messages_pt2.default.EXISTING_INSTITUTION)
 
-        if(!existingInstitution) {
+        if(nonExistingInstitution) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
                 error: true,
                 message: _messages_pt2.default.INSTITUTION_NOT_FOUND + data.institutionId,
                 errorName: _ErrorType2.default.NOT_FOUND
             })
         }
-
+        
+        
         const existingRegistration = await ProfessorIsFController.verifyExistingRegistration(data)
-
+        
         if (existingRegistration) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
                 error: true,
@@ -280,9 +281,8 @@ class ProfessorIsFController extends _usuarioController2.default {
                 errorName: existingRegistration.name
             })
         }
-
+        
         await ProfessorIsFController.closeRegistration(data.login)
-
         const registration = await _IsFTeacherRepository2.default.joinInstitution(data)
 
         return res.status(_httpStatus2.default.CREATED).json({
@@ -333,9 +333,30 @@ class ProfessorIsFController extends _usuarioController2.default {
         })
     }
 
+    /**
+     *
+     * @requires Authentication
+     * @route GET /isf_teacher/current_institution
+     *  
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ComprovanteProfessorInstituicao} data
+     * 
+     * @returns 
+     */
     async getInstituicaoAtual(req, res){
         const userType = req.tipoUsuario
-
+        
         const authorizationError = ProfessorIsFController.verifyUserType([_userTypes2.default.ISF_TEACHER, _userTypes2.default.CURSISTA], userType)
 
         if (authorizationError) {
@@ -348,7 +369,10 @@ class ProfessorIsFController extends _usuarioController2.default {
 
         const registration = await _IsFTeacherRepository2.default.findCurrentDocument(req.loginUsuario)
 
-        return res.status(_httpStatus2.default.SUCCESS).json(registration)
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            data: registration
+        })
     }
 }
 
