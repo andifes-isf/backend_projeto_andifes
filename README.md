@@ -63,6 +63,13 @@ Esse projeto tem como objetivo criar um sistema de gerenciamento para o programa
 - **GET /specialization_student/my_classes**: Lista todas as turmas que o cursista faz parte
 - **POST /specialization_student/interes_in_discipline**: Insere na lista de interesse as disciplinas que o cursista está interessado
 - **POST /specialization_student/feedback**: Adiciona um feedback
+##### ProfessorIsF
+- **GET /isf_teacher**: Lista todos os professores IsF
+- **POST /isf_teacher/proeficiency**: Adiciona uma nova proeficiência para o professor
+- **GET /isf_teacher/proeficiency**: Lista todas as proeficiências de um professor
+- **POST /isf_teacher/institution/:institutionId**: Relaciona o professor IsF com uma nova instituição. Se o relacionamento já existe, retorna erro
+- **GET /isf_teacher/my_institutions**: Lista todas as instituições daquele professor IsF
+- **GET /isf_teacher/current_institution**: Lista a instituição atual do professor IsF
 ### Instituição de Ensino
 - **POST /instituicao_ensino**: Cria um novo ProfessorIsF
 - **GET /instituicao_ensino**: Lista todos os ProfessorIsF
