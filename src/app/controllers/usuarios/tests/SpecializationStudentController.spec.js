@@ -2,7 +2,7 @@
 import SpecializationStudentController from '../cursistaEspecializacaoController'
 
 // Repository
-import SpecializationStudentRepository from '../../../repositories/usuarios/SpecializationStudentRepository'
+import SpecializationStudentRepository from '../../../repositories/user/SpecializationStudentRepository'
 import PracticalReportRepository from '../../../repositories/specialization_course/PracticalReportRepository'
 import NotificationRepository from '../../../repositories/utils/NotificationRepository'
 import SpecializationDisciplineClassRepository from '../../../repositories/specialization_course/SpecializationDisciplineClassRepository'
@@ -13,7 +13,7 @@ import MESSAGES from '../../../utils/response/messages/messages_pt'
 import ErrorType from '../../../utils/response/ErrorType/ErrorType'
 import UserTypes from '../../../utils/userType/userTypes'
 
-jest.mock('../../../repositories/usuarios/SpecializationStudentRepository')
+jest.mock('../../../repositories/user/SpecializationStudentRepository')
 jest.mock('../../../repositories/specialization_course/PracticalReportRepository')
 jest.mock('../../../repositories/utils/NotificationRepository')
 jest.mock('../../../repositories/specialization_course/SpecializationDisciplineClassRepository')
