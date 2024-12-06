@@ -153,7 +153,7 @@ class usuarioController {
     /**
      *
      * @requires Authentication
-     * @route GET /user/notifications
+     * @route GET /user/notification
      * 
      * RETORNO
      * @returns {int} httpStatus - The value might be:

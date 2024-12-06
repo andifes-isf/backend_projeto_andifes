@@ -50,8 +50,11 @@ Esse projeto tem como objetivo criar um sistema de gerenciamento para o programa
 
 ## Rotas da API
 ### Usuário
-- **GET /usuario**: Lista todos os usuários
-- **GET /usuario/meus_dados**: Retorna os dados do usuário logado
+- **GET /user**: Lista todos os usuários
+- **GET /user/my_data**: Retorna os dados do usuário logado
+- **GET /user/notification**: Retorna as notificações do usuário logado
+- **GET /user/unread_notifications**: Retorna as notificações não lidas do usuário
+- **GET /user/notification/:notificationId**: Retorna a notificação indicada
 ##### CursistaEspecialização
 - **POST /specialization_student**: Cria um novo CursistaEspecialização
 - **GET /specialization_student**: Lista todos os CursistaEspecialização
