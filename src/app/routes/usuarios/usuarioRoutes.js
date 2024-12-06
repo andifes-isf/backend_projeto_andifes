@@ -8,12 +8,12 @@ const router = new Router()
 
 router.get('/', controller.get)
 
-router.get('/meus_dados', AuthMiddleware, controller.getMyData)
+router.get('/my_data', AuthMiddleware, controller.getMyData)
 
-router.get('/notificacoes', AuthMiddleware, controller.getNotificacoes)
+router.get('/notifications', AuthMiddleware, controller.getNotificacoes)
 
-router.get('/notificacoes_nao_lidas', AuthMiddleware, controller.getNotificacoesNaoLidas)
+router.get('/unread_notifications', AuthMiddleware, controller.getNotificacoesNaoLidas)
 
-router.get('/notificacao/:idNotificacao', AuthMiddleware, controller.getNotificacao)
+router.get('/notification/:notificationId', AuthMiddleware, controller.getNotificacao)
 
 export default router

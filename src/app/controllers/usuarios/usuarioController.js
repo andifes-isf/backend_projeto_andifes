@@ -1,5 +1,4 @@
 import * as Yup from 'yup'
-import Usuario from '../../models/usuarios/usuario'
 
 // Utils
 import EmailDomainFactory from '../../utils/emailDomain/emailDomainFactory'
@@ -50,13 +49,8 @@ class usuarioController {
         }
     }
 
-    static async verifyExistingNotification(user, id, login) {
-        const notification = await user.getNotificacaos({
-            where: {
-                idNotificacao: id,
-                login: login
-            }
-        }) 
+    static async verifyExistingNotification(user, id) {
+        const notification = await UserRepository.getNotification(user, id)
 
         if(notification.length === 0){
             return new CustomError(
@@ -102,57 +96,146 @@ class usuarioController {
     
     // ENDPOINTS
 
+    /**
+     *
+     * @route GET /user 
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ProfessorIsF} data
+     */
     async get(_, res) {
-        const users = await Usuario.findAll()
+        const users = await UserRepository.findAll()
         
         return res.status(httpStatus.SUCCESS).json({
             error: false,
-            users
+            data: users
         })
     }
 
+    /**
+     *
+     * @requires Authentication
+     * @route GET /user/my_data
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ProfessorIsF} data
+     */
     async getMyData(req, res) {
-        const user = await Usuario.findOne({
-            where: {
-                login: req.loginUsuario
-            }
-        })
+        const user = await UserRepository.findByPk(req.loginUsuario)
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
-            user
+            data: user
         })
     }
 
+    /**
+     *
+     * @requires Authentication
+     * @route GET /user/notifications
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ProfessorIsF} data
+     */
     async getNotificacoes(req, res){
-        const user = await Usuario.findByPk(req.loginUsuario)
+        const user = await UserRepository.findByPk(req.loginUsuario)
 
-        const notifications = await user.getNotificacaos() 
+        const notifications = await UserRepository.getNotifications(user) 
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
-            notifications
+            data: notifications
         })
     }
 
+    /**
+     *
+     * @requires UNAUTHORIZED
+     * @route GET /user/unread_notifications
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ProfessorIsF} data
+     */
     async getNotificacoesNaoLidas(req, res){
-        const user = await Usuario.findByPk(req.loginUsuario)
+        const user = await UserRepository.findByPk(req.loginUsuario)
 
-        const notifications = await user.getNotificacoesNaoLidas() 
+        const notifications = await UserRepository.getUnreadNotifications(user)
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
-            notifications
+            data: notifications
         })
     }
 
+    /**
+     * 
+     * @requires Authentication
+     * @route GET /user/notification/:notificationId
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ProfessorIsF} data
+     */
     async getNotificacao(req, res){
-        const user = await Usuario.findByPk(req.loginUsuario)
+        const user = await UserRepository.findByPk(req.loginUsuario)
 
         const notification = await usuarioController.verifyExistingNotification(user, req.params.idNotificacao, req.loginUsuario)
 
         if (notification instanceof CustomError) {
-            return res.status(httpStatus.SUCCESS).json({
+            return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
                 message: notification.message,
                 errorName: notification.name
@@ -164,7 +247,7 @@ class usuarioController {
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
-            notification
+            data: notification
         })
     }
 }

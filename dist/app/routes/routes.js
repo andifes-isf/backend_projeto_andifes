@@ -70,6 +70,6 @@ router.use('/specialization_student', _cursistaEspecializacaoRoutes2.default)
 router.use('/docente_ministrante', _docenteMinistranteRoutes2.default)
 router.use('/docente_orientador', _docenteOrientadorRoutes2.default)
 router.use('/isf_teacher', _professorIsFRoutes2.default)
-router.use('/usuario', _usuarioRoutes2.default)
+router.use('/user', _usuarioRoutes2.default)
 
 exports. default = router

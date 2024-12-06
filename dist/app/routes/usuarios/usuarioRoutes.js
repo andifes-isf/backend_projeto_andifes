@@ -8,12 +8,12 @@ const router = new (0, _express.Router)()
 
 router.get('/', controller.get)
 
-router.get('/meus_dados', _auth2.default, controller.getMyData)
+router.get('/my_data', _auth2.default, controller.getMyData)
 
-router.get('/notificacoes', _auth2.default, controller.getNotificacoes)
+router.get('/notifications', _auth2.default, controller.getNotificacoes)
 
-router.get('/notificacoes_nao_lidas', _auth2.default, controller.getNotificacoesNaoLidas)
+router.get('/unread_notifications', _auth2.default, controller.getNotificacoesNaoLidas)
 
-router.get('/notificacao/:idNotificacao', _auth2.default, controller.getNotificacao)
+router.get('/notification/:notificationId', _auth2.default, controller.getNotificacao)
 
 exports. default = router

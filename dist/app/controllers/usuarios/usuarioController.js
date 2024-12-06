@@ -1,5 +1,4 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
-var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 // Utils
 var _emailDomainFactory = require('../../utils/emailDomain/emailDomainFactory'); var _emailDomainFactory2 = _interopRequireDefault(_emailDomainFactory);
@@ -50,13 +49,8 @@ class usuarioController {
         }
     }
 
-    static async verifyExistingNotification(user, id, login) {
-        const notification = await user.getNotificacaos({
-            where: {
-                idNotificacao: id,
-                login: login
-            }
-        }) 
+    static async verifyExistingNotification(user, id) {
+        const notification = await _UserRepository2.default.getNotification(user, id)
 
         if(notification.length === 0){
             return new (0, _CustomError2.default)(
@@ -102,57 +96,146 @@ class usuarioController {
     
     // ENDPOINTS
 
+    /**
+     *
+     * @route GET /user 
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ProfessorIsF} data
+     */
     async get(_, res) {
-        const users = await _usuario2.default.findAll()
+        const users = await _UserRepository2.default.findAll()
         
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
-            users
+            data: users
         })
     }
 
+    /**
+     *
+     * @requires Authentication
+     * @route GET /user/my_data
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ProfessorIsF} data
+     */
     async getMyData(req, res) {
-        const user = await _usuario2.default.findOne({
-            where: {
-                login: req.loginUsuario
-            }
-        })
+        const user = await _UserRepository2.default.findByPk(req.loginUsuario)
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
-            user
+            data: user
         })
     }
 
+    /**
+     *
+     * @requires Authentication
+     * @route GET /user/notifications
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ProfessorIsF} data
+     */
     async getNotificacoes(req, res){
-        const user = await _usuario2.default.findByPk(req.loginUsuario)
+        const user = await _UserRepository2.default.findByPk(req.loginUsuario)
 
         const notifications = await user.getNotificacaos() 
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
-            notifications
+            data: notifications
         })
     }
 
+    /**
+     *
+     * @requires UNAUTHORIZED
+     * @route GET /user/unread_notifications
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ProfessorIsF} data
+     */
     async getNotificacoesNaoLidas(req, res){
-        const user = await _usuario2.default.findByPk(req.loginUsuario)
+        const user = await _UserRepository2.default.findByPk(req.loginUsuario)
 
         const notifications = await user.getNotificacoesNaoLidas() 
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
-            notifications
+            data: notifications
         })
     }
 
+    /**
+     * 
+     * @requires Authentication
+     * @route GET /user/notification/:notificationId
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ProfessorIsF} data
+     */
     async getNotificacao(req, res){
-        const user = await _usuario2.default.findByPk(req.loginUsuario)
+        const user = await _UserRepository2.default.findByPk(req.loginUsuario)
 
         const notification = await usuarioController.verifyExistingNotification(user, req.params.idNotificacao, req.loginUsuario)
 
         if (notification instanceof _CustomError2.default) {
-            return res.status(_httpStatus2.default.SUCCESS).json({
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
                 error: true,
                 message: notification.message,
                 errorName: notification.name
@@ -164,7 +247,7 @@ class usuarioController {
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
-            notification
+            data: notification
         })
     }
 }
