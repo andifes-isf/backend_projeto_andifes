@@ -10,7 +10,7 @@ router.get('/', controller.get)
 
 router.get('/my_data', _auth2.default, controller.getMyData)
 
-router.get('/notifications', _auth2.default, controller.getNotificacoes)
+router.get('/notification', _auth2.default, controller.getNotificacoes)
 
 router.get('/unread_notifications', _auth2.default, controller.getNotificacoesNaoLidas)
 

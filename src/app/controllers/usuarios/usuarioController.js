@@ -232,7 +232,7 @@ class usuarioController {
     async getNotificacao(req, res){
         const user = await UserRepository.findByPk(req.loginUsuario)
 
-        const notification = await usuarioController.verifyExistingNotification(user, req.params.idNotificacao, req.loginUsuario)
+        const notification = await usuarioController.verifyExistingNotification(user, req.params.notificationId, req.loginUsuario)
 
         if (notification instanceof CustomError) {
             return res.status(httpStatus.BAD_REQUEST).json({

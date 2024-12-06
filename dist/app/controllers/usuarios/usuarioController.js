@@ -153,7 +153,7 @@ class usuarioController {
     /**
      *
      * @requires Authentication
-     * @route GET /user/notifications
+     * @route GET /user/notification
      * 
      * RETORNO
      * @returns {int} httpStatus - The value might be:
@@ -172,7 +172,7 @@ class usuarioController {
     async getNotificacoes(req, res){
         const user = await _UserRepository2.default.findByPk(req.loginUsuario)
 
-        const notifications = await user.getNotificacaos() 
+        const notifications = await _UserRepository2.default.getNotifications(user) 
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
@@ -202,7 +202,7 @@ class usuarioController {
     async getNotificacoesNaoLidas(req, res){
         const user = await _UserRepository2.default.findByPk(req.loginUsuario)
 
-        const notifications = await user.getNotificacoesNaoLidas() 
+        const notifications = await _UserRepository2.default.getUnreadNotifications(user)
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
@@ -232,7 +232,7 @@ class usuarioController {
     async getNotificacao(req, res){
         const user = await _UserRepository2.default.findByPk(req.loginUsuario)
 
-        const notification = await usuarioController.verifyExistingNotification(user, req.params.idNotificacao, req.loginUsuario)
+        const notification = await usuarioController.verifyExistingNotification(user, req.params.notificationId, req.loginUsuario)
 
         if (notification instanceof _CustomError2.default) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
