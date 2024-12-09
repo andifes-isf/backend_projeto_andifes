@@ -15,8 +15,7 @@ module.exports = {
       },
       start: {
         type: Sequelize.DATEONLY,
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
       },
       end: Sequelize.DATEONLY,
       specialization_student: {

@@ -68,7 +68,7 @@ router.use('/coordenador_nacional_idioma', _coordenadorNacionalIdiomaRoutes2.def
 router.use('/coordenador_nacional', _coordenadorNacionalRoutes2.default)
 router.use('/specialization_student', _cursistaEspecializacaoRoutes2.default)
 router.use('/docente_ministrante', _docenteMinistranteRoutes2.default)
-router.use('/docente_orientador', _docenteOrientadorRoutes2.default)
+router.use('/advisor_teacher', _docenteOrientadorRoutes2.default)
 router.use('/isf_teacher', _professorIsFRoutes2.default)
 router.use('/user', _usuarioRoutes2.default)
 
