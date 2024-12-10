@@ -45,6 +45,15 @@ class DocenteOrientador extends _sequelize.Model {
             foreignKey: 'orientador',
             as: 'materialsToAnalysis'
         })
+
+        this.hasMany(models.GuidanceReport, {
+            foreignKey: 'login',
+            constraints: false,
+            scope: {
+                report_type: 'advisor_teacher'
+            },
+            as: 'GuidanceReport'
+        })
     }
 }
 

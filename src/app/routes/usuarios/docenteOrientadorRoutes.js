@@ -18,4 +18,8 @@ router.get('/materiais_nao_validados', AuthMiddleware, docenteOrientadorControll
 
 router.put('/analisar_material/:material_name', AuthMiddleware, docenteOrientadorController.putEvaluateMaterial)
 
+router.post('/guidance_report', AuthMiddleware, docenteOrientadorController.postGuidanceReport)
+
+router.get('/guidance_report', AuthMiddleware, docenteOrientadorController.getGuidanceReport)
+
 export default router

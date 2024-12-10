@@ -8,6 +8,7 @@ import AlteracaoTurmaEspecializacao from '../app/models/curso_especializacao/alt
 import CursistaCursaTurmaEspecializacao from '../app/models/curso_especializacao/cursistacursaturmaespecializacao'
 import DisciplinaEspecializacao from '../app/models/curso_especializacao/disciplinaespecializacao'
 import EditalCursoEspecializacao from '../app/models/curso_especializacao/editalcursoespecializacao'
+import GuidanceReport from '../app/models/curso_especializacao/GuidanceReport'
 import InteresseNaDisciplina from '../app/models/curso_especializacao/InteresseNaDisciplina'
 import MinistranteMinistraTurmaEspecializacao from '../app/models/curso_especializacao/ministranteMinistraTurmaEspecializacao'
 import OuvidoriaCursoEspecializacao from '../app/models/curso_especializacao/ouvidoria_curso_especializacao'
@@ -57,6 +58,7 @@ const models = [
     CursistaCursaTurmaEspecializacao,
     DisciplinaEspecializacao,
     EditalCursoEspecializacao,
+    GuidanceReport,
     InteresseNaDisciplina,
     MinistranteMinistraTurmaEspecializacao,
     OuvidoriaCursoEspecializacao,

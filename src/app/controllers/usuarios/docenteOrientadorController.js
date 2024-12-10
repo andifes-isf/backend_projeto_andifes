@@ -19,8 +19,10 @@ import RelatorioPratico from '../../models/curso_especializacao/relatorio_pratic
 import UserTypes from '../../utils/userType/userTypes'
 import MESSAGES from '../../utils/response/messages/messages_pt'
 import ReferencedModel from '../../utils/referencedModel/referencedModel'
+import httpStatus from '../../utils/response/httpStatus/httpStatus'
+import MESSAGES from '../../utils/response/messages/messages_pt'
 
-class coordenadorNacionalIdiomaController {
+class DocenteOrientadorController extends UsuarioController{
     async post(req, res) {
         try {            
             await UsuarioController.post(req, res, UserTypes.ADVISOR_TEACHER)
@@ -226,6 +228,99 @@ class coordenadorNacionalIdiomaController {
             return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
     }
+
+    /**
+     * 
+     * @requires Authentication
+     * @route POST /advisor_teacher/guidance_report
+     * 
+     * @param {int} req.body.workload
+     * @param {string} req.body.note - it can be null
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 201 - CREATED
+     * 400 - BAD_REQUEST
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * 
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @return {GuidanceReport} data
+     * 
+     */
+    async postGuidanceReport(req, res) {
+        const userType = req.tipoUsuario
+
+        const authorizationError = DocenteOrientadorController.verifyUserType([UserTypes.ADVISOR_TEACHER], userType)
+
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }     
+
+        const teacher = await DocenteOrientador.findByPk(req.loginUsuario)
+
+        const report = await teacher.createGuidanceReport({
+            workload: req.body.workload,
+            note: req.body.note || null,
+            report_type: new Date().toISOString().split('T')[0]
+        })
+
+        return res.status(httpStatus.CREATED).json({
+            error: false,
+            data: report
+        })
+    }
+
+    /**
+     * 
+     * @requires Authentication
+     * @route GET /advisor_teacher/guidance_report
+     * 
+     * @return {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if error is true
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if error is false
+     * @returns {GuidanceReport[]} data 
+     */
+    async getGuidanceReport(req, res) {
+        const userType = req.tipoUsuario
+
+        const authorizationError = DocenteOrientadorController.verifyUserType([UserTypes.ADVISOR_TEACHER], userType)
+
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }     
+
+        const teacher = await DocenteOrientador.findByPk(req.loginUsuario)
+
+        const reports = await teacher.getGuidanceReport()
+
+        return res.status(httpStatus.SUCCESS).json({
+            error: false,
+            data: reports
+        })
+    }
 }
 
-export default new coordenadorNacionalIdiomaController()
+export default new DocenteOrientadorController()

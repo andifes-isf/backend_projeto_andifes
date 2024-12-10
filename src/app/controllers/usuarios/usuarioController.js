@@ -15,6 +15,7 @@ class usuarioController {
 
     static verifyUserType(userTypes, userType) {
         const founded = userTypes.find((type) => {
+            console.log(type)
             return type == userType
         })
 

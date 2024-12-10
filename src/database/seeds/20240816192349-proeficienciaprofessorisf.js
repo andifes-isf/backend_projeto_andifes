@@ -36,6 +36,7 @@ module.exports = {
     try {  
       await ProeficienciaProfessorIsf.bulkCreate(proeficiencias, { individualHooks: true })
     } catch (error) {
+      console.log(error)
       throw error
     }
 

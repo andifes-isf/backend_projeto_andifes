@@ -8,5 +8,7 @@ module.exports = {
     database: process.env.NODE_ENV === "test" ? process.env.DB_DATABASE_TEST : process.env.DB_DATABASE,
     define:{
         timestamps: true,
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
     }
 }

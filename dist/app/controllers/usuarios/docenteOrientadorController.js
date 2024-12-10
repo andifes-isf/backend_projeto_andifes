@@ -19,8 +19,10 @@ var _relatorio_pratico = require('../../models/curso_especializacao/relatorio_pr
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
 var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 var _referencedModel = require('../../utils/referencedModel/referencedModel'); var _referencedModel2 = _interopRequireDefault(_referencedModel);
+var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
-class coordenadorNacionalIdiomaController {
+
+class DocenteOrientadorController extends _usuarioController2.default{
     async post(req, res) {
         try {            
             await _usuarioController2.default.post(req, res, _userTypes2.default.ADVISOR_TEACHER)
@@ -226,6 +228,99 @@ class coordenadorNacionalIdiomaController {
             return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
     }
+
+    /**
+     * 
+     * @requires Authentication
+     * @route POST /advisor_teacher/guidance_report
+     * 
+     * @param {int} req.body.workload
+     * @param {string} req.body.note - it can be null
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 201 - CREATED
+     * 400 - BAD_REQUEST
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * 
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @return {GuidanceReport} data
+     * 
+     */
+    async postGuidanceReport(req, res) {
+        const userType = req.tipoUsuario
+
+        const authorizationError = DocenteOrientadorController.verifyUserType([_userTypes2.default.ADVISOR_TEACHER], userType)
+
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }     
+
+        const teacher = await _docenteorientador2.default.findByPk(req.loginUsuario)
+
+        const report = await teacher.createGuidanceReport({
+            workload: req.body.workload,
+            note: req.body.note || null,
+            report_type: new Date().toISOString().split('T')[0]
+        })
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            data: report
+        })
+    }
+
+    /**
+     * 
+     * @requires Authentication
+     * @route GET /advisor_teacher/guidance_report
+     * 
+     * @return {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if error is true
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if error is false
+     * @returns {GuidanceReport[]} data 
+     */
+    async getGuidanceReport(req, res) {
+        const userType = req.tipoUsuario
+
+        const authorizationError = DocenteOrientadorController.verifyUserType([_userTypes2.default.ADVISOR_TEACHER], userType)
+
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }     
+
+        const teacher = await _docenteorientador2.default.findByPk(req.loginUsuario)
+
+        const reports = await teacher.getGuidanceReport()
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            data: reports
+        })
+    }
 }
 
-exports. default = new coordenadorNacionalIdiomaController()
+exports. default = new DocenteOrientadorController()

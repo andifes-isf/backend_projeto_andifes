@@ -85,6 +85,15 @@ class CursistaEspecializacao extends _sequelize.Model {
             foreignKey: 'login',
             as: 'reclamation'
         })
+
+        this.hasMany(models.GuidanceReport, {
+            foreignKey: 'login',
+            constraints: false,
+            scope: {
+                report_type: 'specialization_student'
+            },
+            as: 'GuidanceReport'
+        })
     }
 }
 
