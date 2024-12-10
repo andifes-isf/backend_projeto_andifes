@@ -15,6 +15,9 @@ var _usuarioController = require('./usuarioController'); var _usuarioController2
 var _OrientadorOrientaCursista = require('../../models/curso_especializacao/OrientadorOrientaCursista'); var _OrientadorOrientaCursista2 = _interopRequireDefault(_OrientadorOrientaCursista);
 var _relatorio_pratico = require('../../models/curso_especializacao/relatorio_pratico'); var _relatorio_pratico2 = _interopRequireDefault(_relatorio_pratico);
 
+// Repository
+var _NotificationRepository = require('../../repositories/utils/NotificationRepository'); var _NotificationRepository2 = _interopRequireDefault(_NotificationRepository);
+
 // Utils
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
 var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
@@ -268,12 +271,23 @@ class DocenteOrientadorController extends _usuarioController2.default{
         }     
 
         const teacher = await _docenteorientador2.default.findByPk(req.loginUsuario)
+        const student = await teacher.getMentee()
 
         const report = await teacher.createGuidanceReport({
             workload: req.body.workload,
             note: req.body.note || null,
             report_type: 'advisor_teacher',
             created_at: new Date().toISOString().split('T')[0]
+        })
+
+
+
+        await _NotificationRepository2.default.create({
+            login: student[0].login,
+            mensagem: req.loginUsuario + _messages_pt2.default.NEW_GUIDANCE_REPORT,
+            tipo: _notificationType2.default.AVISO,
+            chaveReferenciado: report.id,
+            modeloReferenciado: _referencedModel2.default.GUIDANCE_REPORT
         })
 
         return res.status(_httpStatus2.default.CREATED).json({

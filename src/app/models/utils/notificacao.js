@@ -33,11 +33,11 @@ class Notificacao extends Model {
                     type: Sequelize.TINYINT,
                     defaultValue: false
                 },
-                createdAt: {
+                created_at: {
                     type: Sequelize.DATE,
                     defaultValue: Sequelize.NOW
                 },
-                deletedAt: {
+                deleted_at: {
                     type: Sequelize.DATE
                 }
             },
@@ -46,6 +46,7 @@ class Notificacao extends Model {
                 timestamps: true,
                 updatedAt: false,
                 paranoid: true,
+                deletedAt: 'deleted_at',
                 tableName: 'notificacao',
                 indexes: [{
                     name: 'primary_key',

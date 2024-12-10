@@ -54,6 +54,7 @@ const MESSAGES = {
     // NEW_DATA
     NEW_MATERIAL: ' postou um material novo',
     NEW_SPECIALIZATIONSTUDENT_DISCIPLINE_INTEREST: 'Disciplina inserida com sucesso: ',
+    NEW_GUIDANCE_REPORT: ' preencheu um novo relatório de orientação',
 
     // Tratamento de erros
     INTERNAL_SERVER_ERROR: 'Ocorreu um erro interno no servidor: ',

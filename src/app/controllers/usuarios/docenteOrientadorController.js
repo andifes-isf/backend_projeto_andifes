@@ -15,6 +15,9 @@ import UsuarioController from './usuarioController'
 import OrientadorOrientaCursista from '../../models/curso_especializacao/OrientadorOrientaCursista'
 import RelatorioPratico from '../../models/curso_especializacao/relatorio_pratico'
 
+// Repository
+import NotificationRepository from "../../repositories/utils/NotificationRepository"
+
 // Utils
 import UserTypes from '../../utils/userType/userTypes'
 import MESSAGES from '../../utils/response/messages/messages_pt'
@@ -268,12 +271,23 @@ class DocenteOrientadorController extends UsuarioController{
         }     
 
         const teacher = await DocenteOrientador.findByPk(req.loginUsuario)
+        const student = await teacher.getMentee()
 
         const report = await teacher.createGuidanceReport({
             workload: req.body.workload,
             note: req.body.note || null,
             report_type: 'advisor_teacher',
             created_at: new Date().toISOString().split('T')[0]
+        })
+
+
+
+        await NotificationRepository.create({
+            login: student[0].login,
+            mensagem: req.loginUsuario + MESSAGES.NEW_GUIDANCE_REPORT,
+            tipo: notificationType.AVISO,
+            chaveReferenciado: report.id,
+            modeloReferenciado: ReferencedModel.GUIDANCE_REPORT
         })
 
         return res.status(httpStatus.CREATED).json({

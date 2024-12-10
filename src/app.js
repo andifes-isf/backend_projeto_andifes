@@ -10,6 +10,7 @@ app.use(routes)
 app.use(cors())
 
 app.use((error, req, res, next) => {
+    console.log(error)
     return res.status(500).json({
         error: true,
         message: error.message,

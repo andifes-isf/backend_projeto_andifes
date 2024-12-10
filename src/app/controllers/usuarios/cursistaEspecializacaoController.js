@@ -742,6 +742,14 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
 
         const report = await SpecializationStudentRepository.createGuidanceReport(student, req.body) 
 
+        await NotificationRepository.create({
+            login: advisor.login,
+            mensagem: req.loginUsuario + MESSAGES.NEW_GUIDANCE_REPORT,
+            tipo: notificationType.AVISO,
+            chaveReferenciado: report.id,
+            modeloReferenciado: ReferencedModel.GUIDANCE_REPORT
+        })
+
         return res.status(httpStatus.CREATED).json({
             error: false,
             data: report

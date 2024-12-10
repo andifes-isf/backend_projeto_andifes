@@ -38,7 +38,7 @@ class DocenteOrientador extends _sequelize.Model {
             foreignKey: 'loginOrientador',
             sourceKey: 'login',
             targetKey: 'login',
-            as: 'orientado'
+            as: 'mentee'
         })
 
         this.hasMany(models.RelatorioPratico, {
