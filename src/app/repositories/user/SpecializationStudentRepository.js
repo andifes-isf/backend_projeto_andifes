@@ -30,18 +30,10 @@ class SpecializationStudentRepository {
         return await SpecializationStudent.create(data)
     }
 
-    async createReport(specialization_student, data) {
-        return await specialization_student.createMaterial(data)
-    }
+    // Practical Report
 
-    async getAdvisor(specialization_student) {
-        return await specialization_student.getOrientador({
-            through: {
-                where: {
-                    status: "ativo"
-                }
-            }
-        })
+    async createPracticalReport(specialization_student, data) {
+        return await specialization_student.createMaterial(data)
     }
 
     async getMaterial(specialization_student, material_name) {
@@ -52,6 +44,18 @@ class SpecializationStudentRepository {
         })
     }
 
+    // Advisor
+    async getAdvisor(specialization_student) {
+        return await specialization_student.getOrientador({
+            through: {
+                where: {
+                    status: "ativo"
+                }
+            }
+        })
+    }
+
+    // Specialition Discipline Class
     async isInClass(specialization_student, class_object) {
         return specialization_student.hasTurma(class_object)
     }
@@ -62,6 +66,20 @@ class SpecializationStudentRepository {
 
     async getClasses(specialization_student) {
         return specialization_student.getTurma()
+    }
+
+    // Guidance Report
+    async createGuidanceReport(student, data) {
+        return await student.createGuidanceReport({
+            workload: data.workload,
+            note: data.note || null,
+            report_type: 'specialization_student', 
+            created_at: new Date().toISOString().split('T')[0]
+        })
+    }
+
+    async getGuidanceReport(student) {
+        return await student.getGuidanceReport()
     }
 }
 

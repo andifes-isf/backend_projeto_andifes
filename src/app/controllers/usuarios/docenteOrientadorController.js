@@ -272,7 +272,8 @@ class DocenteOrientadorController extends UsuarioController{
         const report = await teacher.createGuidanceReport({
             workload: req.body.workload,
             note: req.body.note || null,
-            report_type: new Date().toISOString().split('T')[0]
+            report_type: 'advisor_teacher',
+            created_at: new Date().toISOString().split('T')[0]
         })
 
         return res.status(httpStatus.CREATED).json({

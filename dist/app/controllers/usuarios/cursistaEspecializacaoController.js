@@ -52,7 +52,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             )            
         }
 
-        return await _SpecializationStudentRepository2.default.createReport(specializationStudent, {
+        return await _SpecializationStudentRepository2.default.createPracticalReport(specializationStudent, {
             idioma: language,
             nome: name,
             nivel: level,
@@ -701,6 +701,94 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             reclamation
         })
     }
+
+    /**
+     * 
+     * @requires Authentication
+     * @route POST /specialization_student/guidance_report
+     * 
+     * @param {int} req.body.workload
+     * @param {string} req.body.note
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - It value might be:
+     * 201 - CREATED
+     * 400 - BAD_REQUEST
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if error is true
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if error is false
+     * @returns {GuidanceReport} data
+     */
+    async postGuidanceReport(req, res) {
+        const userType = req.tipoUsuario
+
+        const authorizationError = CursistaEspecializacaoController.verifyUserType([_userTypes2.default.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }     
+
+        const [student, advisor] = await CursistaEspecializacaoController.getEntities(req.loginUsuario)
+
+        const report = await _SpecializationStudentRepository2.default.createGuidanceReport(student, req.body) 
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            data: report
+        })
+    }    
+
+    /**
+     * 
+     * @requires Authentication
+     * @route GET /specialization_student/guidance_report
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - It value might be:
+     * 201 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if error is true
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if error is false
+     * @returns {GuidanceReport[]} data
+     */
+    async getGuidanceReport(req, res) {
+        const userType = req.tipoUsuario
+
+        const authorizationError = CursistaEspecializacaoController.verifyUserType([_userTypes2.default.CURSISTA], userType)
+
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }     
+
+        const student = await _SpecializationStudentRepository2.default.findByPk(req.loginUsuario)
+
+        const report = await _SpecializationStudentRepository2.default.getGuidanceReport(student) 
+
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            data: report
+        })
+    }    
 }
 
 exports. default = new CursistaEspecializacaoController()

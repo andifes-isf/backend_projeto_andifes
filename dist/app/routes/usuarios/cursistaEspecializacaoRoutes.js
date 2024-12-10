@@ -24,4 +24,8 @@ router.post('/interest_in_discipline', _auth2.default, _cursistaEspecializacaoCo
 
 router.post('/feedback', _auth2.default, _cursistaEspecializacaoController2.default.postReclamation)
 
+router.post('/guidance_report', _auth2.default, _cursistaEspecializacaoController2.default.postGuidanceReport)
+
+router.get('/guidance_report', _auth2.default, _cursistaEspecializacaoController2.default.getGuidanceReport)
+
 exports. default = router

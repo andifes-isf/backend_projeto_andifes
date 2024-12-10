@@ -24,4 +24,8 @@ router.post('/interest_in_discipline', AuthMiddleware, cursistaEspecializacaoCon
 
 router.post('/feedback', AuthMiddleware, cursistaEspecializacaoController.postReclamation)
 
+router.post('/guidance_report', AuthMiddleware, cursistaEspecializacaoController.postGuidanceReport)
+
+router.get('/guidance_report', AuthMiddleware, cursistaEspecializacaoController.getGuidanceReport)
+
 export default router
