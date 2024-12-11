@@ -5,6 +5,7 @@ const MESSAGES = {
     EXISTING_ISF_TEACHER: "Professor IsF já cadastrado no sistema: ",
     EXISTING_SPECIALIZATION_STUDENT: "Cursista de Especialização já cadastrado no sistema: ",
     EXISTING_GRADUATION_STUDENT: "Aluno de Graduação já cadastrado no sistema: ",
+    EXISTING_ADVISOR_TEACHER: "Docente Orientador já cadastrado no sistema: ",
 
     EXISTING_PRACTICAL_REPORT: 'Relatório Prática já cadastrado no sistema: ',
 
@@ -24,11 +25,12 @@ const MESSAGES = {
     ALREADY_IN_CLASS: ' já está nessa turma',
     ALREADY_MINISTERING_CLASS: ' já ministra essa turma',
     ADVISOR_ADVISES_STUDENT: 'Esse orientador já orienta esse cursista',
+    EXISTING_MENTORSHIP: 'Esse cursista já está sendo orientado por ',
 
     // NOT_FOUND
     NOTIFICATION_NOT_FOUND: "Notificação não encontrada: ",
 
-    USER_NOT_FOUNDED: 'Usuário não encontrado: ',
+    USER_NOT_FOUND: 'Usuário não encontrado: ',
 
     INSTITUTION_NOT_FOUND: 'Instituição de Ensino não encontrada: ',
 
@@ -39,6 +41,8 @@ const MESSAGES = {
     PRACTICAL_REPORT_NOT_FOUND: 'Relatório Prático não encontrado: ',
 
     NOT_FOUND: ' não encontrado',
+
+    MENTORSHIP_NOT_FOUND: 'Não foi encontrada nenhuma relação de orientação com o cursista: ',
 
     // AUTHORIZATION
     ACCESS_DENIED: 'Você não possui permissão para acessar essa página',

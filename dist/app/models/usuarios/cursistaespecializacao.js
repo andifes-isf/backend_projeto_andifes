@@ -29,6 +29,10 @@ class CursistaEspecializacao extends _sequelize.Model {
                     type: _sequelize2.default.INTEGER,
                     defaultValue: 0
                 },
+                has_mentor: {
+                    type: _sequelize2.default.BOOLEAN,
+                    defaultValue: false
+                }
             },
             {
                 sequelize,
@@ -73,7 +77,10 @@ class CursistaEspecializacao extends _sequelize.Model {
             sourceKey: 'login',
             targetKey: 'login',
             timestamps: false,
-            as: "orientador"
+            scope: {
+                [_sequelize.Op.and]: _sequelize2.default.literal("`orientadororientacursista`.`status` = 'ativo'")
+            },
+            as: "activeMentorship"
         })
 
         this.hasMany(models.InteresseNaDisciplina, {

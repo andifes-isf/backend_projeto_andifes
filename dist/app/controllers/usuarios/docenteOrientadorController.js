@@ -17,6 +17,7 @@ var _relatorio_pratico = require('../../models/curso_especializacao/relatorio_pr
 
 // Repository
 var _NotificationRepository = require('../../repositories/utils/NotificationRepository'); var _NotificationRepository2 = _interopRequireDefault(_NotificationRepository);
+var _AdvisorTeacherRepository = require('../../repositories/user/AdvisorTeacherRepository'); var _AdvisorTeacherRepository2 = _interopRequireDefault(_AdvisorTeacherRepository);
 
 // Utils
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
@@ -24,95 +25,250 @@ var _messages_pt = require('../../utils/response/messages/messages_pt'); var _me
 var _referencedModel = require('../../utils/referencedModel/referencedModel'); var _referencedModel2 = _interopRequireDefault(_referencedModel);
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
+var _SpecializationStudentRepository = require('../../repositories/user/SpecializationStudentRepository'); var _SpecializationStudentRepository2 = _interopRequireDefault(_SpecializationStudentRepository);
+var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
+var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
 
 class DocenteOrientadorController extends _usuarioController2.default{
-    async post(req, res) {
-        try {            
-            await _usuarioController2.default.post(req, res, _userTypes2.default.ADVISOR_TEACHER)
+    // UTILS
+    static async verifyMenteeCondition(login, advisor_login) {
+        const mentee = await DocenteOrientadorController.verifyNonExistingObject(_SpecializationStudentRepository2.default, login, _messages_pt2.default.USER_NOT_FOUND)
 
-            const existingTeacher = await _docenteorientador2.default.findOne({
-                where: {
-                    login: req.body.login
-                }
-            })
-    
-            if(existingTeacher) {
-                return res.status(409).json({
-                    error: `${existingTeacher.login} ` + _messages_pt2.default.ALREADY_IN_SYSTEM
-                })
-            }
-    
-            const teacher = await _docenteorientador2.default.create({
-                login: req.body.login
-            })
+        if (mentee.has_mentor == true) {
+            const advisor = await mentee.getActiveMentorship()
 
-            return res.status(201).json(teacher)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)            
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.EXISTING_MENTORSHIP + advisor[0].login,
+                _ErrorType2.default.DUPLICATE_ENTRY
+            )
         }
+
+        return mentee
     }
 
+    static async deleteMentorship(advisor_login, mentee_login) {
+        const relation = await _AdvisorTeacherRepository2.default.getMentorship(advisor_login, mentee_login)
+
+        if (relation == null) {
+            return new (0, _CustomError2.default)(
+                _messages_pt2.default.MENTORSHIP_NOT_FOUND + mentee_login,
+                _ErrorType2.default.NOT_FOUND
+            )
+        }
+
+        await _AdvisorTeacherRepository2.default.deleteMentorship(relation)
+
+        // Aqui seria um local para observer? o cursista precisa ficar olhando para ver se esse relacionamento não sera cortado, e caso seja ele precis settar seu has_mentor para false
+        const mentee = await _SpecializationStudentRepository2.default.findByPk(mentee_login)
+
+        mentee.has_mentor = false
+        await mentee.save()
+
+        return relation
+    }
+
+
+    /**
+     * 
+     * @route POST /advisor_teacher
+     * 
+     * @param {string} req.body.login
+     * @param {string} req.body.name
+     * @param {string} req.body.surname
+     * @param {int} req.body.DDI
+     * @param {int} req.body.DDD
+     * @param {int} req.body.phone
+     * @param {int || string} req.body.ethnicity - The ethnicity of the user. Must be one of the following (int - "value"): 
+     * 1 - "amarelo"
+     * 2 - "branco"
+     * 3 - "indigena"
+     * 4 - "pardo"
+     * 5 - "preto"
+     * 6 - "quilombola"
+     * @param {int || string} req.body.gender - The gender of the user. Must be one of the following (int - "value"): 
+     * 1 - "feminino"
+     * 2 - "masculino"
+     * 3 - "nao binario"
+     * 4 - "outros"
+     * @param {string} req.body.email
+     * @param {int || string} req.body.email_domain - The email domain of the user's email. Must be one of the following (int - "value"):
+     * 1 - "gmail.com"
+     * 2 - "yahoo.com"
+     * 3 - "outlook.com"
+     * 4 - "hotmail.com"
+     * @param {string} req.body.password
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 201 - CREATED
+     * 400 - BAD_REQUEST
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {DocenteOrientador} data
+     */
+     async post(req, res) {
+         const existingTeacher = await DocenteOrientadorController.verifyExistingObject(_AdvisorTeacherRepository2.default, req.body.login, _messages_pt2.default.EXISTING_ADVISOR_TEACHER)
+
+        if(existingTeacher) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: existingTeacher.message,
+                errorName: existingTeacher.name
+            })
+        }
+
+        
+        const { error, user } = await DocenteOrientadorController.postUser(req, res, _userTypes2.default.ADVISOR_TEACHER)
+        
+        if (error) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: user.message,
+                errorName: user.name
+            })
+        }
+        
+        const teacher = await _AdvisorTeacherRepository2.default.create(req.body.login)
+        
+        return res.status(_httpStatus2.default.CREATED).json({
+            error: false,
+            data: teacher
+        })
+    }
+
+    /**
+     * 
+     * @route GET /advisor_teacher
+     * 
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 500 - INTERNAL_SERVER_ERROR
+     * 
+     * if error is true
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if error is false
+     * @returns {DocenteOrientador[]} data
+     */
     async get(_, res){
-        try {
-            const teachers = await _docenteorientador2.default.findAll({
-                include: [
-                    {
-                        model: _usuario2.default,
-                        attributes: {
-                            exclude: ['login', 'senha_encriptada', 'ativo']
-                        }
-                    }
-                ]
-            })
-    
-            return res.status(200).json(teachers)
-        } catch (error) {
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
-        }
+        const teachers = await _AdvisorTeacherRepository2.default.findAll()
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            data: teachers
+        })
     }
 
+    /**
+     * 
+     * @requires Authentication
+     * @route POST /advisor_teacher/mentee
+     * 
+     * @param {string} req.body.mentee_login 
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - It value might be one of the follow:
+     * 201 - CREATED
+     * 400 - BAD_REQUEST
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if error is true
+     * @returns {string} message - error's message 
+     * @returns {string} errorName - error's name
+     * 
+     * if error is false
+     * @returns {OrientadorOrientaCursista} data 
+     */
     async postOrientado(req, res){
-        try {
-            if(!(req.tipoUsuario === _userTypes2.default.ADVISOR_TEACHER)){
-                return res.status(403).json({
-                    error: _messages_pt2.default.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const advisor = await _docenteorientador2.default.findByPk(req.loginUsuario)
-            const specializationStudent = await _cursistaespecializacao2.default.findByPk(req.body.loginCursista)
-            
-            if(!specializationStudent){
-                return res.status(422).json({
-                    error: `${req.body.loginCursista} ` + _messages_pt2.default.NOT_FOUND
-                })
-            }
-
-            const existing = await advisor.hasOrientado(specializationStudent)
-            if(existing){
-                return res.status(422).json({
-                    error: _messages_pt2.default.ADVISOR_ADVISES_STUDENT
-                })
-            }
-
-            await advisor.addOrientado(specializationStudent)
-
-            const relation = await _OrientadorOrientaCursista2.default.findOne({
-                where: {
-                    loginCursista: cursista.login,
-                    loginOrientador: orientador.login
-                }
+        const authorizationError = DocenteOrientadorController.verifyUserType([_userTypes2.default.ADVISOR_TEACHER], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            relation.inicio = new Date().toISOString().split("T")[0]
-            await relation.save()
-
-            return res.status(200).json(relation)
-
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json(_messages_pt2.default.INTERNAL_SERVER_ERROR + error)
         }
+
+        const advisor = await _AdvisorTeacherRepository2.default.findByPk(req.loginUsuario)
+        const specializationStudent = await DocenteOrientadorController.verifyMenteeCondition(req.body.mentee_login)
+
+        if(specializationStudent instanceof _CustomError2.default){
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: specializationStudent.message,
+                errorName: specializationStudent.name
+            })
+        }
+
+        const relation = await _AdvisorTeacherRepository2.default.createMentorship(advisor.login, specializationStudent)
+
+        return res.status(200).json({
+            error: false,
+            data: relation
+        })
+    }
+
+    /**
+     * 
+     * @requires Authentication
+     * @route DELETE /advisor_teacher/mentee
+     * 
+     * @param {string} req.body.mentee_login 
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - It might be one of the follow:
+     * 200 - SUCCESS
+     * 400 - BAD_REQUEST
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR 
+     * @returns {boolean} error
+     * 
+     * if error is true
+     * @returns {string} message
+     * @returns {string} errorName
+     * 
+     * if error is false
+     * @returns {OrientadorOrientaCursista} data
+     */
+    async deleteOrientado(req, res) {
+        const userType = req.tipoUsuario
+
+        const authorizationError = DocenteOrientadorController.verifyUserType([_userTypes2.default.ADVISOR_TEACHER], userType)
+        
+        if (authorizationError) {
+            return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
+            })
+        }
+
+        const relation = await DocenteOrientadorController.deleteMentorship(req.loginUsuario, req.body.mentee_login)
+
+        if (relation instanceof _CustomError2.default) {
+            return res.status(_httpStatus2.default.BAD_REQUEST).json({
+                error: true,
+                message: relation.message,
+                errorName: relation.name
+            })
+        }
+
+        return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            data: relation
+        })
     }
 
     async getMenteesMaterials(req, res){

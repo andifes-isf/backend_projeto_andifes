@@ -8,7 +8,9 @@ router.post('/', _docenteOrientadorController2.default.post)
 
 router.get('/', _docenteOrientadorController2.default.get)
 
-router.post('/adicionar_orientado', _auth2.default, _docenteOrientadorController2.default.postOrientado)
+router.post('/mentee', _auth2.default, _docenteOrientadorController2.default.postOrientado)
+
+router.delete('/mentee', _auth2.default, _docenteOrientadorController2.default.deleteOrientado)
 
 router.get('/materiais_dos_orientandos', _auth2.default, _docenteOrientadorController2.default.getMenteesMaterials)
 

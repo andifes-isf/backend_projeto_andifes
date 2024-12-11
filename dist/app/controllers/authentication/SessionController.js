@@ -17,7 +17,7 @@ class SessionController {
 
         if(!user) {
             return res.status(401).json({
-                error: _messages_pt2.default.USER_NOT_FOUNDED
+                error: _messages_pt2.default.USER_NOT_FOUND
             })
         }
 

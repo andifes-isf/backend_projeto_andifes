@@ -15,7 +15,6 @@ class usuarioController {
 
     static verifyUserType(userTypes, userType) {
         const founded = userTypes.find((type) => {
-            console.log(type)
             return type == userType
         })
 
@@ -36,6 +35,8 @@ class usuarioController {
                 ErrorType.NOT_FOUND
             )
         }
+
+        return existingObject
     }
 
     static async verifyExistingObject(repository, key, message) {

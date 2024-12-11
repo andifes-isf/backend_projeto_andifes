@@ -8,7 +8,9 @@ router.post('/', docenteOrientadorController.post)
 
 router.get('/', docenteOrientadorController.get)
 
-router.post('/adicionar_orientado', AuthMiddleware, docenteOrientadorController.postOrientado)
+router.post('/mentee', AuthMiddleware, docenteOrientadorController.postOrientado)
+
+router.delete('/mentee', AuthMiddleware, docenteOrientadorController.deleteOrientado)
 
 router.get('/materiais_dos_orientandos', AuthMiddleware, docenteOrientadorController.getMenteesMaterials)
 

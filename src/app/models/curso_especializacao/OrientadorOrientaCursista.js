@@ -27,7 +27,11 @@ class OrientadorOrientaCursista extends Model {
             },
             {
                 sequelize,
-                timestamps: false,
+                timestamps: true,
+                updatedAt: false,
+                createdAt: 'inicio',
+                paranoid: true,
+                deletedAt: 'termino',
                 tableName: 'orientadororientacursista',
                 indexes: [{
                     name: 'primary_key',
@@ -41,9 +45,17 @@ class OrientadorOrientaCursista extends Model {
             }
         )
 
-        return this
+        // Hooks
+        this.addHook(`beforeDestroy`, async (orientacao, options) => {
+            if(orientacao.status == 'ativo') {
+                orientacao.status = 'inativo'
+                await orientacao.save()
+            }
+        })
 
+        return this
     }
+
 }
 
 export default OrientadorOrientaCursista

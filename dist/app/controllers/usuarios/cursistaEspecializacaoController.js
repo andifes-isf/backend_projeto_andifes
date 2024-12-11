@@ -155,7 +155,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     * @route POST /specialization_student
     * 
     * @param {string} req.body.login
-    * @param {string} req.body.namestudent
+    * @param {string} req.body.name
     * @param {string} req.body.surname
     * @param {int} req.body.DDI
     * @param {int} req.body.DDD

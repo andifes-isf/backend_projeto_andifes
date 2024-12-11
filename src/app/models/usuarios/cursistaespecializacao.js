@@ -1,4 +1,4 @@
-import Sequelize, { Model } from "sequelize"
+import Sequelize, { Model, Op } from "sequelize"
 
 class CursistaEspecializacao extends Model {
     static init (sequelize) {
@@ -29,6 +29,10 @@ class CursistaEspecializacao extends Model {
                     type: Sequelize.INTEGER,
                     defaultValue: 0
                 },
+                has_mentor: {
+                    type: Sequelize.BOOLEAN,
+                    defaultValue: false
+                }
             },
             {
                 sequelize,
@@ -73,7 +77,10 @@ class CursistaEspecializacao extends Model {
             sourceKey: 'login',
             targetKey: 'login',
             timestamps: false,
-            as: "orientador"
+            scope: {
+                [Op.and]: Sequelize.literal("`orientadororientacursista`.`status` = 'ativo'")
+            },
+            as: "activeMentorship"
         })
 
         this.hasMany(models.InteresseNaDisciplina, {

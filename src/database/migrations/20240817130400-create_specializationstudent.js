@@ -29,6 +29,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
+      has_mentor: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      }
     })
 
     await queryInterface.addConstraint('specialization_student', {
