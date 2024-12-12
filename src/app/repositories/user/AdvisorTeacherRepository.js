@@ -2,6 +2,9 @@ import AdvisorTeacher from '../../models/usuarios/docenteorientador'
 import User from '../../models/usuarios/usuario'
 import Mentorship from '../../models/curso_especializacao/OrientadorOrientaCursista'
 
+// Utils
+import Op from 'sequelize'
+
 class AdvisorTeacherRepository {
     async findByPk(pk) {
         return await AdvisorTeacher.findByPk(pk)
@@ -60,6 +63,34 @@ class AdvisorTeacherRepository {
     async deleteMentorship(relation) {
         await relation.destroy()
         return relation
+    }
+
+    // Mentorship Practical Reports
+    async getMaterialsToAnalisys(advisor) {
+        return await advisor.getMaterialsToAnalysis()
+    }
+
+    async getNotViewedPracticalReports(advisor) {
+        return await advisor.getMaterialsToAnalysis({
+            where: {
+                data_avaliacao: null
+            }
+        })
+    }
+
+    async getNotValidatedPracticalReports(advisor) {
+        return await advisor.getMaterialsToAnalysis({
+            where: {
+                data_avaliacao: {
+                    [Op.ne]: null
+                },
+                validado: false
+            }
+        })
+    }
+
+    async savePracticalReport(report) {
+        return await report.save()
     }
 }
 

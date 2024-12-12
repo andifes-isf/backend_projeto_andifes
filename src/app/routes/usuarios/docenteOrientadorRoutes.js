@@ -12,13 +12,13 @@ router.post('/mentee', AuthMiddleware, docenteOrientadorController.postOrientado
 
 router.delete('/mentee', AuthMiddleware, docenteOrientadorController.deleteOrientado)
 
-router.get('/materiais_dos_orientandos', AuthMiddleware, docenteOrientadorController.getMenteesMaterials)
+router.get('/mentee_practical_report', AuthMiddleware, docenteOrientadorController.getMenteesMaterials)
 
-router.get('/materiais_nao_analisados', AuthMiddleware, docenteOrientadorController.getNotEvaluatedMaterials)
+router.get('/practical_reports_not_evaluated', AuthMiddleware, docenteOrientadorController.getNotEvaluatedMaterials)
 
-router.get('/materiais_nao_validados', AuthMiddleware, docenteOrientadorController.getNotValidatedMaterials)
+router.get('/practical_report_not_validated', AuthMiddleware, docenteOrientadorController.getNotValidatedMaterials)
 
-router.put('/analisar_material/:material_name', AuthMiddleware, docenteOrientadorController.putEvaluateMaterial)
+router.put('/evaluate_practical_report/:report_name', AuthMiddleware, docenteOrientadorController.putEvaluateMaterial)
 
 router.post('/guidance_report', AuthMiddleware, docenteOrientadorController.postGuidanceReport)
 

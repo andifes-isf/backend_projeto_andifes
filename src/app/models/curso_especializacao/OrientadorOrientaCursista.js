@@ -5,13 +5,16 @@ class OrientadorOrientaCursista extends Model {
     static init(sequelize) {
         super.init(
             {
-                loginOrientador: {
-                    type: Sequelize.STRING,
+                id: {
+                    type: Sequelize.BIGINT,
+                    autoIncrement: true,
                     primaryKey: true
                 },
-                loginCursista: {
+                loginOrientador: {
                     type: Sequelize.STRING,
-                    primaryKey: true
+                },
+                loginCursista: {
+                    type: Sequelize.STRING
                 },
                 status: {
                     type: Sequelize.ENUM('ativo', 'inativo'),
@@ -38,8 +41,7 @@ class OrientadorOrientaCursista extends Model {
                     unique: true,
                     using: 'BTREE',
                     fields: [
-                        { name: 'loginOrientador' },
-                        { name: 'loginCursista' }
+                        { name: 'inicio' }
                     ]
                 }]
             }

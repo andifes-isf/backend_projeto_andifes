@@ -43,6 +43,7 @@ const MESSAGES = {
     NOT_FOUND: ' não encontrado',
 
     MENTORSHIP_NOT_FOUND: 'Não foi encontrada nenhuma relação de orientação com o cursista: ',
+    FEEDBACK_IS_NEEDED: 'Feedback necessário para essa atividade',
 
     // AUTHORIZATION
     ACCESS_DENIED: 'Você não possui permissão para acessar essa página',
@@ -50,7 +51,6 @@ const MESSAGES = {
     INVALID_PASSWORD: 'Senha inválida',
     USER_WITHOUT_PROEFICIENCY_LEVEL: 'Nível de proeficiência não é o suficiente para este curso',
     ANY_CHANGE: 'Nenhuma alteração realizada',
-    FEEDBACK_IS_NEEDED: 'Feedback necessário para essa atividade',
     DOMAIN_NOT_SUPPORTED: 'Domínio inserido não suportado. Por favor insira um email com um dos seguintes domínios: gmail.com, yahoo.com, outlook.com ou hotmail.com',
     EXISTING_ACRONYM: ' já está cadastrada para outra universidade',
     LOGIN_NECESSARY: 'É preciso estar logado para acessar essa página',

@@ -30,7 +30,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
         const specializationStudent = await SpecializationStudentRepository.findByPk(login)
         const advisor = await SpecializationStudentRepository.getAdvisor(specializationStudent)
 
-        
+        console.log(advisor)        
         
         return [ specializationStudent, advisor[0] ]
 
@@ -135,7 +135,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
         let unexpectedError = []
         
         results.forEach((result) => {
-            console.log(result.value.errorInfo)
+
             if (result.value.error === false) {
                 success.push({message: MESSAGES.NEW_SPECIALIZATIONSTUDENT_DISCIPLINE_INTEREST + result.value.discipline})
             } else if (result.value.error === true) {
@@ -320,7 +320,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
         }
         
         const [specializationStudent, advisor] = await        CursistaEspecializacaoController.getEntities(req.loginUsuario)
-        
+
         const report = await CursistaEspecializacaoController.createReport(specializationStudent, advisor, req.body)
         
         if(report instanceof CustomError) {

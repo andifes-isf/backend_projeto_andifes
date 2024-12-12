@@ -11,6 +11,15 @@ class PracticalReportRepository {
         })
     }
 
+    async findOneForAdvisor(login, name) {
+        return await PracticalReport.findOne({
+            where: {
+                nome: name,
+                orientador: login
+            }
+        })
+    }
+
     async create(data) {
         return await PracticalReport.create(data)
     }

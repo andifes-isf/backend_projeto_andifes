@@ -1,33 +1,25 @@
 import * as Yup from 'yup'
 
 // Utils
-import Op from 'sequelize'
 import notificationType from '../../utils/notificationType/notificationType'
-
-// Models
-import CursistaEspecializacao from '../../models/usuarios/cursistaespecializacao'
-import DocenteOrientador from '../../models/usuarios/docenteorientador'
-import Usuario from '../../models/usuarios/usuario'
-import Notificacao from '../../models/utils/notificacao'
 
 // Controllers
 import UsuarioController from './usuarioController'
-import OrientadorOrientaCursista from '../../models/curso_especializacao/OrientadorOrientaCursista'
 import RelatorioPratico from '../../models/curso_especializacao/relatorio_pratico'
 
 // Repository
 import NotificationRepository from "../../repositories/utils/NotificationRepository"
 import AdvisorTeacherRepository from '../../repositories/user/AdvisorTeacherRepository'
+import SpecializationStudentRepository from '../../repositories/user/SpecializationStudentRepository'
 
 // Utils
 import UserTypes from '../../utils/userType/userTypes'
-import MESSAGES from '../../utils/response/messages/messages_pt'
 import ReferencedModel from '../../utils/referencedModel/referencedModel'
 import httpStatus from '../../utils/response/httpStatus/httpStatus'
 import MESSAGES from '../../utils/response/messages/messages_pt'
-import SpecializationStudentRepository from '../../repositories/user/SpecializationStudentRepository'
 import ErrorType from '../../utils/response/ErrorType/ErrorType'
 import CustomError from '../../utils/response/CustomError/CustomError'
+import PracticalReportRepository from '../../repositories/specialization_course/PracticalReportRepository'
 
 class DocenteOrientadorController extends UsuarioController{
     // UTILS
@@ -65,6 +57,25 @@ class DocenteOrientadorController extends UsuarioController{
         await mentee.save()
 
         return relation
+    }
+
+    static async evaluatePracticalReport(report, data) {
+        if(data.validated){
+            report.validado = true
+        } else {
+            if(!data.feedback){
+                return new CustomError(
+                    MESSAGES.FEEDBACK_IS_NEEDED,
+                    ErrorType.MISSING_PARAMETER
+                )
+            }
+        }
+        
+        report.feedback = data.feedback
+        report.visualizado_pelo_cursista = false
+        report.data_avaliacao = new Date()
+        await AdvisorTeacherRepository.savePracticalReport(report)
+
     }
 
 
@@ -271,121 +282,201 @@ class DocenteOrientadorController extends UsuarioController{
         })
     }
 
+    /**
+     * 
+     * @requires Authentication
+     * @route GET /advisor_teacher/mentee_practcial_report
+     * 
+     * RETORNO 
+     * @returns {int} httpStatus - It might be one of the follow:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if error is true
+     * @returns {string} message 
+     * @returns {string} errorName
+     * 
+     * if error is false
+     * @returns {PRACTICAL_REPORT[]} data 
+     */
     async getMenteesMaterials(req, res){
-        try {
-            if(!(req.tipoUsuario === UserTypes.ADVISOR_TEACHER)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
+    const userType = req.tipoUsuario
 
-            const advisor = await DocenteOrientador.findByPk(req.loginUsuario)
-
-            const materials = await advisor.getMaterialsToAnalysis()
-
-            return res.status(200).json(materials)
-
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
-        }
+    const authorizationError = DocenteOrientadorController.verifyUserType([UserTypes.ADVISOR_TEACHER], userType)
+    
+    if (authorizationError) {
+        return res.status(httpStatus.UNAUTHORIZED).json({
+            error: true,
+            message: authorizationError.message,
+            errorName: authorizationError.name
+        })
     }
 
+        const advisor = await AdvisorTeacherRepository.findByPk(req.loginUsuario)
+
+        const materials = await AdvisorTeacherRepository.getMaterialsToAnalisys(advisor)
+
+        return res.status(200).json({
+            error: false,
+            data: materials
+        })
+    }
+
+    /**
+     * 
+     * @requires Authentication
+     * @route GET /advisor_teacher/practical_reports_not_viewed
+     * 
+     * RETORNO 
+     * @returns {int} httpStatus - It might be one of the follow:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if error is true
+     * @returns {string} message 
+     * @returns {string} errorName
+     * 
+     * if error is false
+     * @returns {PRACTICAL_REPORT[]} data 
+     */
     async getNotEvaluatedMaterials(req, res){
-        try {
-            if(!(req.tipoUsuario === UserTypes.ADVISOR_TEACHER)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const advisor = await DocenteOrientador.findByPk(req.loginUsuario)
-
-            const materials = await advisor.getMaterialsToAnalysis({
-                where: {
-                    data_avaliacao: null
-                }
+        const authorizationError = DocenteOrientadorController.verifyUserType([UserTypes.ADVISOR_TEACHER], userType)
+        
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(materials)
-
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const advisor = await AdvisorTeacherRepository.findByPk(req.loginUsuario)
+
+        const materials = await AdvisorTeacherRepository.getNotViewedPracticalReports(advisor)
+
+        return res.status(200).json({
+            error: false,
+            data: materials
+        })
     }
 
+    /**
+     * 
+     * @requires Authentication
+     * @route GET /advisor_teacher/mentee_practcial_report
+     * 
+     * RETORNO 
+     * @returns {int} httpStatus - It might be one of the follow:
+     * 200 - SUCCESS
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if error is true
+     * @returns {string} message 
+     * @returns {string} errorName
+     * 
+     * if error is false
+     * @returns {PRACTICAL_REPORT[]} data 
+     */
     async getNotValidatedMaterials(req, res){
-        try {
-            if(!(req.tipoUsuario === UserTypes.ADVISOR_TEACHER)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const advisor = await DocenteOrientador.findByPk(req.loginUsuario)
-
-            const materials = await advisor.getMaterialsToAnalysis({
-                where: {
-                    data_avaliacao: {
-                        [Op.ne]: null
-                    },
-                    validado: false
-                }
+        const authorizationError = DocenteOrientadorController.verifyUserType([UserTypes.ADVISOR_TEACHER], userType)
+        
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            return res.status(200).json(materials)
-
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const advisor = await AdvisorTeacherRepository.findByPk(req.loginUsuario)
+
+        const materials = await AdvisorTeacherRepository.getNotValidatedPracticalReports(advisor)
+
+        return res.status(200).json({
+            error: false,
+            data: materials
+        })
     }
 
+    /**
+     * 
+     * @requires Authentication
+     * @route PUT /advisor_teacher/evaluate_material/:report_name
+     * 
+     * @param {boolean} req.body.validated
+     * @param {string} req.body.feedback - is mandatory if validated is false
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - It value might be one of the follow:
+     * 200 - SUCCESS
+     * 400 - BAD_REQUEST
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if error is true
+     * @return {string} message
+     * @return {string} errorName
+     * 
+     * if error is false
+     * @return {PRACTICAL_REPORT} data 
+     *  
+     */
     async putEvaluateMaterial(req, res){
-        try {
-            if(!(req.tipoUsuario === UserTypes.ADVISOR_TEACHER)){
-                return res.status(403).json({
-                    error: MESSAGES.ACCESS_DENIED
-                })
-            }
+        const userType = req.tipoUsuario
 
-            const report = await RelatorioPratico.findOne({
-                where: {
-                    nome: req.params.material_name,
-                    orientador: req.loginUsuario
-                }
+        const authorizationError = DocenteOrientadorController.verifyUserType([UserTypes.ADVISOR_TEACHER], userType)
+        
+        if (authorizationError) {
+            return res.status(httpStatus.UNAUTHORIZED).json({
+                error: true,
+                message: authorizationError.message,
+                errorName: authorizationError.name
             })
-
-            if(report == null) {
-                throw new Error(`Relatório prático ` + MESSAGES.NOT_FOUND)
-            }
-
-            if(req.body.validated){
-                report.validado = true
-            } else {
-                if(!req.body.feedback){
-                    return res.status(400).json({
-                        error: MESSAGES.FEEDBACK_IS_NEEDED
-                    })
-                }
-                report.feedback = req.body.feedback
-            }
-
-            report.visualizado_pelo_cursista = false
-            report.data_avaliacao = new Date()
-            await report.save()
-
-            const notification = await Notificacao.create({
-                login: report.login,
-                mensagem: `Material "${report.nome}" foi ${report.validado ? "aprovado" : "recusado"} pelo seu orientador`,
-                tipo: notificationType.FEEDBACK,
-                chaveReferenciado: report.nome,
-                modeloReferenciado: ReferencedModel.PRACTICAL_REPORT,
-            })
-
-            return res.status(200).json([report, notification])
-
-        } catch (error) {
-            return res.status(500).json(MESSAGES.INTERNAL_SERVER_ERROR + error)
         }
+
+        const report = await PracticalReportRepository.findOneForAdvisor(req.loginUsuario, req.params.report_name)
+
+        if(report == null) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: MESSAGES.PRACTICAL_REPORT_NOT_FOUND + req.params.report_name,
+                errorName: ErrorType.NOT_FOUND 
+            })
+        }
+
+        const error = await DocenteOrientadorController.evaluatePracticalReport(report, req.body)
+
+        if (error) {
+            return res.status(httpStatus.BAD_REQUEST).json({
+                error: true,
+                message: error.message,
+                errorName: error.name
+            })
+        }
+
+        await NotificationRepository.create({
+            login: report.login,
+            mensagem: `Material "${report.nome}" foi ${report.validado ? "aprovado" : "recusado"} pelo seu orientador`,
+            tipo: notificationType.FEEDBACK,
+            chaveReferenciado: report.nome,
+            modeloReferenciado: ReferencedModel.PRACTICAL_REPORT,
+        })
+
+        return res.status(httpStatus.SUCCESS).json({
+            error: false,
+            data: report
+        })
     }
 
     /**
@@ -426,7 +517,7 @@ class DocenteOrientadorController extends UsuarioController{
             })
         }     
 
-        const teacher = await DocenteOrientador.findByPk(req.loginUsuario)
+        const teacher = await AdvisorTeacherRepository.findByPk(req.loginUsuario)
         const student = await teacher.getMentee()
 
         const report = await teacher.createGuidanceReport({
@@ -483,7 +574,7 @@ class DocenteOrientadorController extends UsuarioController{
             })
         }     
 
-        const teacher = await DocenteOrientador.findByPk(req.loginUsuario)
+        const teacher = await AdvisorTeacherRepository.findByPk(req.loginUsuario)
 
         const reports = await teacher.getGuidanceReport()
 

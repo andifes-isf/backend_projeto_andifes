@@ -6,13 +6,16 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('orientadororientacursista', {
-      loginOrientador: {
-        type: Sequelize.STRING,
+      id: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
         primaryKey: true
       },
+      loginOrientador: {
+        type: Sequelize.STRING
+      },
       loginCursista: {
-        type: Sequelize.STRING,
-        primaryKey: true
+        type: Sequelize.STRING
       },
       status: {
         type: Sequelize.ENUM('ativo', 'inativo'),
@@ -49,6 +52,12 @@ module.exports = {
       },
       onDelete: 'cascade',
       onUpdate: 'cascade'
+    })
+
+    await queryInterface.addConstraint('orientadororientacursista', {
+      fields: ['loginCursista', 'loginOrientador', 'inicio'],
+      type: 'unique',
+      name: 'unique_cursista_orientador_inicio_orientacao'
     })
 
   },

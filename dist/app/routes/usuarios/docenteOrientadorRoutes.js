@@ -12,13 +12,13 @@ router.post('/mentee', _auth2.default, _docenteOrientadorController2.default.pos
 
 router.delete('/mentee', _auth2.default, _docenteOrientadorController2.default.deleteOrientado)
 
-router.get('/materiais_dos_orientandos', _auth2.default, _docenteOrientadorController2.default.getMenteesMaterials)
+router.get('/mentee_practical_report', _auth2.default, _docenteOrientadorController2.default.getMenteesMaterials)
 
-router.get('/materiais_nao_analisados', _auth2.default, _docenteOrientadorController2.default.getNotEvaluatedMaterials)
+router.get('/practical_reports_not_evaluated', _auth2.default, _docenteOrientadorController2.default.getNotEvaluatedMaterials)
 
-router.get('/materiais_nao_validados', _auth2.default, _docenteOrientadorController2.default.getNotValidatedMaterials)
+router.get('/practical_report_not_validated', _auth2.default, _docenteOrientadorController2.default.getNotValidatedMaterials)
 
-router.put('/analisar_material/:material_name', _auth2.default, _docenteOrientadorController2.default.putEvaluateMaterial)
+router.put('/evaluate_practical_report/:report_name', _auth2.default, _docenteOrientadorController2.default.putEvaluateMaterial)
 
 router.post('/guidance_report', _auth2.default, _docenteOrientadorController2.default.postGuidanceReport)
 

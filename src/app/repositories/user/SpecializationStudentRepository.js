@@ -46,13 +46,7 @@ class SpecializationStudentRepository {
 
     // Advisor
     async getAdvisor(specialization_student) {
-        return await specialization_student.getOrientador({
-            through: {
-                where: {
-                    status: "ativo"
-                }
-            }
-        })
+        return await specialization_student.getActiveMentorship()
     }
 
     // Specialition Discipline Class
