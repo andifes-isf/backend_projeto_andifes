@@ -61,7 +61,7 @@ router.use('/turma_oc', turmaOCRoutes)
 
 // usuarios
 router.use('/institution_student', alunoDeInstituicaoRoutes)
-router.use('/aluno_estrangeiro', alunoEstrangeiroRoutes)
+router.use('/foreign_student', alunoEstrangeiroRoutes)
 router.use('/aluno_graduacao', alunoGraduacaoRoutes)
 router.use('/isf_student', alunoIsFRoutes)
 router.use('/coordenador_nacional_idioma', coordenadorNacionalIdiomaRoutes)
