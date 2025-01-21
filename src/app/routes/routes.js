@@ -60,7 +60,7 @@ router.use('/professorisf_ministra_turmaoc', professorIsFMinistraTurmaOCRoutes)
 router.use('/turma_oc', turmaOCRoutes)
 
 // usuarios
-router.use('/aluno_deinstituicao', alunoDeInstituicaoRoutes)
+router.use('/institution_student', alunoDeInstituicaoRoutes)
 router.use('/aluno_estrangeiro', alunoEstrangeiroRoutes)
 router.use('/aluno_graduacao', alunoGraduacaoRoutes)
 router.use('/isf_student', alunoIsFRoutes)

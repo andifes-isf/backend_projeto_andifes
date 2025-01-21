@@ -8,10 +8,10 @@ router.post('/', alunoDeInstituicaoController.post)
 
 router.get('/', alunoDeInstituicaoController.get)
 
-router.post('/adicionar_instituicao/:idInstituicao', AuthMiddleware, alunoDeInstituicaoController.postInstituicao)
+router.post('/institution/:institutionId', AuthMiddleware, alunoDeInstituicaoController.postInstituicao)
 
-router.get('/visualizar_minhas_instituicoes', AuthMiddleware, alunoDeInstituicaoController.getMinhasInstituicoes)
+router.get('/my_institutions', AuthMiddleware, alunoDeInstituicaoController.getMinhasInstituicoes)
 
-router.get('/visualizar_instituicao_atual', AuthMiddleware, alunoDeInstituicaoController.getInstituicaoAtual)
+router.get('/current_institution', AuthMiddleware, alunoDeInstituicaoController.getInstituicaoAtual)
 
 export default router
