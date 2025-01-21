@@ -8,8 +8,8 @@ const router = new Router()
 
 router.get('/', controller.get)
 
-router.post('/adicionar_proeficiencia', AuthMiddleware, controller.postProeficiencia)
+router.post('/proeficiency', AuthMiddleware, controller.postProeficiencia)
 
-router.get('/visualizar_minha_proeficiencia', AuthMiddleware, controller.getMinhaProeficiencia)
+router.get('/my_proeficiency', AuthMiddleware, controller.getMinhaProeficiencia)
 
 export default router

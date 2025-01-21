@@ -1,10 +1,7 @@
 import * as Yup from 'yup'
 
-// Models
-import AlunoIsF from '../../models/usuarios/alunoisf'
-import Curso from '../../models/ofertacoletiva/curso'
-import proeficienciaAlunoIsF from '../../models/proeficiencia/proeficienciaalunoisf'
-import TurmaOC from '../../models/ofertacoletiva/turmaoc'
+// Repository
+import IsfStudentRepository from '../../repositories/user/IsfStudentRepository'
 
 // Controller
 import usuarioController from './usuarioController'
@@ -20,7 +17,7 @@ class alunoIsFController extends usuarioController {
     // Auxiliar Functions 
 
     static async postIsFStudent(req, res, from_institution) {
-        const existingStudent = await alunoIsFController.verifyExistingObject(AlunoIsF, req.body.login, MESSAGES.EXISTING_ISF_STUDENT)
+        const existingStudent = await alunoIsFController.verifyExistingObject(IsfStudentRepository, req.body.login, MESSAGES.EXISTING_ISF_STUDENT)
 
         if (existingStudent) {
             return {
@@ -38,7 +35,7 @@ class alunoIsFController extends usuarioController {
             }
         }
 
-        const student = await AlunoIsF.create({
+        const student = await IsfStudentRepository.create({
             login: req.body.login,
             from_institution: from_institution
         })
@@ -49,18 +46,12 @@ class alunoIsFController extends usuarioController {
         }
     }
 
-    static async verifyExistingProeficiency(login, language, level) {
-        const existingProeficiency = await proeficienciaAlunoIsF.findOne({
-            where: {
-                login: login,
-                idioma: language,
-                nivel: level
-            }
-        })
+    static async verifyExistingProeficiency(data) {
+        const existingProeficiency = await IsfStudentRepository.findOneProeficiency(data)
 
         if(existingProeficiency) {
             return new CustomError(
-                MESSAGES.EXISTING_PROEFICIENCY + language + " " +  level,
+                MESSAGES.EXISTING_PROEFICIENCY + data.language + " " + data.data.level,
                 ErrorType.DUPLICATE_ENTRY
             )
         }
@@ -68,24 +59,25 @@ class alunoIsFController extends usuarioController {
 
     // Endpoints
 
+    /**
+    *
+    * @route GET /isf_student
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 200 - SUCCESS
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {AlunoIsF} data
+    */
     async get(_, res){
-        const students = await AlunoIsF.findAll({
-            include: [
-                {
-                    model: TurmaOC,
-                    attributes: {
-                        exclude: ['idTurma', 'idCurso', ]
-                    },
-                    include: {
-                        model: Curso,
-                        attributes: ['nome']
-                    },
-                    through: {
-                        attributes: []
-                    }
-                }
-            ]
-        })
+        const students = await IsfStudentRepository.findAll()
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
@@ -93,6 +85,39 @@ class alunoIsFController extends usuarioController {
         })
     }
 
+    /**
+    *
+    * @requires Authentication
+    * @route POST /isf_student/proeficiency
+    * 
+    * @param {char[2]} level - The level of the proeficiency. 
+    * For japanese, it should be used N5 -> N1
+    * For other languages, it should be used A1 -> C2
+    * @param {string} language - Indicates the language of the proeficiency. It must be one of the follow:
+    * 1 - "ingles"
+    * 2 - "portugues",
+    * 3 - "alemao"
+    * 4 - "frances"
+    * 5 - "italiano"
+    * 6 - "espanhol"
+    * 7 - "japones"
+    * @param {string} document - Document that proves the proeficiency
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 201 - CREATED
+    * 400 - BAD_REQUEST
+    * 401 - UNAUTHORIZED
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {proeficienciaAlunoIsF} data
+    */  
     async postProeficiencia(req, res) {
         const userType = req.tipoUsuario
 
@@ -107,9 +132,14 @@ class alunoIsFController extends usuarioController {
         }
 
         const userLogin = req.loginUsuario
-        const { language, level, document } = req.body
+        const data = {
+            userLogin = userLogin,
+            language,
+            level,
+            document
+        } = req.body
 
-        const existingProeficiencyError = await alunoIsFController.verifyExistingProeficiency(userLogin, language, level)
+        const existingProeficiencyError = await alunoIsFController.verifyExistingProeficiency(data)
 
         if (existingProeficiencyError) {
             return res.status(httpStatus.BAD_REQUEST).json({
@@ -119,12 +149,7 @@ class alunoIsFController extends usuarioController {
             })
         }
 
-        const proeficiency = await proeficienciaAlunoIsF.create({
-            login: userLogin,
-            nivel: level,
-            idioma: language,
-            comprovante: document
-        })
+        const proeficiency = await IsfStudentRepository.createProeficiency(data)
 
         return res.status(httpStatus.CREATED).json({
             error: false,
@@ -132,6 +157,25 @@ class alunoIsFController extends usuarioController {
         })
     }
 
+    /**
+    *
+    * @requires Authentication
+    * @route GET /isf_student/my_proeficiency
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 200 - SUCCESS
+    * 401 - UNAUTHORIZED
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {proeficienciaAlunoIsF[]} data
+    */
     async getMinhaProeficiencia(req, res) {
         const userType = req.tipoUsuario
 
@@ -145,11 +189,7 @@ class alunoIsFController extends usuarioController {
             })
         }
 
-        const proeficiencies = await proeficienciaAlunoIsF.findAll({
-            where: {
-                login: req.loginUsuario
-            }
-        })
+        const proeficiencies = await IsfStudentRepository.findAllProeficiencyForStudent(req.loginUsuario)
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,

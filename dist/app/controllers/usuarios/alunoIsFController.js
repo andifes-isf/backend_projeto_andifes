@@ -1,10 +1,7 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
 
-// Models
-var _alunoisf = require('../../models/usuarios/alunoisf'); var _alunoisf2 = _interopRequireDefault(_alunoisf);
-var _curso = require('../../models/ofertacoletiva/curso'); var _curso2 = _interopRequireDefault(_curso);
-var _proeficienciaalunoisf = require('../../models/proeficiencia/proeficienciaalunoisf'); var _proeficienciaalunoisf2 = _interopRequireDefault(_proeficienciaalunoisf);
-var _turmaoc = require('../../models/ofertacoletiva/turmaoc'); var _turmaoc2 = _interopRequireDefault(_turmaoc);
+// Repository
+var _IsfStudentRepository = require('../../repositories/user/IsfStudentRepository'); var _IsfStudentRepository2 = _interopRequireDefault(_IsfStudentRepository);
 
 // Controller
 var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
@@ -20,7 +17,7 @@ class alunoIsFController extends _usuarioController2.default {
     // Auxiliar Functions 
 
     static async postIsFStudent(req, res, from_institution) {
-        const existingStudent = await alunoIsFController.verifyExistingObject(_alunoisf2.default, req.body.login, _messages_pt2.default.EXISTING_ISF_STUDENT)
+        const existingStudent = await alunoIsFController.verifyExistingObject(_IsfStudentRepository2.default, req.body.login, _messages_pt2.default.EXISTING_ISF_STUDENT)
 
         if (existingStudent) {
             return {
@@ -38,7 +35,7 @@ class alunoIsFController extends _usuarioController2.default {
             }
         }
 
-        const student = await _alunoisf2.default.create({
+        const student = await _IsfStudentRepository2.default.create({
             login: req.body.login,
             from_institution: from_institution
         })
@@ -49,18 +46,12 @@ class alunoIsFController extends _usuarioController2.default {
         }
     }
 
-    static async verifyExistingProeficiency(login, language, level) {
-        const existingProeficiency = await _proeficienciaalunoisf2.default.findOne({
-            where: {
-                login: login,
-                idioma: language,
-                nivel: level
-            }
-        })
+    static async verifyExistingProeficiency(data) {
+        const existingProeficiency = await _IsfStudentRepository2.default.findOneProeficiency(data)
 
         if(existingProeficiency) {
             return new (0, _CustomError2.default)(
-                _messages_pt2.default.EXISTING_PROEFICIENCY + language + " " +  level,
+                _messages_pt2.default.EXISTING_PROEFICIENCY + data.language + " " + data.data.level,
                 _ErrorType2.default.DUPLICATE_ENTRY
             )
         }
@@ -68,24 +59,25 @@ class alunoIsFController extends _usuarioController2.default {
 
     // Endpoints
 
+    /**
+    *
+    * @route GET /isf_student
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 200 - SUCCESS
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {AlunoIsF} data
+    */
     async get(_, res){
-        const students = await _alunoisf2.default.findAll({
-            include: [
-                {
-                    model: _turmaoc2.default,
-                    attributes: {
-                        exclude: ['idTurma', 'idCurso', ]
-                    },
-                    include: {
-                        model: _curso2.default,
-                        attributes: ['nome']
-                    },
-                    through: {
-                        attributes: []
-                    }
-                }
-            ]
-        })
+        const students = await _IsfStudentRepository2.default.findAll()
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,
@@ -93,6 +85,39 @@ class alunoIsFController extends _usuarioController2.default {
         })
     }
 
+    /**
+    *
+    * @requires Authentication
+    * @route POST /isf_student/proeficiency
+    * 
+    * @param {char[2]} level - The level of the proeficiency. 
+    * For japanese, it should be used N5 -> N1
+    * For other languages, it should be used A1 -> C2
+    * @param {string} language - Indicates the language of the proeficiency. It must be one of the follow:
+    * 1 - "ingles"
+    * 2 - "portugues",
+    * 3 - "alemao"
+    * 4 - "frances"
+    * 5 - "italiano"
+    * 6 - "espanhol"
+    * 7 - "japones"
+    * @param {string} document - Document that proves the proeficiency
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 201 - CREATED
+    * 400 - BAD_REQUEST
+    * 401 - UNAUTHORIZED
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {proeficienciaAlunoIsF} data
+    */  
     async postProeficiencia(req, res) {
         const userType = req.tipoUsuario
 
@@ -107,9 +132,14 @@ class alunoIsFController extends _usuarioController2.default {
         }
 
         const userLogin = req.loginUsuario
-        const { language, level, document } = req.body
+        const data = {
+            userLogin = userLogin,
+            language,
+            level,
+            document
+        } = req.body
 
-        const existingProeficiencyError = await alunoIsFController.verifyExistingProeficiency(userLogin, language, level)
+        const existingProeficiencyError = await alunoIsFController.verifyExistingProeficiency(data)
 
         if (existingProeficiencyError) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
@@ -119,12 +149,7 @@ class alunoIsFController extends _usuarioController2.default {
             })
         }
 
-        const proeficiency = await _proeficienciaalunoisf2.default.create({
-            login: userLogin,
-            nivel: level,
-            idioma: language,
-            comprovante: document
-        })
+        const proeficiency = await _IsfStudentRepository2.default.createProeficiency(data)
 
         return res.status(_httpStatus2.default.CREATED).json({
             error: false,
@@ -132,6 +157,25 @@ class alunoIsFController extends _usuarioController2.default {
         })
     }
 
+    /**
+    *
+    * @requires Authentication
+    * @route GET /isf_student/my_proeficiency
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 200 - SUCCESS
+    * 401 - UNAUTHORIZED
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {proeficienciaAlunoIsF[]} data
+    */
     async getMinhaProeficiencia(req, res) {
         const userType = req.tipoUsuario
 
@@ -145,11 +189,7 @@ class alunoIsFController extends _usuarioController2.default {
             })
         }
 
-        const proeficiencies = await _proeficienciaalunoisf2.default.findAll({
-            where: {
-                login: req.loginUsuario
-            }
-        })
+        const proeficiencies = await _IsfStudentRepository2.default.findAllProeficiencyForStudent(req.loginUsuario)
 
         return res.status(_httpStatus2.default.SUCCESS).json({
             error: false,

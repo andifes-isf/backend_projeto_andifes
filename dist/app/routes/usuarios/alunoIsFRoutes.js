@@ -8,8 +8,8 @@ const router = new (0, _express.Router)()
 
 router.get('/', controller.get)
 
-router.post('/adicionar_proeficiencia', _auth2.default, controller.postProeficiencia)
+router.post('/proeficiency', _auth2.default, controller.postProeficiencia)
 
-router.get('/visualizar_minha_proeficiencia', _auth2.default, controller.getMinhaProeficiencia)
+router.get('/my_proeficiency', _auth2.default, controller.getMinhaProeficiencia)
 
 exports. default = router
