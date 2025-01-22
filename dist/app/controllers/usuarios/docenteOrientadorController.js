@@ -4,7 +4,7 @@
 var _notificationType = require('../../utils/notificationType/notificationType'); var _notificationType2 = _interopRequireDefault(_notificationType);
 
 // Controllers
-var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
+var _usuarioController = require('../../user/usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 var _relatorio_pratico = require('../../models/curso_especializacao/relatorio_pratico'); var _relatorio_pratico2 = _interopRequireDefault(_relatorio_pratico);
 
 // Repository

@@ -7,7 +7,7 @@ var _turmadisciplinaespecializacao = require('../../models/curso_especializacao/
 var _alteracaoturmaespecializacao = require('../../models/curso_especializacao/alteracaoturmaespecializacao'); var _alteracaoturmaespecializacao2 = _interopRequireDefault(_alteracaoturmaespecializacao);
 
 // Controllers
-var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
+var _usuarioController = require('../../user/usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
 // Utils
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
@@ -16,7 +16,7 @@ var _messages_pt = require('../../utils/response/messages/messages_pt'); var _me
 class coordenadorNacionalIdiomaController {
     async post(req, res) {
         try {            
-            await _usuarioController2.default.post(req, res, _userTypes2.default.LANGUAGE_NATIONAL_COORDINATOR)
+            await UsuarioController.post(req, res, _userTypes2.default.LANGUAGE_NATIONAL_COORDINATOR)
 
             const existingCoordinator = await _coordenadornacionalIdioma2.default.findOne({
                 where: {

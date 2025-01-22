@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 import notificationType from '../../utils/notificationType/notificationType'
 
 // Controllers
-import UsuarioController from './usuarioController'
+import UsuarioController from "../../user/usuarioController"
 import RelatorioPratico from '../../models/curso_especializacao/relatorio_pratico'
 
 // Repository

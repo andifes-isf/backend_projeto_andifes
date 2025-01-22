@@ -55,6 +55,39 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
 
     // Endpoints
 
+    /**
+    *
+    * @route POST /institution_student
+    * 
+    * @param {string} req.body.register_number - User's register number
+    * @param {int} req.body.position - I don't know
+    * @param {int} req.body.activity_area - Indicates the student's area
+    * 1 - 'ciencias exatas e da terra'
+    * 2 - 'ciencias biologicas'
+    * 3 - 'engenharia/tecnologia'
+    * 4 - 'ciencias da saude'
+    * 5 - 'ciencias agrarias'
+    * 6 - 'ciencias sociais'
+    * 7 - 'ciencias humanas'
+    * 8 - 'linguistica'
+    * 9 - 'letras e artes'
+    * 10 - 'prefiro nao dizer'
+    * @param {string} req.body.login - User's login 
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 201 - CREATED
+    * 400 - BAD_REQUEST
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {AlunoDeInstituicao} data
+    */  
     async post(req, res) {
         const existingStudent = await alunoDeinstituicaoController.verifyExistingObject(_alunodeinstituicao2.default, req.body.login, _messages_pt2.default.EXISTING_INSTITUTION_STUDENT)
         
@@ -89,6 +122,23 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
         })
     }
 
+    /**
+    *
+    * @route GET /institution_student
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 200 - SUCCESS
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {AlunoDeInstituicao[]} data
+    */
     async get(_, res) {
         const students = await _alunodeinstituicao2.default.findAll({
             include: [
@@ -126,6 +176,32 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
         })
     }
 
+    /**
+    *
+    * @requires Authentication
+    * @route POST /institution_student/institution/:institutionId
+    * 
+    * 
+    * @param {int} req.params.institutionId - Institution's id
+    * @param {string} req.loginUsuario - User's logged login
+    * @param {inicio} req.body.inicio - Date the student started college
+    * @param {string} req.body.comprovante - Registration's proof
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 201 - CREATED
+    * 400 - BAD_REQUEST
+    * 401 - UNAUTHORIZED
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {ComprovanteAlunoInstituicao} data
+    */  
     async postInstituicao(req, res){
         const userType = req.tipoUsuario
 
@@ -141,7 +217,7 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
 
         // Seria bom ver como mudar para que fosse passado o nome, ou sigla, da instituição, ao invés do Id dela
 
-        const existingInstitution = await alunoDeinstituicaoController.verifyExistingObject(_instituicaoensino2.default, req.params.idInstituicao, _messages_pt2.default.EXISTING_INSTITUTION)
+        const existingInstitution = await alunoDeinstituicaoController.verifyExistingObject(_instituicaoensino2.default, req.params.institutionId, _messages_pt2.default.EXISTING_INSTITUTION)
 
         if (!existingInstitution) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
@@ -151,7 +227,7 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
             })
         }
 
-        const existingRegistration = await alunoDeinstituicaoController.verifyExistingRegistration(req.loginUsuario, req.params.idInstituicao, req.body.inicio)
+        const existingRegistration = await alunoDeinstituicaoController.verifyExistingRegistration(req.loginUsuario, req.params.institutionId, req.body.inicio)
 
         if (existingRegistration) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
@@ -161,10 +237,10 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
             })
         }
 
-        await alunoDeinstituicaoController.closeRegistration(req.loginUsuario, req.params.idInstituicao)
+        await alunoDeinstituicaoController.closeRegistration(req.loginUsuario, req.params.institutionId)
         
         const registration = await _comprovantealunoinstituicao2.default.create({
-            idInstituicao: req.params.idInstituicao,
+            idInstituicao: req.params.institutionId,
             login: req.loginUsuario,
             inicio: req.body.inicio,
             comprovante: req.body.comprovante
@@ -176,6 +252,27 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
         })  
     }
 
+    /**
+     * 
+     * @Authentication
+     * @route GET /institution_student/my_institutions
+     * 
+     * @param {string} req.body.loginUsuario - User's logged login
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 400 - BAD_REQUEST
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ComprovanteAlunoInstituicao} data
+     */
     async getMinhasInstituicoes(req, res){
         const userType = req.tipoUsuario
 
@@ -201,6 +298,27 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
         })
     }
 
+    /**
+     * 
+     * @Authentication
+     * @route GET /institution_student/current_institution
+     * 
+     * @param {string} req.body.loginUsuario - User's logged login
+     * 
+     * RETORNO
+     * @returns {int} httpStatus - The value might be:
+     * 400 - BAD_REQUEST
+     * 401 - UNAUTHORIZED
+     * 500 - INTERNAL_SERVER_ERROR
+     * @returns {boolean} error
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {ComprovanteAlunoInstituicao} data
+     */
     async getInstituicaoAtual(req, res){
         const userType = req.tipoUsuario
 

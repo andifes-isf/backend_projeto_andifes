@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import * as Yup from 'yup'
 import bcrypt from 'bcrypt'
-import UserRepository from '../../repositories/user/UserRepository'
+import UserRepositorySequelize from '../../user/repository/UserRepositorySequelize' 
 import authConfig from '../../../config/auth'
 import MESSAGES from '../../utils/response/messages/messages_pt'
 
@@ -13,7 +13,7 @@ class SessionController {
             password
         } = req.body
 
-        const user = await UserRepository.findByPk(login)
+        const user = await UserRepositorySequelize.findByPk(login)
 
         if(!user) {
             return res.status(401).json({

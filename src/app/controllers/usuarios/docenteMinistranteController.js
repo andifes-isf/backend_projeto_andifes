@@ -6,7 +6,7 @@ import Usuario from '../../models/usuarios/usuario'
 import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/turmadisciplinaespecializacao'
 
 // Controllers
-import UsuarioController from './usuarioController'
+import usuarioController from "../../user/usuarioController"
 
 // Utils
 import UserTypes from '../../utils/userType/userTypes'

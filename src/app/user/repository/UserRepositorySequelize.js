@@ -1,17 +1,17 @@
 import User from '../../models/usuarios/usuario'
+import IUserRepository from './IUserRepository'
 
+class UserRepositorySequelize extends IUserRepository {
+    async createUser(data) {
+        return await User.create(data)
+    }
 
-class UserRepository {
     async findByPk(pk) {
         return await User.findByPk(pk)
     }
 
     async findAll() {
         return await User.findAll()
-    }
-
-    async create(data) {
-        return await User.create(data)
     }
 
     async getNotification(user, id) {
@@ -32,4 +32,4 @@ class UserRepository {
     }
 }
 
-export default new UserRepository()
+export default new UserRepositorySequelize()

@@ -1,7 +1,7 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _jsonwebtoken = require('jsonwebtoken'); var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
 var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup);
 var _bcrypt = require('bcrypt'); var _bcrypt2 = _interopRequireDefault(_bcrypt);
-var _UserRepository = require('../../repositories/user/UserRepository'); var _UserRepository2 = _interopRequireDefault(_UserRepository);
+var _UserRepositorySequelize = require('../../user/repository/UserRepositorySequelize'); var _UserRepositorySequelize2 = _interopRequireDefault(_UserRepositorySequelize); 
 var _auth = require('../../../config/auth'); var _auth2 = _interopRequireDefault(_auth);
 var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
 
@@ -13,7 +13,7 @@ class SessionController {
             password
         } = req.body
 
-        const user = await _UserRepository2.default.findByPk(login)
+        const user = await _UserRepositorySequelize2.default.findByPk(login)
 
         if(!user) {
             return res.status(401).json({

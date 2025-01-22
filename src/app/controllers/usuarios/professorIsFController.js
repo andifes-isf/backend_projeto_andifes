@@ -1,6 +1,6 @@
 // Precisa, no futuro, trocar esse InstituicaoEnsino pelo InstitutionRepository
 
-import usuarioController from "./usuarioController"
+import usuarioController from "../../user/usuarioController"
 
 // Repositories
 import IsFTeacherRepository from "../../repositories/user/IsFTeacherRepository"
@@ -26,7 +26,7 @@ class ProfessorIsFController extends usuarioController {
                 teacher: existingTeacher
             }
         }
-        
+
         const { error, user} = await ProfessorIsFController.postUser(req, res, specialization_student ? UserTypes.CURSISTA : UserTypes.ISF_TEACHER)
 
         if (error) {

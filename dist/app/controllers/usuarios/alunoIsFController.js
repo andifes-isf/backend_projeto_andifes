@@ -4,7 +4,7 @@
 var _IsfStudentRepository = require('../../repositories/user/IsfStudentRepository'); var _IsfStudentRepository2 = _interopRequireDefault(_IsfStudentRepository);
 
 // Controller
-var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
+var _usuarioController = require('../../user/usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
 // Utils
 var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);

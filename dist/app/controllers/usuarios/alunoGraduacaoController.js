@@ -11,6 +11,28 @@ var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _Error
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
 class AlunoGraduacaoController extends _professorIsFController2.default{
+
+    /**
+    *
+    * @route POST /graduation_student
+    * 
+    * @param {string} req.body.login
+    * 
+    * 
+    * RETORNO
+    * @returns {int} httpStatus - The value might be:
+    * 201 - CREATED
+    * 400 - BAD_REQUEST
+    * 500 - INTERNAL_SERVER_ERROR
+    * @returns {boolean} error
+    * 
+    * if return an error
+    * @returns {string} message - error's message
+    * @returns {string} errorName - error's name
+    * 
+    * if return successfully
+    * @returns {AlunoGraduacao} data
+    */
     async post(req, res) {
         const existingGraduationStudent = await AlunoGraduacaoController.verifyExistingObject(_alunograduacao2.default, req.body.login, _messages_pt2.default.EXISTING_GRADUATION_STUDENT)
 
@@ -43,6 +65,21 @@ class AlunoGraduacaoController extends _professorIsFController2.default{
 
     }
 
+    /**
+     * 
+     * @route GET /graduation_student
+     * 
+     * @returns {int} httpStatus - The value might be:
+     * 200 - SUCCESS
+     * 500 - INTERNAL_SERVER_ERROR
+     * 
+     * if return an error
+     * @returns {string} message - error's message
+     * @returns {string} errorName - error's name
+     * 
+     * if return successfully
+     * @returns {AlunoGraduacao} data
+     */
     async get(_, res){
         const graduationStudents = await _alunograduacao2.default.findAll({
             include: [

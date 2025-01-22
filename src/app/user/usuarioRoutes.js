@@ -1,8 +1,9 @@
 import { Router } from "express"
-import usuarioController from "../../controllers/usuarios/usuarioController"
-import AuthMiddleware from '../../middlewares/auth'
+import usuarioController from "./usuarioController"
+import AuthMiddleware from '../middlewares/auth'
+import UserRepositorySequelize from './repository/UserRepositorySequelize'
 
-const controller = new usuarioController()
+const controller = new usuarioController(UserRepositorySequelize)
 
 const router = new Router()
 

@@ -1,6 +1,6 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }// Precisa, no futuro, trocar esse InstituicaoEnsino pelo InstitutionRepository
 
-var _usuarioController = require('./usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
+var _usuarioController = require('../../user/usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
 // Repositories
 var _IsFTeacherRepository = require('../../repositories/user/IsFTeacherRepository'); var _IsFTeacherRepository2 = _interopRequireDefault(_IsFTeacherRepository);
@@ -26,7 +26,7 @@ class ProfessorIsFController extends _usuarioController2.default {
                 teacher: existingTeacher
             }
         }
-        
+
         const { error, user} = await ProfessorIsFController.postUser(req, res, specialization_student ? _userTypes2.default.CURSISTA : _userTypes2.default.ISF_TEACHER)
 
         if (error) {

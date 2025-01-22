@@ -33,7 +33,7 @@ import cursistaEspecializacaoRoutes from './usuarios/cursistaEspecializacaoRoute
 import docenteMinistranteRoutes from './usuarios/docenteMinistranteRoutes'
 import docenteOrientadorRoutes from './usuarios/docenteOrientadorRoutes'
 import professorIsFRoutes from './usuarios/professorIsFRoutes'
-import usuarioRoutes from './usuarios/usuarioRoutes'
+import usuarioRoutes from '../user/usuarioRoutes'
 
 const router = new Router()
 

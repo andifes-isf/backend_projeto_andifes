@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 import IsfStudentRepository from '../../repositories/user/IsfStudentRepository'
 
 // Controller
-import usuarioController from './usuarioController'
+import usuarioController from "../../user/usuarioController"
 
 // Utils
 import MESSAGES from '../../utils/response/messages/messages_pt'

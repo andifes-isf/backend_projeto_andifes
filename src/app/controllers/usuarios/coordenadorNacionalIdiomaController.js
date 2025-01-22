@@ -7,7 +7,7 @@ import TurmaDisciplinaEspecializacao from '../../models/curso_especializacao/tur
 import AlteracaoTurmaEspecializacao from '../../models/curso_especializacao/alteracaoturmaespecializacao'
 
 // Controllers
-import UsuarioController from './usuarioController'
+import usuarioController from "../../user/usuarioController"
 
 // Utils
 import UserTypes from '../../utils/userType/userTypes'

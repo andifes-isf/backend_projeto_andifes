@@ -1,16 +1,22 @@
-import * as Yup from 'yup'
-
 // Utils
-import EmailDomainFactory from '../../utils/emailDomain/emailDomainFactory'
-import MESSAGES from '../../utils/response/messages/messages_pt'
-import CustomError from '../../utils/response/CustomError/CustomError'
-import ErrorType from '../../utils/response/ErrorType/ErrorType'
-import httpStatus from '../../utils/response/httpStatus/httpStatus'
+import EmailDomainFactory from '../utils/emailDomain/emailDomainFactory'
+import MESSAGES from '../utils/response/messages/messages_pt'
+import CustomError from '../utils/response/CustomError/CustomError'
+import ErrorType from '../utils/response/ErrorType/ErrorType'
+import httpStatus from '../utils/response/httpStatus/httpStatus'
+
+// Use Cases
+import CreateUser from './use-cases/CreateUser'
 
 // Repository
-import UserRepository from '../../repositories/user/UserRepository'
+import UserRepository from './repository/UserRepositorySequelize'
 
 class usuarioController {
+    // constructor() {
+
+    //     var createUser = new CreateUser(UserRepository)
+    //     console.log(createUser)
+    // }
     // AUXILIAR FUNCTIONS
 
     static verifyUserType(userTypes, userType) {
@@ -65,34 +71,39 @@ class usuarioController {
     }
 
     static async postUser(req, _, type) {
-        const existingUser = await usuarioController.verifyExistingObject(UserRepository, req.body.login, MESSAGES.EXISTING_USER)
+        try {
 
-        if(existingUser) {
-            return {
-                error: true,
-                user: existingUser
+            const existingUser = await usuarioController.verifyExistingObject(UserRepository, req.body.login, MESSAGES.EXISTING_USER)
+            if(existingUser) {
+                return {
+                    error: true,
+                    user: existingUser
+                }
             }
-        }
-
-        const user = await UserRepository.create({
-            login: req.body.login,
-            name: req.body.name,
-            surname: req.body.surname,
-            DDI: req.body.DDI,
-            DDD: req.body.DDD,
-            phone: req.body.phone,
-            ethnicity: req.body.ethnicity,
-            gender: req.body.gender,
-            active: 1,
-            email: req.body.email,
-            email_domain: req.body.email_domain,
-            password: req.body.password,
-            type: type
-        })
-
-        return {
-            error: false,
-            user: user
+            
+            const createUser = new CreateUser(UserRepository)
+            const user = await createUser.exec({
+                login: req.body.login,
+                name: req.body.name,
+                surname: req.body.surname,
+                DDI: req.body.DDI,
+                DDD: req.body.DDD,
+                phone: req.body.phone,
+                ethnicity: req.body.ethnicity,
+                gender: req.body.gender,
+                active: 1,
+                email: req.body.email,
+                email_domain: req.body.email_domain,
+                password: req.body.password,
+                type: type
+            })
+    
+            return {
+                error: false,
+                user: user
+            }
+        } catch (e) {
+            console.log(e)
         }
     }
     
