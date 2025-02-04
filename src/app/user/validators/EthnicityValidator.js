@@ -5,7 +5,8 @@ class EthnicityValidator extends Validator{
         if (0 > data.ethnicity || data.ethnicity > 5) {
             return {
                 valid: false,
-                error: "Etnia não cadastrada"
+                error: "Etnia não cadastrada",
+                name: "ValidationError"
             }
         }
 

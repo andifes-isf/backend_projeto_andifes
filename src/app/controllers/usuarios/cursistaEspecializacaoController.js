@@ -208,20 +208,19 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
         
-        const { error, teacher } = await CursistaEspecializacaoController.postIsFTeacher(req, res, 1)
+        const { error, result } = await CursistaEspecializacaoController.postIsFTeacher(req, res, 1)
 
         if (error) {
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
-                message: teacher.message,
-                errorName: teacher.name
+                result
             })
         }
         
         const specializationStudent = await SpecializationStudentRepository.create({
             login: req.body.login
         })
-
+        
         return res.status(httpStatus.CREATED).json({
             error: false,
             data: specializationStudent

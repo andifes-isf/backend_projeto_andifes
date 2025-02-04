@@ -27,12 +27,12 @@ class ProfessorIsFController extends _usuarioController2.default {
             }
         }
 
-        const { error, user} = await ProfessorIsFController.postUser(req, res, specialization_student ? _userTypes2.default.CURSISTA : _userTypes2.default.ISF_TEACHER)
+        const { error, result} = await ProfessorIsFController.postUser(req, res, specialization_student ? _userTypes2.default.CURSISTA : _userTypes2.default.ISF_TEACHER)
 
         if (error) {
             return {
                 error: true,
-                teacher: user
+                result
             }
         }
 
@@ -46,7 +46,7 @@ class ProfessorIsFController extends _usuarioController2.default {
 
         return {
             error: false,
-            teacher: teacher
+            result: teacher
         }
     }
 

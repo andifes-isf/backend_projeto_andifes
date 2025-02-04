@@ -22,11 +22,6 @@ export default class User {
         this.email_domain = email_domain
         this.password = password
         this.type = type
-
-        const validationResult = this.validateData()
-        if (!validationResult.valid) {
-            throw new Error(validationResult.error)
-        }
     }
 
     validateData() {
@@ -38,7 +33,7 @@ export default class User {
             )
         )
 
-        return validator.validate({
+        const validationResult = validator.validate({
             login: this.login,
             name: this.name,
             surname: this.surname,
@@ -53,5 +48,15 @@ export default class User {
             password: this.password,
             type: this.type
         })
+
+        if (!validationResult.valid) {
+            return {
+                error: true,
+                validationResult
+            }
+        }
+        return {
+            error: false
+        }
     }
 }

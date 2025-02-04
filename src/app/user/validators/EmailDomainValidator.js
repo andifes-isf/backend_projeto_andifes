@@ -5,7 +5,8 @@ class EmailDomainValidator extends Validator{
         if (0 > data.email_domain || data.email_domain > 3) {
             return {
                 valid: false,
-                error: "Domínio de email não cadastrado"
+                error: "Domínio de email não cadastrado",
+                name: "ValidationError"
             }
         }
 

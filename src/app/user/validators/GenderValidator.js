@@ -5,7 +5,8 @@ class GenderValidator extends Validator{
         if (0 > data.gender || data.gender > 3) {
             return {
                 valid: false,
-                error: "Gênero não cadastrado"
+                error: "Gênero não cadastrado",
+                name: "ValidationError"
             }
         }
 

@@ -7,16 +7,19 @@ import httpStatus from '../utils/response/httpStatus/httpStatus'
 
 // Use Cases
 import CreateUser from './use-cases/CreateUser'
+import GetUsers from './use-cases/GetUsers'
+import GetMyData from './use-cases/GetMyData'
+import GetNotification from './use-cases/GetNotification'
 
 // Repository
 import UserRepository from './repository/UserRepositorySequelize'
+import User from './User'
+import GetNotifications from './use-cases/GetNotifications'
+import GetUnreadNotifications from './use-cases/GetUnreadNotifications'
 
 class usuarioController {
-    // constructor() {
-
-    //     var createUser = new CreateUser(UserRepository)
-    //     console.log(createUser)
-    // }
+    constructor() {
+    }
     // AUXILIAR FUNCTIONS
 
     static verifyUserType(userTypes, userType) {
@@ -71,39 +74,40 @@ class usuarioController {
     }
 
     static async postUser(req, _, type) {
-        try {
-
-            const existingUser = await usuarioController.verifyExistingObject(UserRepository, req.body.login, MESSAGES.EXISTING_USER)
-            if(existingUser) {
-                return {
-                    error: true,
-                    user: existingUser
-                }
-            }
-            
-            const createUser = new CreateUser(UserRepository)
-            const user = await createUser.exec({
-                login: req.body.login,
-                name: req.body.name,
-                surname: req.body.surname,
-                DDI: req.body.DDI,
-                DDD: req.body.DDD,
-                phone: req.body.phone,
-                ethnicity: req.body.ethnicity,
-                gender: req.body.gender,
-                active: 1,
-                email: req.body.email,
-                email_domain: req.body.email_domain,
-                password: req.body.password,
-                type: type
-            })
-    
+        const existingUser = await usuarioController.verifyExistingObject(UserRepository, req.body.login, MESSAGES.EXISTING_USER)
+        if(existingUser) {
             return {
-                error: false,
-                user: user
+                error: true,
+                user: existingUser
             }
-        } catch (e) {
-            console.log(e)
+        }
+        
+        const {error, result} = await CreateUser.exec({
+            login: req.body.login,
+            name: req.body.name,
+            surname: req.body.surname,
+            DDI: req.body.DDI,
+            DDD: req.body.DDD,
+            phone: req.body.phone,
+            ethnicity: req.body.ethnicity,
+            gender: req.body.gender,
+            active: 1,
+            email: req.body.email,
+            email_domain: req.body.email_domain,
+            password: req.body.password,
+            type: type
+        }, UserRepository)
+
+        if (error) {
+            return {
+                error: error,
+                result
+            }
+        }
+
+        return {
+            error: false,
+            result
         }
     }
     
@@ -127,7 +131,7 @@ class usuarioController {
      * @returns {ProfessorIsF} data
      */
     async get(_, res) {
-        const users = await UserRepository.findAll()
+        const users = await GetUsers.exec(UserRepository)
         
         return res.status(httpStatus.SUCCESS).json({
             error: false,
@@ -155,7 +159,7 @@ class usuarioController {
      * @returns {ProfessorIsF} data
      */
     async getMyData(req, res) {
-        const user = await UserRepository.findByPk(req.loginUsuario)
+        const user = await GetMyData.exec(req.loginUsuario, UserRepository)
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
@@ -185,7 +189,7 @@ class usuarioController {
     async getNotificacoes(req, res){
         const user = await UserRepository.findByPk(req.loginUsuario)
 
-        const notifications = await UserRepository.getNotifications(user) 
+        const notifications = await GetNotifications.exec(user, UserRepository) 
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
@@ -215,7 +219,7 @@ class usuarioController {
     async getNotificacoesNaoLidas(req, res){
         const user = await UserRepository.findByPk(req.loginUsuario)
 
-        const notifications = await UserRepository.getUnreadNotifications(user)
+        const notifications = await GetUnreadNotifications.exec(user, UserRepository)
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,
@@ -243,20 +247,11 @@ class usuarioController {
      * @returns {ProfessorIsF} data
      */
     async getNotificacao(req, res){
-        const user = await UserRepository.findByPk(req.loginUsuario)
+        const notification = await GetNotification.exec([req.loginUsuario, req.params.notificationId], UserRepository)
 
-        const notification = await usuarioController.verifyExistingNotification(user, req.params.notificationId, req.loginUsuario)
-
-        if (notification instanceof CustomError) {
-            return res.status(httpStatus.BAD_REQUEST).json({
-                error: true,
-                message: notification.message,
-                errorName: notification.name
-            })
+        if (notification.error) {
+            return res.status(httpStatus.BAD_REQUEST).json(notification)
         }
-        
-        notification.lida = 1
-        await notification.save()
 
         return res.status(httpStatus.SUCCESS).json({
             error: false,

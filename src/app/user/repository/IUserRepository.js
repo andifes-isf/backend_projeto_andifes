@@ -11,10 +11,10 @@ class IUserRepository {
     getNotification(data) {
         throw new Error("Method 'getNotification' must be implemented")
     }
-    getNotification(data) {
+    getNotifications() {
         throw new Error("Method 'getNotification' must be implemented")
     }
-    getUnreadNotifications(data) {
+    getUnreadNotifications() {
         throw new Error("Method 'getUnreadNotifications' must be implemented")
     }
 }

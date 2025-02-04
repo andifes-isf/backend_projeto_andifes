@@ -1,18 +1,25 @@
 import User from '../User'
 
 class CreateUser {
-    constructor(userRepository) {
-        this.userRepository = userRepository
-    }
-
-    async exec(data) {
-        console.log("Entrou \n\n")
+    async exec(data, userRepository) {
         const user = new User(data)
 
-        user.validateData()
+        const {error, validationResult: result} = user.validateData()
+        
+        if (error) {
+            return {
+                error: error,
+                result
+            }
+        }
 
-        return await this.UserRepositorySequelize.CreateUser(user)
+        const userConcrete = await userRepository.createUser(user)
+
+        return {
+            error: error,
+            userConcrete
+        }
     }
 }
 
-export default CreateUser
+export default new CreateUser()
