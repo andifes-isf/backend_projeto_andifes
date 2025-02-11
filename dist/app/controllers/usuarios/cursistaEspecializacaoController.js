@@ -5,7 +5,7 @@ var _InteresseNaDisciplina = require('../../models/curso_especializacao/Interess
 var _ouvidoria_curso_especializacao = require('../../models/curso_especializacao/ouvidoria_curso_especializacao'); var _ouvidoria_curso_especializacao2 = _interopRequireDefault(_ouvidoria_curso_especializacao);
 
 // Controllers
-var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
+var _isfTeacherController = require('../../entities/isf-teacher/isfTeacherController'); var _isfTeacherController2 = _interopRequireDefault(_isfTeacherController);
 
 // Repositories
 var _PracticalReportRepository = require('../../repositories/specialization_course/PracticalReportRepository'); var _PracticalReportRepository2 = _interopRequireDefault(_PracticalReportRepository);
@@ -23,8 +23,9 @@ var _messages_pt = require('../../utils/response/messages/messages_pt'); var _me
 var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
+var _usuarioController = require('../../entities/user/usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
 
-class CursistaEspecializacaoController extends _professorIsFController2.default {
+class CursistaEspecializacaoController extends _usuarioController2.default {
     // Auxiliar Functions
     static async getEntities(login){
         const specializationStudent = await _SpecializationStudentRepository2.default.findByPk(login)
@@ -198,6 +199,7 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
     * @returns {CursistaEspecializacao} data
     */
     async post(req, res) {
+        const a = new (0, _isfTeacherController2.default)()
         const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingObject(_SpecializationStudentRepository2.default, req.body.login, _messages_pt2.default.EXISTING_SPECIALIZATION_STUDENT)
         
         if (existingSpecializationStudent) {
@@ -208,9 +210,10 @@ class CursistaEspecializacaoController extends _professorIsFController2.default 
             })
         }
         
-        const { error, result } = await CursistaEspecializacaoController.postIsFTeacher(req, res, 1)
+        const { error, result } = await a.postIsFTeacher(req, res, 1)
 
         if (error) {
+            console.log("Resultado " + result)
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
                 error: true,
                 result

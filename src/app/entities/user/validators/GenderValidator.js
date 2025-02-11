@@ -1,4 +1,4 @@
-import Validator from "../../utils/validator"
+import Validator from "../../../utils/validator"
 
 class GenderValidator extends Validator{
     validate(data) {

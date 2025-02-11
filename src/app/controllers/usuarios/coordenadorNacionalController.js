@@ -6,7 +6,7 @@ import EditalCursoEspecializacao from '../../models/curso_especializacao/editalc
 import Usuario from '../../models/usuarios/usuario'
 
 // Controllers
-import usuarioController from "../../user/usuarioController"
+// import usuarioController from "../../user/usuarioController"
 
 // Utils
 import UserTypes from '../../utils/userType/userTypes'

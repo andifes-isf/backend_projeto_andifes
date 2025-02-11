@@ -1,6 +1,6 @@
 import { Router } from "express"
 import AuthMiddleware from '../../middlewares/auth'
-import ProfessorIsFController from "../../controllers/usuarios/professorIsFController"
+import ProfessorIsFController from "./isfTeacherController"
 
 const controller = new ProfessorIsFController()
 const router = new Router()

@@ -1,21 +1,19 @@
 // Utils
-import EmailDomainFactory from '../utils/emailDomain/emailDomainFactory'
-import MESSAGES from '../utils/response/messages/messages_pt'
-import CustomError from '../utils/response/CustomError/CustomError'
-import ErrorType from '../utils/response/ErrorType/ErrorType'
-import httpStatus from '../utils/response/httpStatus/httpStatus'
+import MESSAGES from '../../utils/response/messages/messages_pt'
+import CustomError from '../../utils/response/CustomError/CustomError'
+import ErrorType from '../../utils/response/ErrorType/ErrorType'
+import httpStatus from '../../utils/response/httpStatus/httpStatus'
 
 // Use Cases
 import CreateUser from './use-cases/CreateUser'
 import GetUsers from './use-cases/GetUsers'
 import GetMyData from './use-cases/GetMyData'
 import GetNotification from './use-cases/GetNotification'
+import GetNotifications from './use-cases/GetNotifications'
+import GetUnreadNotifications from './use-cases/GetUnreadNotifications'
 
 // Repository
 import UserRepository from './repository/UserRepositorySequelize'
-import User from './User'
-import GetNotifications from './use-cases/GetNotifications'
-import GetUnreadNotifications from './use-cases/GetUnreadNotifications'
 
 class usuarioController {
     constructor() {

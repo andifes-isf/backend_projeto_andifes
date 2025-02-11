@@ -32,8 +32,8 @@ import coordenadorNacionalRoutes from "./usuarios/coordenadorNacionalRoutes"
 import cursistaEspecializacaoRoutes from './usuarios/cursistaEspecializacaoRoutes'
 import docenteMinistranteRoutes from './usuarios/docenteMinistranteRoutes'
 import docenteOrientadorRoutes from './usuarios/docenteOrientadorRoutes'
-import professorIsFRoutes from './usuarios/professorIsFRoutes'
-import usuarioRoutes from '../user/usuarioRoutes'
+import professorIsFRoutes from '../entities/isf-teacher/isfTeacherRoutes'
+import usuarioRoutes from '../entities/user/usuarioRoutes'
 
 const router = new Router()
 

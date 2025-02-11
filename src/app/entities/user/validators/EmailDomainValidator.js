@@ -1,4 +1,4 @@
-import Validator from "../../utils/validator"
+import Validator from "../../../utils/validator"
 
 class EmailDomainValidator extends Validator{
     validate(data) {

@@ -5,7 +5,7 @@ import InteresseNaDisciplina from '../../models/curso_especializacao/InteresseNa
 import OuvidoriaCursoEspecializacao from "../../models/curso_especializacao/ouvidoria_curso_especializacao"
 
 // Controllers
-import ProfessorIsFController from './professorIsFController'
+import ProfessorIsFController from '../../entities/isf-teacher/isfTeacherController'
 
 // Repositories
 import PracticalReportRepository from "../../repositories/specialization_course/PracticalReportRepository"
@@ -23,8 +23,9 @@ import MESSAGES from '../../utils/response/messages/messages_pt'
 import CustomError from "../../utils/response/CustomError/CustomError"
 import ErrorType from "../../utils/response/ErrorType/ErrorType"
 import httpStatus from "../../utils/response/httpStatus/httpStatus"
+import usuarioController from "../../entities/user/usuarioController"
 
-class CursistaEspecializacaoController extends ProfessorIsFController {
+class CursistaEspecializacaoController extends usuarioController {
     // Auxiliar Functions
     static async getEntities(login){
         const specializationStudent = await SpecializationStudentRepository.findByPk(login)
@@ -198,6 +199,7 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
     * @returns {CursistaEspecializacao} data
     */
     async post(req, res) {
+        const a = new ProfessorIsFController()
         const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingObject(SpecializationStudentRepository, req.body.login, MESSAGES.EXISTING_SPECIALIZATION_STUDENT)
         
         if (existingSpecializationStudent) {
@@ -208,9 +210,10 @@ class CursistaEspecializacaoController extends ProfessorIsFController {
             })
         }
         
-        const { error, result } = await CursistaEspecializacaoController.postIsFTeacher(req, res, 1)
+        const { error, result } = await a.postIsFTeacher(req, res, 1)
 
         if (error) {
+            console.log("Resultado " + result)
             return res.status(httpStatus.BAD_REQUEST).json({
                 error: true,
                 result

@@ -2,7 +2,7 @@
 var _alunograduacao = require('../../models/usuarios/alunograduacao'); var _alunograduacao2 = _interopRequireDefault(_alunograduacao);
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 var _professorisf = require('../../models/usuarios/professorisf'); var _professorisf2 = _interopRequireDefault(_professorisf);
-var _professorIsFController = require('./professorIsFController'); var _professorIsFController2 = _interopRequireDefault(_professorIsFController);
+// import ProfessorIsFController from './professorIsFController'
 
 // Utils
 var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
@@ -10,7 +10,7 @@ var _CustomError = require('../../utils/response/CustomError/CustomError'); var 
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
-class AlunoGraduacaoController extends _professorIsFController2.default{
+class AlunoGraduacaoController {
 
     /**
     *

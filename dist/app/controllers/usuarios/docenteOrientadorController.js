@@ -4,7 +4,7 @@
 var _notificationType = require('../../utils/notificationType/notificationType'); var _notificationType2 = _interopRequireDefault(_notificationType);
 
 // Controllers
-var _usuarioController = require('../../user/usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
+// import UsuarioController from "../../user/usuarioController"
 var _relatorio_pratico = require('../../models/curso_especializacao/relatorio_pratico'); var _relatorio_pratico2 = _interopRequireDefault(_relatorio_pratico);
 
 // Repository
@@ -21,7 +21,7 @@ var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _Error
 var _CustomError = require('../../utils/response/CustomError/CustomError'); var _CustomError2 = _interopRequireDefault(_CustomError);
 var _PracticalReportRepository = require('../../repositories/specialization_course/PracticalReportRepository'); var _PracticalReportRepository2 = _interopRequireDefault(_PracticalReportRepository);
 
-class DocenteOrientadorController extends _usuarioController2.default{
+class DocenteOrientadorController {
     // UTILS
     static async verifyMenteeCondition(login, advisor_login) {
         const mentee = await DocenteOrientadorController.verifyNonExistingObject(_SpecializationStudentRepository2.default, login, _messages_pt2.default.USER_NOT_FOUND)

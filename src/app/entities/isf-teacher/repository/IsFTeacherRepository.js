@@ -1,11 +1,11 @@
 import { Sequelize } from "sequelize"
 import { Op } from 'sequelize'
 
-import IsFTeacher from '../../models/usuarios/professorisf'
-import User from '../../models/usuarios/usuario'
-import Institution from '../../models/instituicao/instituicaoensino'
-import IsFTeacherProeficiency from '../../models/proeficiencia/proeficienciaprofessorisf'
-import IsFTeacherInstitutionDocument from '../../models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'
+import IsFTeacher from '../../../models/usuarios/professorisf'
+import User from '../../../models/usuarios/usuario'
+import Institution from '../../../models/instituicao/instituicaoensino'
+import IsFTeacherProeficiency from '../../../models/proeficiencia/proeficienciaprofessorisf'
+import IsFTeacherInstitutionDocument from '../../../models/usuario_pertence_instituicao/comprovanteprofessorinstituicao'
 
 class IsFTeacherRepository {
     async findByPk(pk) {

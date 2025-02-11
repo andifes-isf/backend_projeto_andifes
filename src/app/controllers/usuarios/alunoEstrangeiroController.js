@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 import AlunoEstrangeiro from '../../models/usuarios/alunoestrangeiro'
 import alunoIsFController from './alunoIsFController'
 import AlunoIsF from '../../models/usuarios/alunoisf'
-import Usuario from '../../models/usuarios/usuario'
+// import Usuario from '../../models/usuarios/usuario'
 
 // Utils
 import MESSAGES from '../../utils/response/messages/messages_pt'
@@ -12,7 +12,7 @@ import CustomError from '../../utils/response/CustomError/CustomError'
 import httpStatus from '../../utils/response/httpStatus/httpStatus'
 import ErrorType from '../../utils/response/ErrorType/ErrorType'
 
-class alunoEstrangeiroController extends alunoIsFController {
+class alunoEstrangeiroController  {
     // Endpoints
 
     /**

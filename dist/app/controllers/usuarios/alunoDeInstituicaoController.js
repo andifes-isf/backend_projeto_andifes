@@ -8,7 +8,7 @@ var _instituicaoensino = require('../../models/instituicao/instituicaoensino'); 
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 // Controller
-var _alunoIsFController = require('./alunoIsFController'); var _alunoIsFController2 = _interopRequireDefault(_alunoIsFController);
+// import alunoIsFController from './alunoIsFController'
 
 // Utils
 var _sequelize = require('sequelize');
@@ -18,7 +18,7 @@ var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _ht
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 
-class alunoDeinstituicaoController extends _alunoIsFController2.default {
+class alunoDeinstituicaoController  {
     // Auxiliar Functions
 
     static async verifyExistingRegistration(login, institutionId, begin) {
@@ -99,7 +99,7 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
             })
         }
 
-        const { error, student } = await _alunoIsFController2.default.postIsFStudent(req, res, 1)
+        const { error, student } = await alunoIsFController.postIsFStudent(req, res, 1)
 
         if (error) {
             return res.status(_httpStatus2.default.BAD_REQUEST).json({
@@ -205,7 +205,7 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
     async postInstituicao(req, res){
         const userType = req.tipoUsuario
 
-        const authorizationError = _alunoIsFController2.default.verifyUserType([_userTypes2.default.ISF_STUDENT], userType)
+        const authorizationError = alunoIsFController.verifyUserType([_userTypes2.default.ISF_STUDENT], userType)
         
         if (authorizationError) {
             return res.status(_httpStatus2.default.UNAUTHORIZED).json({
@@ -276,7 +276,7 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
     async getMinhasInstituicoes(req, res){
         const userType = req.tipoUsuario
 
-        const authorizationError = _alunoIsFController2.default.verifyUserType([_userTypes2.default.ISF_STUDENT], userType)
+        const authorizationError = alunoIsFController.verifyUserType([_userTypes2.default.ISF_STUDENT], userType)
         
         if (authorizationError) {
             return res.status(_httpStatus2.default.UNAUTHORIZED).json({
@@ -322,7 +322,7 @@ class alunoDeinstituicaoController extends _alunoIsFController2.default {
     async getInstituicaoAtual(req, res){
         const userType = req.tipoUsuario
 
-        const authorizationError = _alunoIsFController2.default.verifyUserType([_userTypes2.default.ISF_STUDENT], userType)
+        const authorizationError = alunoIsFController.verifyUserType([_userTypes2.default.ISF_STUDENT], userType)
         
         if (authorizationError) {
             return res.status(_httpStatus2.default.UNAUTHORIZED).json({

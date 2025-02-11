@@ -6,7 +6,7 @@ var _editalcursoespecializacao = require('../../models/curso_especializacao/edit
 var _usuario = require('../../models/usuarios/usuario'); var _usuario2 = _interopRequireDefault(_usuario);
 
 // Controllers
-var _usuarioController = require('../../user/usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
+// import usuarioController from "../../user/usuarioController"
 
 // Utils
 var _userTypes = require('../../utils/userType/userTypes'); var _userTypes2 = _interopRequireDefault(_userTypes);
@@ -15,7 +15,7 @@ var _messages_pt = require('../../utils/response/messages/messages_pt'); var _me
 class coordenadorNacionalController {
     async post(req, res) {
         try {            
-            await _usuarioController2.default.post(req, res, _userTypes2.default.NATIONAL_COORDINATOR)
+            await usuarioController.post(req, res, _userTypes2.default.NATIONAL_COORDINATOR)
 
             const existingCoordinator = await _coordenadornacional2.default.findOne({
                 where: {

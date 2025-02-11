@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 import notificationType from '../../utils/notificationType/notificationType'
 
 // Controllers
-import UsuarioController from "../../user/usuarioController"
+// import UsuarioController from "../../user/usuarioController"
 import RelatorioPratico from '../../models/curso_especializacao/relatorio_pratico'
 
 // Repository
@@ -21,7 +21,7 @@ import ErrorType from '../../utils/response/ErrorType/ErrorType'
 import CustomError from '../../utils/response/CustomError/CustomError'
 import PracticalReportRepository from '../../repositories/specialization_course/PracticalReportRepository'
 
-class DocenteOrientadorController extends UsuarioController{
+class DocenteOrientadorController {
     // UTILS
     static async verifyMenteeCondition(login, advisor_login) {
         const mentee = await DocenteOrientadorController.verifyNonExistingObject(SpecializationStudentRepository, login, MESSAGES.USER_NOT_FOUND)

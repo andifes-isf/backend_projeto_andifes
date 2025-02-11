@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import * as Yup from 'yup'
 import bcrypt from 'bcrypt'
-import UserRepositorySequelize from '../../user/repository/UserRepositorySequelize' 
+import UserRepositorySequelize from '../../entities/user/repository/UserRepositorySequelize' 
 import authConfig from '../../../config/auth'
 import MESSAGES from '../../utils/response/messages/messages_pt'
 

@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 import IsfStudentRepository from '../../repositories/user/IsfStudentRepository'
 
 // Controller
-import usuarioController from "../../user/usuarioController"
+// import usuarioController from "../../user/usuarioController"
 
 // Utils
 import MESSAGES from '../../utils/response/messages/messages_pt'
@@ -13,7 +13,7 @@ import CustomError from '../../utils/response/CustomError/CustomError'
 import httpStatus from '../../utils/response/httpStatus/httpStatus'
 import ErrorType from '../../utils/response/ErrorType/ErrorType'
 
-class alunoIsFController extends usuarioController {
+class alunoIsFController {
     // Auxiliar Functions 
 
     static async postIsFStudent(req, res, from_institution) {

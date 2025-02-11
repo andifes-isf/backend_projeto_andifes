@@ -8,7 +8,7 @@ import InstituicaoEnsino from '../../models/instituicao/instituicaoensino'
 import Usuario from '../../models/usuarios/usuario'
 
 // Controller
-import alunoIsFController from './alunoIsFController'
+// import alunoIsFController from './alunoIsFController'
 
 // Utils
 import { Op } from 'sequelize'
@@ -18,7 +18,7 @@ import httpStatus from '../../utils/response/httpStatus/httpStatus'
 import UserTypes from '../../utils/userType/userTypes'
 import ErrorType from '../../utils/response/ErrorType/ErrorType'
 
-class alunoDeinstituicaoController extends alunoIsFController {
+class alunoDeinstituicaoController  {
     // Auxiliar Functions
 
     static async verifyExistingRegistration(login, institutionId, begin) {

@@ -4,7 +4,7 @@
 var _IsfStudentRepository = require('../../repositories/user/IsfStudentRepository'); var _IsfStudentRepository2 = _interopRequireDefault(_IsfStudentRepository);
 
 // Controller
-var _usuarioController = require('../../user/usuarioController'); var _usuarioController2 = _interopRequireDefault(_usuarioController);
+// import usuarioController from "../../user/usuarioController"
 
 // Utils
 var _messages_pt = require('../../utils/response/messages/messages_pt'); var _messages_pt2 = _interopRequireDefault(_messages_pt);
@@ -13,7 +13,7 @@ var _CustomError = require('../../utils/response/CustomError/CustomError'); var 
 var _httpStatus = require('../../utils/response/httpStatus/httpStatus'); var _httpStatus2 = _interopRequireDefault(_httpStatus);
 var _ErrorType = require('../../utils/response/ErrorType/ErrorType'); var _ErrorType2 = _interopRequireDefault(_ErrorType);
 
-class alunoIsFController extends _usuarioController2.default {
+class alunoIsFController {
     // Auxiliar Functions 
 
     static async postIsFStudent(req, res, from_institution) {

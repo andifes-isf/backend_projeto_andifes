@@ -1,10 +1,10 @@
 // Model
-import User from '../../models/usuarios/usuario'
-import Notification from '../../models/utils/notificacao'
+import User from '../../../models/usuarios/usuario'
+import Notification from '../../../models/utils/notificacao'
 
 // Utils
-import MESSAGES from '../../utils/response/messages/messages_pt'
-import ErrorType from '../../utils/response/ErrorType/ErrorType'
+import MESSAGES from '../../../utils/response/messages/messages_pt'
+import ErrorType from '../../../utils/response/ErrorType/ErrorType'
 
 // Interface
 import IUserRepository from './IUserRepository'

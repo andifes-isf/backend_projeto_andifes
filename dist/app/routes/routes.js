@@ -32,8 +32,8 @@ var _coordenadorNacionalRoutes = require('./usuarios/coordenadorNacionalRoutes')
 var _cursistaEspecializacaoRoutes = require('./usuarios/cursistaEspecializacaoRoutes'); var _cursistaEspecializacaoRoutes2 = _interopRequireDefault(_cursistaEspecializacaoRoutes);
 var _docenteMinistranteRoutes = require('./usuarios/docenteMinistranteRoutes'); var _docenteMinistranteRoutes2 = _interopRequireDefault(_docenteMinistranteRoutes);
 var _docenteOrientadorRoutes = require('./usuarios/docenteOrientadorRoutes'); var _docenteOrientadorRoutes2 = _interopRequireDefault(_docenteOrientadorRoutes);
-var _professorIsFRoutes = require('./usuarios/professorIsFRoutes'); var _professorIsFRoutes2 = _interopRequireDefault(_professorIsFRoutes);
-var _usuarioRoutes = require('../user/usuarioRoutes'); var _usuarioRoutes2 = _interopRequireDefault(_usuarioRoutes);
+var _isfTeacherRoutes = require('../entities/isf-teacher/isfTeacherRoutes'); var _isfTeacherRoutes2 = _interopRequireDefault(_isfTeacherRoutes);
+var _usuarioRoutes = require('../entities/user/usuarioRoutes'); var _usuarioRoutes2 = _interopRequireDefault(_usuarioRoutes);
 
 const router = new (0, _express.Router)()
 
@@ -69,7 +69,7 @@ router.use('/coordenador_nacional', _coordenadorNacionalRoutes2.default)
 router.use('/specialization_student', _cursistaEspecializacaoRoutes2.default)
 router.use('/docente_ministrante', _docenteMinistranteRoutes2.default)
 router.use('/advisor_teacher', _docenteOrientadorRoutes2.default)
-router.use('/isf_teacher', _professorIsFRoutes2.default)
+router.use('/isf_teacher', _isfTeacherRoutes2.default)
 router.use('/user', _usuarioRoutes2.default)
 
 exports. default = router

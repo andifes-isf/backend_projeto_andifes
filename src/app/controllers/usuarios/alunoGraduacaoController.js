@@ -2,7 +2,7 @@
 import AlunoGraduacao from "../../models/usuarios/alunograduacao";
 import Usuario from "../../models/usuarios/usuario";
 import ProfessorIsF from "../../models/usuarios/professorisf";
-import ProfessorIsFController from './professorIsFController'
+// import ProfessorIsFController from './professorIsFController'
 
 // Utils
 import MESSAGES from "../../utils/response/messages/messages_pt";
@@ -10,7 +10,7 @@ import CustomError from "../../utils/response/CustomError/CustomError";
 import ErrorType from "../../utils/response/ErrorType/ErrorType";
 import httpStatus from "../../utils/response/httpStatus/httpStatus";
 
-class AlunoGraduacaoController extends ProfessorIsFController{
+class AlunoGraduacaoController {
 
     /**
     *
