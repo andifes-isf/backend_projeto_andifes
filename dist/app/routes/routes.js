@@ -60,9 +60,9 @@ router.use('/professorisf_ministra_turmaoc', _professorIsFMinistraTurmaOCRoutes2
 router.use('/turma_oc', _turmaOCRoutes2.default)
 
 // usuarios
-router.use('/aluno_deinstituicao', _alunoDeInstituicaoRoutes2.default)
-router.use('/aluno_estrangeiro', _alunoEstrangeiroRoutes2.default)
-router.use('/aluno_graduacao', _alunoGraduacaoRoutes2.default)
+router.use('/institution_student', _alunoDeInstituicaoRoutes2.default)
+router.use('/foreign_student', _alunoEstrangeiroRoutes2.default)
+router.use('/graduation_student', _alunoGraduacaoRoutes2.default)
 router.use('/isf_student', _alunoIsFRoutes2.default)
 router.use('/coordenador_nacional_idioma', _coordenadorNacionalIdiomaRoutes2.default)
 router.use('/coordenador_nacional', _coordenadorNacionalRoutes2.default)
