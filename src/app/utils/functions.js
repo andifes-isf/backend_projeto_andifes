@@ -27,6 +27,18 @@ class AuxiliarFunctions {
 
         return existingObject
     }
+
+    static async verifyExistingObject(repository, key, message) {
+        const existingObject = await repository.findByPk(key)
+
+        if (existingObject) {
+
+            return {
+                message: message + key,
+                name: ErrorType.DUPLICATE_ENTRY
+            }
+        }
+    }
 }
 
 export default new AuxiliarFunctions()

@@ -5,12 +5,12 @@ import InteresseNaDisciplina from '../../models/curso_especializacao/InteresseNa
 import OuvidoriaCursoEspecializacao from "../../models/curso_especializacao/ouvidoria_curso_especializacao"
 
 // Controllers
-import ProfessorIsFController from '../../entities/isf-teacher/isfTeacherController'
+import ProfessorIsFController from '../isf-teacher/isfTeacherController'
 
 // Repositories
 import PracticalReportRepository from "../../repositories/specialization_course/PracticalReportRepository"
 import NotificationRepository from "../../repositories/utils/NotificationRepository"
-import SpecializationStudentRepository from "../../repositories/user/SpecializationStudentRepository"
+import SpecializationStudentRepository from "./repository/SpecializationStudentRepository"
 import SpecializationDisciplineClassRepository from "../../repositories/specialization_course/SpecializationDisciplineClassRepository"
 import SpecializationDisciplineRepository from "../../repositories/specialization_course/SpecializationDisciplineRepository"
 
@@ -23,7 +23,7 @@ import MESSAGES from '../../utils/response/messages/messages_pt'
 import CustomError from "../../utils/response/CustomError/CustomError"
 import ErrorType from "../../utils/response/ErrorType/ErrorType"
 import httpStatus from "../../utils/response/httpStatus/httpStatus"
-import usuarioController from "../../entities/user/usuarioController"
+import usuarioController from "../user/usuarioController"
 
 class CursistaEspecializacaoController extends usuarioController {
     // Auxiliar Functions
