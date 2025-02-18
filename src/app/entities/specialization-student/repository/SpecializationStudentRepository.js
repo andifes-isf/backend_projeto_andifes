@@ -1,7 +1,7 @@
 import ISpecializationStudentRepository from './ISpecializationStudentRepository'
-import SpecializationStudent from '../../models/usuarios/cursistaespecializacao'
-import IsFTeacher from '../../models/usuarios/professorisf'
-import User from '../../models/usuarios/usuario'
+import SpecializationStudent from '../../../models/usuarios/cursistaespecializacao'
+import IsFTeacher from '../../../models/usuarios/professorisf'
+import User from '../../../models/usuarios/usuario'
 
 class SpecializationStudentRepository extends ISpecializationStudentRepository {
     async findByPk(pk) {

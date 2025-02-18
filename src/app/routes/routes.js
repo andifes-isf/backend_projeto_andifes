@@ -29,7 +29,7 @@ import alunoGraduacaoRoutes from './usuarios/alunoGraduacaoRoutes'
 import alunoIsFRoutes from './usuarios/alunoIsFRoutes'
 import coordenadorNacionalIdiomaRoutes from "./usuarios/coordenadorNacionalIdiomaRoutes"
 import coordenadorNacionalRoutes from "./usuarios/coordenadorNacionalRoutes"
-import cursistaEspecializacaoRoutes from '../entities/isf-teacher/isfTeacherRoutes'
+import cursistaEspecializacaoRoutes from '../entities/specialization-student/SpecializationStudentRoutes'
 import docenteMinistranteRoutes from './usuarios/docenteMinistranteRoutes'
 import docenteOrientadorRoutes from './usuarios/docenteOrientadorRoutes'
 import professorIsFRoutes from '../entities/isf-teacher/isfTeacherRoutes'

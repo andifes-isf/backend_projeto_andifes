@@ -24,6 +24,7 @@ import CustomError from "../../utils/response/CustomError/CustomError"
 import ErrorType from "../../utils/response/ErrorType/ErrorType"
 import httpStatus from "../../utils/response/httpStatus/httpStatus"
 import usuarioController from "../user/usuarioController"
+import Post from "./use-cases/Post"
 
 class CursistaEspecializacaoController extends usuarioController {
     // Auxiliar Functions
@@ -199,34 +200,19 @@ class CursistaEspecializacaoController extends usuarioController {
     * @returns {CursistaEspecializacao} data
     */
     async post(req, res) {
-        const a = new ProfessorIsFController()
-        const existingSpecializationStudent = await CursistaEspecializacaoController.verifyExistingObject(SpecializationStudentRepository, req.body.login, MESSAGES.EXISTING_SPECIALIZATION_STUDENT)
-        
-        if (existingSpecializationStudent) {
-            return res.status(httpStatus.BAD_REQUEST).json({
-                error: true,
-                message: existingSpecializationStudent.message,
-                errorName: existingSpecializationStudent.name
-            })
-        }
-        
-        const { error, result } = await a.postIsFTeacher(req, res, 1)
+        const { error, result } = await Post.exec({...req.body}, SpecializationStudentRepository)
 
         if (error) {
-            console.log("Resultado " + result)
+            console.log(result)
             return res.status(httpStatus.BAD_REQUEST).json({
-                error: true,
-                result
+                error: error,
+                data: result
             })
         }
-        
-        const specializationStudent = await SpecializationStudentRepository.create({
-            login: req.body.login
-        })
-        
+
         return res.status(httpStatus.CREATED).json({
             error: false,
-            data: specializationStudent
+            data: result
         })
     }
 
