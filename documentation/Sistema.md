@@ -82,6 +82,12 @@ Também é um professor isf, mas é um usuário que só faz sentido quando anali
 - Exemplo: No caso de uso de inserção do cursista, ele chama diretamente o UserRepository
 - O código ainda funciona, mas pode ser melhorado
 
-5. Reestruturar melhor o Material Prático do cursista
+6. Arrumar erro na inserção dos usuários
+- Em teoria, um usuário pode ter mais de um tipo
+- Um docente orientador pode ser um docente ministrantes, por exemplo
+- Hoje o usuário é um cursista, mas é possivel que futuramente ele entre como docente
+- Atualmente, ao inserir um usuário que já está na tabela de usuários, ele dá erro de chave duplicada
+
+7. Reestruturar melhor o Material Prático do cursista
 - Está misturado o conceito de relatório prático e material do cursista
 - É interessante reestudar essa parte e reestruturar esse trecho
