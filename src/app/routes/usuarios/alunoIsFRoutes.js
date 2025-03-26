@@ -12,4 +12,6 @@ router.post('/proeficiency', AuthMiddleware, controller.postProeficiencia)
 
 router.get('/my_proeficiency', AuthMiddleware, controller.getMinhaProeficiencia)
 
+router.put("/editar_proeficiencia", AuthMiddleware, controller.putProeficiencia);
+
 export default router

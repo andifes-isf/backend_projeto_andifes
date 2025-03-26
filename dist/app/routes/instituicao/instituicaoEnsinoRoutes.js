@@ -5,4 +5,6 @@ const router = new (0, _express.Router)()
 
 router.get('/', _instituicaoEnsinoController2.default.get)
 
+router.get('/:id', _instituicaoEnsinoController2.default.getById);
+
 exports. default = router

@@ -196,6 +196,61 @@ class alunoIsFController {
             proeficiencies
         })
     }
+
+    async putProeficiencia(req, res) {
+        const userType = req.tipoUsuario;
+      
+        // Verificar autorização
+        const authorizationError = alunoIsFController.verifyUserType(
+          [_userTypes2.default.ISF_STUDENT],
+          userType
+        );
+      
+        if (authorizationError) {
+          return res.status(_httpStatus2.default.UNAUTHORIZED).json({
+            error: true,
+            message: authorizationError.message,
+            errorName: authorizationError.name,
+          });
+        }
+      
+        const { language, level, document } = req.body;
+      
+        try {
+          // Atualizar proficiência existente
+          const updatedProeficiency = await _proeficienciaalunoisf2.default.update(
+            {
+              nivel: level,
+              comprovante: document,
+            },
+            {
+              where: {
+                login: req.loginUsuario,
+                idioma: language,
+              },
+            }
+          );
+      
+          if (updatedProeficiency[0] === 0) {
+            return res.status(_httpStatus2.default.NOT_FOUND).json({
+              error: true,
+              message: "Proeficiência não encontrada para atualização.",
+            });
+          }
+      
+          return res.status(_httpStatus2.default.SUCCESS).json({
+            error: false,
+            message: "Proeficiência atualizada com sucesso.",
+          });
+        } catch (error) {
+          console.error("Erro ao atualizar proeficiência:", error);
+          return res.status(_httpStatus2.default.INTERNAL_SERVER_ERROR).json({
+            error: true,
+            message: "Erro ao atualizar proeficiência.",
+          });
+        }
+      }
+      
 }
 
 exports. default = alunoIsFController

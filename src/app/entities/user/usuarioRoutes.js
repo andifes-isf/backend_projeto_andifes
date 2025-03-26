@@ -17,4 +17,6 @@ router.get('/unread_notifications', AuthMiddleware, controller.getNotificacoesNa
 
 router.get('/notification/:notificationId', AuthMiddleware, controller.getNotificacao)
 
+router.put('/update_my_data', AuthMiddleware, controller.updateMyData);
+
 export default router

@@ -56,6 +56,45 @@ class instituicaoEnsinoController {
 
         return res.status(_httpStatus2.default.SUCCESS).json(institutions)
     }
+
+    async getById(req, res) {
+        try {
+          const { id } = req.params;
+      
+          const instituicao = await _instituicaoensino2.default.findOne({
+            where: { idInstituicao: id },
+            attributes: ["idInstituicao", "nome", "brasileira", "documentoVinculo"],
+            include: [
+              {
+                model: _instituicaoensinobrasileira2.default, // Modelo sem alias explícito
+                attributes: ["sigla", "CNPJ"],
+              },
+              {
+                model: _instituicaoensinoestrangeira2.default, // Modelo sem alias explícito
+                attributes: ["sigla", "pais"],
+              },
+            ],
+          });
+      
+          if (!instituicao) {
+            return res.status(404).json({
+              error: true,
+              message: "Instituição não encontrada.",
+            });
+          }
+      
+          return res.status(200).json({
+            error: false,
+            instituicao,
+          });
+        } catch (error) {
+          console.error("Erro ao buscar instituição por ID:", error);
+          return res.status(500).json({
+            error: true,
+            message: "Erro ao buscar instituição.",
+          });
+        }
+      }
 }
 
 exports. default = new instituicaoEnsinoController()

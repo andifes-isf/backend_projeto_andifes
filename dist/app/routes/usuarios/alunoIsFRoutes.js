@@ -12,4 +12,6 @@ router.post('/proeficiency', _auth2.default, controller.postProeficiencia)
 
 router.get('/my_proeficiency', _auth2.default, controller.getMinhaProeficiencia)
 
+router.put("/editar_proeficiencia", _auth2.default, controller.putProeficiencia);
+
 exports. default = router
