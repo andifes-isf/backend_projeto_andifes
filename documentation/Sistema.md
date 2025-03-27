@@ -38,7 +38,7 @@ Também possui algumas funcionalidades próprias que são gerais de todos os pro
 6. getMaterial - Retorna um material específico
 7. postCursaTurma - Insere o cursista em uma turma de alguma disciplina
 8. getMinhasTurmas - Retorna as turmas que o cursista faz parte
-9. postInteresseNaDiscipline - Antes da inscrição nas disciplinas, é liberado uma pesquisa no qual os cursista demonstram interesses nas disciplnias para então ser estudado quais disciplinas podem ser ministradas e estudar quem ministraria elas 
+9. postInteresseNaDiscipline - Antes da inscrição nas disciplinas, é liberado uma pesquisa no qual os cursista demonstram interesses nas disciplinas para então ser estudado quais disciplinas podem ser ministradas e estudar quem ministraria elas 
 10. postReclamation - Adiciona uma reclamação (ouvidoria)
 11. postGuidanceReport - Insere o relatório de orientação
 12. getGuidanceReport - Retorna os relatório de orientação
@@ -91,3 +91,15 @@ Também é um professor isf, mas é um usuário que só faz sentido quando anali
 7. Reestruturar melhor o Material Prático do cursista
 - Está misturado o conceito de relatório prático e material do cursista
 - É interessante reestudar essa parte e reestruturar esse trecho
+
+8. Verificar o funcionamento da lista de interesse em disciplinas
+- O sistema deve permitir que os cursistas declarem interesse em disciplinas (tem um endpoint pra isso, 9 do cursista)
+- Mas tendo a lista de interesse em mãos, como fazer as salas?
+
+9. Verificar como funcionaria de fato a inserção de novos cursistas 
+- Após o processo seletivo/edital, como os aprovados serão inseridos? Planilha?
+
+10. Criar um getMyAdvisor pro cursista
+
+11. Adicionar atualização de dados do usuário
+- Email, telefone, gênero e nome
