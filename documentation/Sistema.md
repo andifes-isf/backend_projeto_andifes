@@ -63,10 +63,10 @@ Também é um professor isf, mas é um usuário que só faz sentido quando anali
 
 # Funcionalidade que ainda precisam ser implementadas
 1. No relatório de orientação
-- O relatório de orientação precisa ser preenchido tanto pelo Cursista quanto pelo Orientador
+- O relatório de orientação pode ser preenchido tanto pelo Cursista quanto pelo Orientador
 - Eles podem preencher semanalmente, quinzenalmente ou mensalmente
 - É preciso armazenar essa "frequência de preenchimento" e cobrar o outro lado
-- Por exemplo: Se o cursista preenche semanalmente, é preciso que o orientador também preencha semanalmente
+- Por exemplo: Se o cursista preenche semanalmente, é preciso gerar uma notificação para o orientador aprovar esse relatório (evita que o relatório seja preenchido sem ambos estarem de acordo). Se o orientador preencher, deve ser gerada uma notificação pro cursista aprovar o relatório
 
 2. Terminar de ajustar a arquitetura do projeto
 - Para melhorar a organização arquitetural do projeto, está sendo implementado uma arquitetura semelhante à de Clean Architecture
@@ -92,14 +92,20 @@ Também é um professor isf, mas é um usuário que só faz sentido quando anali
 - Está misturado o conceito de relatório prático e material do cursista
 - É interessante reestudar essa parte e reestruturar esse trecho
 
-8. Verificar o funcionamento da lista de interesse em disciplinas
+8. Fazer o relatório teórico 
+- O relatório teórico é gerado após o término de uma disciplina
+- O docente ministrante sobe uma planilha (.xml) com os dados dos alunos, notas e frequência
+- O sistema deve ler essa planilha e atualizar os dados dos alunos
+
+
+9. Verificar o funcionamento da lista de interesse em disciplinas
 - O sistema deve permitir que os cursistas declarem interesse em disciplinas (tem um endpoint pra isso, 9 do cursista)
 - Mas tendo a lista de interesse em mãos, como fazer as salas?
 
-9. Verificar como funcionaria de fato a inserção de novos cursistas 
+10. Verificar como funcionaria de fato a inserção de novos cursistas 
 - Após o processo seletivo/edital, como os aprovados serão inseridos? Planilha?
 
-10. Criar um getMyAdvisor pro cursista
+11. Criar um getMyAdvisor pro cursista
 
-11. Adicionar atualização de dados do usuário
+12. Adicionar atualização de dados do usuário
 - Email, telefone, gênero e nome
